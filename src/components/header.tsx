@@ -8,7 +8,7 @@ export function Header() {
     <header className="bg-zinc-50 h-24 flex items-center">
       <div className="flex items-center justify-between w-full px-[18px] py-6 gap-3 ">
         <span className="text-zinc-300">Dashboard</span>
-        <Input.Root>
+        <Input.Root className="w-[442px] ">
           <Input.Icon>
             <CiSearch size={24} className="text-zinc-400" />
           </Input.Icon>

@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge'
 
 export interface InputRootProps {
   children: ReactNode
+  className?: string
 }
 
 export interface InputIconProps {
@@ -11,9 +12,14 @@ export interface InputIconProps {
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
 
-function InputRoot({ children }: InputRootProps) {
+function InputRoot({ children, className }: InputRootProps) {
   return (
-    <div className="flex h-10 w-full items-center gap-3 rounded-2xl  bg-zinc-200 px-3 py-4 focus-within:ring-2 focus-within:ring-zinc-400">
+    <div
+      className={twMerge(
+        'flex h-10 w-full items-center gap-3 rounded-2xl  bg-zinc-200 px-3 py-4 focus-within:ring-2 focus-within:ring-zinc-400',
+        className,
+      )}
+    >
       {children}
     </div>
   )
