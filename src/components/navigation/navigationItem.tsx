@@ -10,7 +10,7 @@ export function NavigationItem({ children, className }: NavigationItemProps) {
   return (
     <li
       className={twMerge(
-        'flex w-full items-center justify-start rounded-md ',
+        'flex w-full items-center justify-start   rounded-md duration-200 ',
         className,
       )}
     >

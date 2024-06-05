@@ -20,7 +20,7 @@ export function NavigationLinks({
     <Link
       href={url}
       className={twMerge(
-        'flex w-full items-center justify-start gap-4 rounded-lg py-2 px-2 text-sm font-medium text-zinc-600 duration-200 hover:bg-zinc-700 hover:text-zinc-50',
+        'flex w-full items-center justify-start gap-2 rounded-lg hover:bg-zinc-700 py-2 px-2 hover:text-zinc-50 text-sm font-medium text-zinc-600 ',
         className,
       )}
     >
