@@ -1,18 +1,16 @@
 'use client'
 import { useSession } from 'next-auth/react'
-import Image from 'next/image'
+
+import { Avatar } from './avatar'
 
 export function User() {
   const { data } = useSession()
   return (
     <div className="flex items-center gap-2">
-      <Image
-        src={data?.user?.image || ''}
-        alt=""
-        width={40}
-        height={40}
-        quality={100}
-        className="w-[40px] h-[40px] rounded-full"
+      <Avatar
+        Url={data?.user?.image || ''}
+        Alt={data?.user?.name || ''}
+        name={data?.user?.name || ''}
       />
 
       <div className="flex flex-col">
