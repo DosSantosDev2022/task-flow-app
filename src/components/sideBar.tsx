@@ -26,7 +26,7 @@ export function SideBar() {
     {
       label: 'Tarefas',
       icon: <SiGoogletasks size={25} />,
-      Url: '/',
+      Url: '/tasks',
     },
     {
       label: 'Configurações',
