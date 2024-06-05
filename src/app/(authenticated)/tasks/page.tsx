@@ -1,4 +1,7 @@
 import { Button } from '@/components/button'
+import { Deadiline } from '@/components/deadline'
+import { FilterTasks } from '@/components/filterTasks'
+import { TypeTask } from '@/components/typeTask'
 import { Input } from '@/components/input'
 import Image from 'next/image'
 import { CiSearch } from 'react-icons/ci'
@@ -61,7 +64,7 @@ export default function TasksPage() {
           {listProject.map((p) => (
             <div
               key={p.name}
-              className="px-2 py-[13px] bg-zinc-200 rounded-lg flex items-center justify-between w-full"
+              className="px-2 py-[13px] bg-zinc-50 border border-zinc-100 rounded-lg flex items-center justify-between w-full"
             >
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -87,7 +90,7 @@ export default function TasksPage() {
         </div>
       </div>
       <div className="col-span-9 border">
-        <div className="bg-zinc-50 h-20 flex items-center p-2">
+        <div className="bg-zinc-50 h-20 flex items-center justify-between w-full p-2">
           <div className="flex items-center justify-start  w-full gap-2">
             <Image
               src={''}
@@ -97,7 +100,7 @@ export default function TasksPage() {
               quality={100}
               className="bg-zinc-800 rounded-full"
             />
-            <div className="flex items-start gap-1 flex-col w-[368px] border ">
+            <div className="flex items-start gap-1 flex-col w-[368px]">
               <span className="text-zinc-600 font-normal text-md flex items-center justify-between w-full">
                 Project 01
                 <div className="text-xs bg-zinc-200 rounded-md p-1">
@@ -110,15 +113,16 @@ export default function TasksPage() {
               </div>
             </div>
           </div>
-
-          <div className="border">colocar prazos do projeto</div>
-        </div>
-        <div>{/* componente filtro de tarefa */}</div>
-        <div>
-          {/* componente tipos de tarefa (a fazer / fazendo / concluido) */}
+          <Deadiline />
         </div>
 
-        <div>{/* Componente cards das tarefas */}</div>
+        <FilterTasks />
+
+        <div className="grid grid-cols-12 gap-2 px-2">
+          <TypeTask type="Tarefas do dia" />
+          <TypeTask type="Em andamento" />
+          <TypeTask type="Concluídas" />
+        </div>
       </div>
     </div>
   )
