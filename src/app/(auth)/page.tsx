@@ -1,9 +1,22 @@
+'use client'
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { FaGoogle, FaUser } from 'react-icons/fa'
 import { RiLockPasswordFill } from 'react-icons/ri'
+import { signIn, useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
-export default function signIn() {
+export default function SignInPage() {
+  const { data: session } = useSession()
+  const router = useRouter()
+  const handleLoginClick = async () => {
+    await signIn()
+  }
+
+  if (session?.user) {
+    router.push('/dashboard') // Navigate to /dashboard
+  }
+
   return (
     <div className="h-screen md:flex">
       <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-violet-800 to-violet-900  i justify-around items-center  hidden ">
@@ -52,7 +65,10 @@ export default function signIn() {
 
             <div className="flex flex-col gap-2">
               <Button className="w-full">Login</Button>
-              <Button className="w-full flex items-center justify-center gap-2">
+              <Button
+                onClick={handleLoginClick}
+                className="w-full flex items-center justify-center gap-2"
+              >
                 <FaGoogle />
                 Google
               </Button>

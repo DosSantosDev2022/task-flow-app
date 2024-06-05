@@ -2,6 +2,7 @@ import { IoNotifications } from 'react-icons/io5'
 import { Input } from './input'
 import { AiFillMessage } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
+import { User } from './user'
 
 export function Header() {
   return (
@@ -25,17 +26,7 @@ export function Header() {
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="rounded-full bg-zinc-400 w-[40px] h-[40px] "></div>
-            <div className="flex flex-col">
-              <span className="text-base font-bold text-zinc-950">
-                Juliano Santos
-              </span>
-              <span className="text-zinc-600 font-normal text-xs leading-[14.52px] ">
-                dossantosdevoficial@gmail.com
-              </span>
-            </div>
-          </div>
+          <User />
         </div>
       </div>
     </header>
