@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import '@/styles/globals.css'
-import { SideBar } from '@/components/sideBar'
-import { Header } from '@/components/header'
+import { SideBar } from '@/components/global/sideBar'
+import { Header } from '@/components/global/header'
 
 export const metadata: Metadata = {
   title: 'Task Flow App',

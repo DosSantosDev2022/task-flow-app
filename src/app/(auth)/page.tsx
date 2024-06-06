@@ -1,6 +1,6 @@
 'use client'
-import { Button } from '@/components/button'
-import { Input } from '@/components/input'
+import { Button } from '@/components/global/button'
+import { Input } from '@/components/global/input'
 import { FaGoogle, FaUser } from 'react-icons/fa'
 import { RiLockPasswordFill } from 'react-icons/ri'
 import { signIn, useSession } from 'next-auth/react'
