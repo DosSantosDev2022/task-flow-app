@@ -20,17 +20,17 @@ export function SideBar() {
     {
       label: 'Dashboard',
       icon: <MdSpaceDashboard size={25} />,
-      Url: '/',
+      Url: '/dashboard',
     },
     {
       label: 'Clientes',
       icon: <FaUsers size={25} />,
-      Url: '/',
+      Url: '/clients',
     },
     {
       label: 'Projetos',
       icon: <MdEditDocument size={25} />,
-      Url: '/',
+      Url: '/projects',
     },
     {
       label: 'Tarefas',
@@ -40,7 +40,7 @@ export function SideBar() {
     {
       label: 'Configurações',
       icon: <FaGear size={25} />,
-      Url: '/',
+      Url: '/configurations',
     },
   ]
 
