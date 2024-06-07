@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'
 
 import { twMerge } from 'tailwind-merge'
@@ -16,11 +17,17 @@ export function NavigationLinks({
   icon,
   className,
 }: NavigationLinksProps) {
+  const pathName = usePathname()
+  const isActive = pathName === url
+
   return (
     <Link
       href={url}
       className={twMerge(
-        'flex w-full items-center justify-start gap-2 rounded-lg hover:bg-zinc-700 py-2 px-2 hover:text-zinc-50 text-sm font-medium text-zinc-600 ',
+        'flex w-full items-center justify-start gap-2 rounded-lg py-2 px-2 text-sm font-medium text-zinc-600 ',
+        isActive
+          ? 'bg-violet-700 text-zinc-50'
+          : 'hover:bg-violet-700 hover:text-zinc-50',
         className,
       )}
     >
