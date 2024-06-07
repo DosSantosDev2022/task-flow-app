@@ -11,6 +11,6 @@ const config: Config = {
       colors: {},
     },
   },
-  plugins: [require('tailwind-scrollbar')],
+  plugins: [require('tailwind-scrollbar'), require('tailwindcss-animated')],
 }
 export default config
