@@ -1,6 +1,6 @@
+import '@/styles/globals.css'
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
-import '../styles/globals.css'
 import { NextAuthProvider } from '@/providers/auth'
 
 const poppins = Poppins({
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`${poppins.className} w-full h-screen `}>
+      <body className={` w-full h-screen ${poppins.className}`}>
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>
