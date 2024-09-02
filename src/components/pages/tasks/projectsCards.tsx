@@ -2,15 +2,17 @@
 import { Button } from '@/components/global/button'
 import { Navigation } from '@/components/global/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { FaEllipsisVertical } from 'react-icons/fa6'
 
 interface ProjectCardsProps {
   name: string
   image: string
+  id: string
 }
 
-export function ProjectCards({ name }: ProjectCardsProps) {
+export function ProjectCards({ name, id }: ProjectCardsProps) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const handleMenuOpen = () => {
@@ -36,7 +38,10 @@ export function ProjectCards({ name }: ProjectCardsProps) {
   ]
 
   return (
-    <div className="px-2 py-3 bg-zinc-50 border border-zinc-100 rounded-lg flex flex-col items-center justify-between w-full">
+    <Link
+      href={`/tasks/${id}`}
+      className="px-2 py-3 cursor-pointer bg-zinc-50 border border-zinc-100 rounded-lg flex flex-col items-center justify-between w-full"
+    >
       <div className="flex w-full justify-between">
         <div className="flex items-center justify-center gap-2 w-full border py-2 px-1">
           <Image
@@ -78,6 +83,6 @@ export function ProjectCards({ name }: ProjectCardsProps) {
           </Navigation.List>
         </Navigation.Root>
       )}
-    </div>
+    </Link>
   )
 }

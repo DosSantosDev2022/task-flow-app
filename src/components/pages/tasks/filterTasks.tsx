@@ -16,15 +16,15 @@ export function FilterTasks({ onFilterChange }: FilterTasksProps) {
     },
     {
       label: 'A fazer',
-      value: 'todo',
+      value: 'a fazer',
     },
     {
       label: 'Em andamento',
-      value: 'in-progress',
+      value: 'em andamento',
     },
     {
       label: 'Concluído',
-      value: 'completed',
+      value: 'concluído',
     },
   ]
 
