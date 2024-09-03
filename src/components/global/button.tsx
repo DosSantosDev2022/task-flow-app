@@ -20,6 +20,7 @@ export interface ButtonProps
     | 'warning'
     | 'Shine'
     | 'Swipe'
+    | 'Sucesss'
   ref?: ForwardedRef<HTMLButtonElement>
 }
 
@@ -43,6 +44,7 @@ export function Button({
     link: 'bg-transparent border-none underline-offset-4 hover:underline',
     danger: 'bg-red-700 hover:bg-red-600 text-zinc-50',
     warning: 'bg-yellow-400 text-zinc-900 hover:bg-yellow-300',
+    Sucesss: 'bg-green-600 text-zinc-50 hover:bg-green-700',
     Shine:
       'before:ease relative  overflow-hidden border border-primary-800 bg-primary-800 text-white shadow-2xl transition-all before:absolute before:right-0 before:top-0 before:h-12 before:w-6 before:translate-x-12 before:rotate-6 before:bg-white before:opacity-10 before:duration-700 hover:shadow-primary-500 hover:before:-translate-x-40',
     Swipe:
