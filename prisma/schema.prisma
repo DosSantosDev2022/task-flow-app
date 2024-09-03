@@ -74,16 +74,22 @@ model Project {
 }
 
 model Task {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   title       String
   description String?
-  status      String   @default("em andamento")
+  status      TaskStatus @default(A_FAZER)
   start_date  DateTime
   end_date    DateTime
-  Project     Project  @relation(fields: [projectId], references: [id])
+  Project     Project    @relation(fields: [projectId], references: [id])
   projectId   String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
   userId      String
 
   @@map("tasks")
+}
+
+enum TaskStatus {
+  A_FAZER
+  EM_ANDAMENTO
+  CONCLUIDO
 }
