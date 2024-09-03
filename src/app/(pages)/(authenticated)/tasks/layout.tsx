@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import '@/styles/globals.css'
-
-import { ProjectList } from '@/components/pages/tasks/projects'
-import { prisma } from '@/lib/prisma'
+import { ProjectList } from '@/components/pages/tasks/ProjectList'
 
 export const metadata: Metadata = {
   title: 'Task Flow App',
@@ -14,10 +12,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const projects = await prisma.project.findMany({})
   return (
     <div className="grid grid-cols-12 gap-2 p-2">
-      <ProjectList projects={projects} />
+      <ProjectList />
       <div className="col-span-9 border h-screen">{children}</div>
     </div>
   )
