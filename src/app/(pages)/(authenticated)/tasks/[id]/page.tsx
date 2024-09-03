@@ -1,6 +1,5 @@
 import { Deadiline } from '@/components/pages/tasks/deadline'
 import { ProgressBar } from '@/components/pages/tasks/progressBar'
-
 import { Tasks } from '@/components/pages/tasks/tasks'
 import { prisma } from '@/lib/prisma'
 import Image from 'next/image'
@@ -12,7 +11,7 @@ interface TasksPageParams {
 }
 
 export default async function TasksPage({ params }: TasksPageParams) {
-  const tasks = await prisma.task.findMany({
+  const data = await prisma.task.findMany({
     where: {
       projectId: params.id,
     },
@@ -20,6 +19,7 @@ export default async function TasksPage({ params }: TasksPageParams) {
 
   const Selectedproject = await prisma.project.findMany({})
   const project = Selectedproject.find((p) => p.id === params.id)
+  console.log(data)
   return (
     <>
       <div className="bg-zinc-50 h-20 flex items-center justify-between w-full p-2">
@@ -49,7 +49,7 @@ export default async function TasksPage({ params }: TasksPageParams) {
         </Deadiline.Root>
       </div>
 
-      <Tasks tasks={tasks} />
+      <Tasks tasks={data} />
     </>
   )
 }
