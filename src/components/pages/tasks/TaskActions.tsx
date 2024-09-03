@@ -1,14 +1,16 @@
 'use client'
+
 import { AddNewTasksModal } from './addTasks'
 import { useState } from 'react'
 import { Button } from '@/components/global/button'
 import { FilterType } from './tasks'
+import { useTaskStatusStore } from '@/store/TaskStatusStore'
 
 interface FilterTasksProps {
   onFilterChange: (filter: FilterType) => void
 }
 
-export function FilterTasks({ onFilterChange }: FilterTasksProps) {
+export function TaskActions({ onFilterChange }: FilterTasksProps) {
   const status: { label: string; value: FilterType }[] = [
     {
       label: 'Todas',
@@ -16,23 +18,38 @@ export function FilterTasks({ onFilterChange }: FilterTasksProps) {
     },
     {
       label: 'A fazer',
-      value: 'a fazer',
+      value: 'A_FAZER',
     },
     {
       label: 'Em andamento',
-      value: 'em andamento',
+      value: 'EM_ANDAMENTO',
     },
     {
       label: 'Concluído',
-      value: 'concluído',
+      value: 'CONCLUIDO',
     },
   ]
 
   const [activeFilter, setActiveFilter] = useState('all')
+  const [isLoading, setIsLoading] = useState(false)
+  const saveAllChanges = useTaskStatusStore((state) => state.saveAllChanges)
+
   const handleFilterClick = (filter: FilterType) => {
     setActiveFilter(filter)
     onFilterChange(filter)
   }
+
+  const handleSaveChanges = async () => {
+    setIsLoading(true)
+    try {
+      await saveAllChanges()
+    } catch (error) {
+      console.error('Error saving changes:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="flex items-center gap-2 px-2 py-4">
       <AddNewTasksModal />
@@ -49,6 +66,15 @@ export function FilterTasks({ onFilterChange }: FilterTasksProps) {
             {status.label}
           </Button>
         ))}
+
+        <Button
+          variant="highlight"
+          isLoading={isLoading} // Atualize o botão com o estado de carregamento
+          onClick={handleSaveChanges}
+          className="ml-4"
+        >
+          {isLoading ? 'Salvando...' : 'Salvar Alterações'}
+        </Button>
       </div>
     </div>
   )

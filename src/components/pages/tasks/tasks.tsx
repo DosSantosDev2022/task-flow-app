@@ -1,23 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { FilterTasks } from './filterTasks'
-import { TypeTask } from './typeTask'
+import { TaskActions } from './TaskActions'
+import { TaskByStatus } from './TaskByStatus'
 import { Task } from '@prisma/client'
 
-export type FilterType = 'all' | 'a fazer' | 'em andamento' | 'concluído'
+export type FilterType = 'all' | 'A_FAZER' | 'EM_ANDAMENTO' | 'CONCLUIDO'
 
 export function Tasks({ tasks }: { tasks: Task[] }) {
   const [filter, setFilter] = useState<FilterType>('all')
-
-  /* const tasks = [
-    { name: 'Tarefa 1', status: 'todo' },
-    { name: 'Tarefa 2', status: 'in-progress' },
-    { name: 'Tarefa 3', status: 'completed' },
-    { name: 'Tarefa 4', status: 'todo' },
-    { name: 'Tarefa 5', status: 'in-progress' },
-    { name: 'Tarefa 6', status: 'completed' },
-  ] */
 
   const filteredTasks = (status: string) => {
     return tasks.filter((task) => {
@@ -28,17 +19,20 @@ export function Tasks({ tasks }: { tasks: Task[] }) {
 
   return (
     <>
-      <FilterTasks onFilterChange={setFilter} />
+      <TaskActions onFilterChange={setFilter} />
 
       <div className="grid grid-cols-12 gap-2 px-2">
         <div className="col-span-4">
-          <TypeTask type="A fazer" tasks={filteredTasks('a fazer')} />
+          <TaskByStatus status="A_FAZER" tasks={filteredTasks('A_FAZER')} />
         </div>
         <div className="col-span-4">
-          <TypeTask type="Em andamento" tasks={filteredTasks('em andamento')} />
+          <TaskByStatus
+            status="EM_ANDAMENTO"
+            tasks={filteredTasks('EM_ANDAMENTO')}
+          />
         </div>
         <div className="col-span-4">
-          <TypeTask type="Concluídas" tasks={filteredTasks('concluído')} />
+          <TaskByStatus status="CONCLUIDO" tasks={filteredTasks('CONCLUIDO')} />
         </div>
       </div>
     </>
