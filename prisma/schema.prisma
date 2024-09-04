@@ -67,11 +67,20 @@ model Project {
   description String?
   startDate   DateTime
   endDate     DateTime
+  price       Decimal  @db.Decimal(10, 2)
+  payment     Payment  @default(DEBITO)
   Task        Task[]
   user        User     @relation(fields: [userId], references: [id])
   userId      String
 
   @@map("projects")
+}
+
+enum Payment {
+  CREDITO
+  DEBITO
+  DINHEIRO
+  PIX
 }
 
 model Task {
