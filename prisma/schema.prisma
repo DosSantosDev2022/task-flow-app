@@ -63,6 +63,7 @@ model VerificationToken {
 model Project {
   id          String   @id @default(uuid())
   title       String
+  slug        String   @unique @default("")
   description String?
   startDate   DateTime
   endDate     DateTime
