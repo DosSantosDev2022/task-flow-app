@@ -86,12 +86,12 @@ const SelectTrigger = () => {
     selectedOptions.length > 0
       ? selectedOptions.join(', ').substring(0, 25) +
         (selectedOptions.join(', ').length > 25 ? '...' : '')
-      : 'Select option'
+      : 'Selecione...'
 
   return (
     <div
       onClick={toggleOpen}
-      className="bg-white border w-full p-2 flex items-center justify-between rounded text-gray-700 cursor-pointer"
+      className="bg-white border w-full p-2 flex items-center justify-between rounded text-gray-500 text-sm cursor-pointer"
     >
       {displayValue}
       <BiChevronDown
@@ -109,7 +109,9 @@ const SelectTrigger = () => {
 const SelectContent = ({ children }: { children: ReactNode }) => {
   const { isOpen } = useSelectContext()
   return isOpen ? (
-    <ul className="bg-white mt-2 overflow-y-auto max-h-32">{children}</ul>
+    <ul className="bg-white mt-1 overflow-y-auto max-h-32 border rounded-md">
+      {children}
+    </ul>
   ) : null
 }
 
@@ -125,7 +127,7 @@ const SelectOption = ({ option }: { option: string }) => {
       onClick={() => selectOption(option)}
       className={twMerge(
         'p-2 text-sm hover:bg-zinc-300 duration-300 rounded-sm  cursor-pointer',
-        isSelected(option) && 'bg-sky-600 text-white',
+        isSelected(option) && 'bg-zinc-600 text-white',
       )}
     >
       {option}
