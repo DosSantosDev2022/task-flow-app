@@ -4,7 +4,8 @@ import { CiSearch } from 'react-icons/ci'
 import { ProjectCards } from './projectsCards'
 import { useForm } from 'react-hook-form'
 import { Project } from '@prisma/client'
-import { useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
+import { SkeletonProjectListCards } from './skeletons/SkeletonProjectList'
 
 type InputSearch = {
   search: string
@@ -41,7 +42,7 @@ export function ProjectList() {
     )
   }, [project, searchTerm])
 
-  if (loading) return <div>Carregando...</div>
+  if (loading) return <SkeletonProjectListCards />
 
   return (
     <div className="col-span-3  px-2 py-3 border h-full ">
@@ -59,12 +60,17 @@ export function ProjectList() {
       <div className="flex flex-col gap-1 mt-2 overflow-y-auto max-h-[424px] scrollbar-thin scrollbar-track-zinc-50 scrollbar-thumb-zinc-600 p-2">
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
-            <ProjectCards
-              id={project.id}
-              image=""
-              name={project.title}
-              key={project.id}
-            />
+            <Suspense key={project.id} fallback={<SkeletonProjectListCards />}>
+              <ProjectCards
+                slug={project.slug}
+                id={project.id}
+                title={project.title}
+                description={project.description}
+                endDate={project.endDate}
+                startDate={project.startDate}
+                userId={project.userId}
+              />
+            </Suspense>
           ))
         ) : (
           <span>Nenhum projeto encontrado !</span>
