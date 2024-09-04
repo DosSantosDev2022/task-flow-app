@@ -10,16 +10,26 @@ interface TasksPageParams {
   }
 }
 
+async function getTasks({ params }: TasksPageParams) {
+  try {
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId: params.id,
+      },
+    })
+
+    return tasks
+  } catch (error) {
+    console.error('Erro ao buscar tarefas', error)
+  }
+}
+
 export default async function TasksPage({ params }: TasksPageParams) {
-  const data = await prisma.task.findMany({
-    where: {
-      projectId: params.id,
-    },
-  })
+  const data = await getTasks({ params })
 
   const Selectedproject = await prisma.project.findMany({})
   const project = Selectedproject.find((p) => p.id === params.id)
-  console.log(data)
+
   return (
     <>
       <div className="bg-zinc-50 h-20 flex items-center justify-between w-full p-2">
@@ -49,7 +59,7 @@ export default async function TasksPage({ params }: TasksPageParams) {
         </Deadiline.Root>
       </div>
 
-      <Tasks tasks={data} />
+      <Tasks tasks={data || []} />
     </>
   )
 }
