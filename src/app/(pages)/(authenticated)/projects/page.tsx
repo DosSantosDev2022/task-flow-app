@@ -16,10 +16,17 @@ import { CiSearch } from 'react-icons/ci'
 import { BiExport } from 'react-icons/bi'
 import { FilterProjects } from '@/components/pages/projects/filterProjects'
 import { CreatedProject } from '@/components/pages/projects/createdProject/createdProject'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { getServerSession } from 'next-auth'
 
 async function getProjects() {
+  const session = await getServerSession(authOptions)
   try {
-    const projects = await prisma.project.findMany()
+    const projects = await prisma.project.findMany({
+      where: {
+        userId: session?.user.id,
+      },
+    })
     return projects
   } catch (error) {
     console.error('Erro ao buscar projetos, verifique !', error)
