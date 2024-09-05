@@ -15,6 +15,7 @@ import { RxOpenInNewWindow } from 'react-icons/rx'
 import { CiSearch } from 'react-icons/ci'
 import { BiExport } from 'react-icons/bi'
 import { FilterProjects } from '@/components/pages/projects/filterProjects'
+import { CreatedProject } from '@/components/pages/projects/createdProject/createdProject'
 
 async function getProjects() {
   try {
@@ -33,9 +34,7 @@ export default async function Projects() {
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
         <div className="flex items-center gap-2 px-2 py-3">
-          <Button sizes="xs" variant="highlight">
-            Novo Projeto
-          </Button>
+          <CreatedProject />
         </div>
 
         <div className="flex items-center gap-2">
