@@ -14,6 +14,7 @@ import TextArea from '@/components/global/textArea'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { useSession } from 'next-auth/react'
 
 const payments = [
   {
@@ -49,26 +50,30 @@ export function CreatedProject() {
   } = useForm<Form>({
     resolver: zodResolver(FormSchema),
   })
+  const { data } = useSession()
+  const token = data
+
+  /* if (!session) {
+    throw new Error('Você precisa estar logado para fazer essa requisição')
+  } */
 
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    /* console.log(data) */
     try {
-      const response = await fetch('/api/project/create', {
+      const response = await fetch(`/api/project/create`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
+          Authorization: `Bearer ${token?.user.id}`,
         },
         body: JSON.stringify({
           ...data,
-          startDate: new Date(data.startDate).toISOString(),
-          endDate: new Date(data.endDate).toISOString(),
-          price: parseFloat(data.price),
         }),
       })
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || 'Erro ao crirar projeto')
+        console.log(response)
+        throw new Error(error.error || 'Erro ao criar projeto')
       }
 
       alert('Projeto criado com sucesso!')
@@ -82,8 +87,8 @@ export function CreatedProject() {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button sizes="xs" variant="highlight">
-            Novo Projeto
+          <Button sizes="xs" variant="highlight" className="w-[112px] ">
+            Novo Projeto +
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
