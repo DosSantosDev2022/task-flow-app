@@ -19,8 +19,9 @@ import { CreatedProject } from '@/components/pages/projects/createdProject/creat
 import { LuCalendarDays, LuList, LuLoader2, LuUser } from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
 import { MdOutlineTitle } from 'react-icons/md'
-import { Project } from '@prisma/client'
 import { Pagination } from '@/components/global/pagination/pagination'
+import { Project } from '@prisma/client'
+/* import { getServerSession } from 'next-auth' */
 
 const tableHead = [
   {
@@ -56,13 +57,28 @@ const tableHead = [
     icon: <LuCalendarDays />,
   },
 ]
-async function getProjects(page: number, limit: number) {
+
+interface getProjectsResponse {
+  projects: Project[]
+  totalProjects?: number
+}
+
+async function getProjects(
+  page: number,
+  limit: number,
+): Promise<getProjectsResponse> {
   try {
+    /*  const session = await getSession()
+
+    if (!session || !session.user || !session.user.id) {
+      throw new Error('Usuário não autenticado')
+    } */
+
     // Faz a requisição à rota da API que retorna os projetos
     const baseUrl =
       typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
     const res = await fetch(
-      `${baseUrl}/api/project?page=${page}&limit=${limit}`,
+      `${baseUrl}/api/projects?page=${page}&limit=${limit}`,
       {
         method: 'GET',
         headers: {
@@ -76,13 +92,13 @@ async function getProjects(page: number, limit: number) {
     }
 
     // Obtém os dados da resposta
-    const data: Project[] = await res.json()
-    console.log('Resposta da API:', data)
-
-    return data
+    const { projects, totalProjects } = await res.json()
+    console.log(projects)
+    console.log(totalProjects)
+    return { projects, totalProjects }
   } catch (error) {
     console.error('Erro ao buscar projetos:', error)
-    return []
+    return { projects: [] }
   }
 }
 
@@ -97,7 +113,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   const page = Number(searchParams.page) || 1
   const limit = Number(searchParams.limit) || 10
 
-  const projects = await getProjects(page, limit)
+  const { projects, totalProjects } = await getProjects(page, limit)
   return (
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
@@ -150,7 +166,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {projects.map((project) => (
+              {projects.map((project: Project) => (
                 <TableRow key={project.id}>
                   <TableCell>{project.title}</TableCell>
                   <TableCell>{project.description}</TableCell>
@@ -177,7 +193,9 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
             </TableBody>
             <TableFooter>
               <TableRow className="hover:opacity-100">
-                <TableCell colSpan={5}>Total de Projetos: {limit}</TableCell>
+                <TableCell colSpan={5}>
+                  Total de Projetos:{totalProjects}{' '}
+                </TableCell>
               </TableRow>
             </TableFooter>
           </Table>
