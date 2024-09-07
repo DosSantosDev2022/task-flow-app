@@ -1,4 +1,3 @@
-import { prisma } from '@/lib/prisma'
 import {
   TableBody,
   TableCaption,
@@ -7,6 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableItem,
   Table,
 } from '@/components/global/table'
 import { Input } from '@/components/global/input'
@@ -16,27 +16,88 @@ import { CiSearch } from 'react-icons/ci'
 import { BiExport } from 'react-icons/bi'
 import { FilterProjects } from '@/components/pages/projects/filterProjects'
 import { CreatedProject } from '@/components/pages/projects/createdProject/createdProject'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { getServerSession } from 'next-auth'
+import { LuCalendarDays, LuList, LuLoader2, LuUser } from 'react-icons/lu'
+import { RiProgress1Line } from 'react-icons/ri'
+import { MdOutlineTitle } from 'react-icons/md'
+import { Project } from '@prisma/client'
+import { Pagination } from '@/components/global/pagination/pagination'
 
-async function getProjects() {
-  const session = await getServerSession(authOptions)
+const tableHead = [
+  {
+    title: 'Título',
+    icon: <MdOutlineTitle />,
+  },
+  {
+    title: 'Descrição',
+    icon: <LuList />,
+  },
+  {
+    title: 'Cliente',
+    icon: <LuUser />,
+  },
+  {
+    title: 'Data de início',
+    icon: <LuCalendarDays />,
+  },
+  {
+    title: 'Data de entrega',
+    icon: <LuCalendarDays />,
+  },
+  {
+    title: 'Progresso',
+    icon: <RiProgress1Line />,
+  },
+  {
+    title: 'Status',
+    icon: <LuLoader2 />,
+  },
+  {
+    title: 'Visualizar',
+    icon: <LuCalendarDays />,
+  },
+]
+async function getProjects(page: number, limit: number) {
   try {
-    const projects = await prisma.project.findMany({
-      where: {
-        userId: session?.user.id,
+    // Faz a requisição à rota da API que retorna os projetos
+    const baseUrl =
+      typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
+    const res = await fetch(
+      `${baseUrl}/api/project?page=${page}&limit=${limit}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    })
-    return projects
+    )
+
+    if (!res.ok) {
+      throw new Error('Erro ao buscar projetos')
+    }
+
+    // Obtém os dados da resposta
+    const data: Project[] = await res.json()
+    console.log('Resposta da API:', data)
+
+    return data
   } catch (error) {
-    console.error('Erro ao buscar projetos, verifique !', error)
+    console.error('Erro ao buscar projetos:', error)
     return []
   }
 }
 
-export default async function Projects() {
-  const projects = await getProjects()
+interface ProjectSearchParams {
+  searchParams: {
+    page: string
+    limit: string
+  }
+}
 
+export default async function Projects({ searchParams }: ProjectSearchParams) {
+  const page = Number(searchParams.page) || 1
+  const limit = Number(searchParams.limit) || 10
+
+  const projects = await getProjects(page, limit)
   return (
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
@@ -67,14 +128,25 @@ export default async function Projects() {
           <p>Nenhum projeto encontrado.</p>
         ) : (
           <Table>
-            <TableCaption>Lista de Projetos</TableCaption>
-            <TableHeader>
-              <TableRow className="hover:opacity-100">
-                <TableHead>Título</TableHead>
-                <TableHead>Descrição</TableHead>
-                <TableHead>Início</TableHead>
-                <TableHead>Fim</TableHead>
-                <TableHead>Visualizar</TableHead>
+            <TableCaption>
+              <Pagination limit={limit} page={page} total={limit} />
+            </TableCaption>
+            <TableHeader className="rounded-t-md">
+              <TableRow className="hover:opacity-100 bg-zinc-800 ">
+                {tableHead.map((item, index) => (
+                  <TableHead key={index}>
+                    <div className="flex items-center gap-2 justify-start">
+                      {item.icon && (
+                        <span className="text-lg font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
+                          {item.icon}
+                        </span>
+                      )}
+                      <span className="font-medium text-zinc-50">
+                        {item.title}
+                      </span>
+                    </div>
+                  </TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -82,11 +154,18 @@ export default async function Projects() {
                 <TableRow key={project.id}>
                   <TableCell>{project.title}</TableCell>
                   <TableCell>{project.description}</TableCell>
+                  <TableCell>{project.clientId}</TableCell>
                   <TableCell>
                     {new Date(project.startDate).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
                     {new Date(project.endDate).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell></TableCell>
+                  <TableCell>
+                    <TableItem className="rounded-md bg-green-500 text-zinc-100">
+                      status
+                    </TableItem>
                   </TableCell>
                   <TableCell>
                     <Button variant="link" sizes="icon">
@@ -98,9 +177,7 @@ export default async function Projects() {
             </TableBody>
             <TableFooter>
               <TableRow className="hover:opacity-100">
-                <TableCell colSpan={5}>
-                  Total de Projetos: {projects.length}
-                </TableCell>
+                <TableCell colSpan={5}>Total de Projetos: {limit}</TableCell>
               </TableRow>
             </TableFooter>
           </Table>
