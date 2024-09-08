@@ -14,7 +14,7 @@ export default async function RootLayout({
 }>) {
   return (
     <div className="grid grid-cols-12 gap-2 p-2">
-      <ProjectList />
+      <ProjectList  />
       <div className="col-span-9 border h-screen">{children}</div>
     </div>
   )
