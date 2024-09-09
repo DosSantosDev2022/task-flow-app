@@ -9,9 +9,17 @@ interface PaginationProps {
   page: number
   limit: number
   total: number
+  baseUrl: string
+  queryParams?: Record<string, string | number>
 }
 
-export function Pagination({ page, limit, total }: PaginationProps) {
+export function Pagination({
+  page,
+  limit,
+  total,
+  baseUrl,
+  queryParams = {},
+}: PaginationProps) {
   const { pages } = usePagination({
     page,
     limit,
@@ -20,6 +28,16 @@ export function Pagination({ page, limit, total }: PaginationProps) {
 
   const isFirstPage = page === 1
   const isLastPage = page === Math.ceil(total / limit)
+
+  const buildUrl = (pageNumber: string | number) => {
+    const url = new URL(baseUrl, window.location.origin)
+    url.searchParams.set('page', pageNumber.toString())
+    Object.entries(queryParams).forEach(([key, value]) => {
+      url.searchParams.set(key, value.toString())
+    })
+
+    return url.toString()
+  }
 
   return (
     <div className="mt-8 flex w-full items-center justify-between p-2">
@@ -36,7 +54,7 @@ export function Pagination({ page, limit, total }: PaginationProps) {
           variant="outline"
           asChild
         >
-          <Link href={!isFirstPage ? `/Projects?page=1` : '#'} passHref>
+          <Link href={!isFirstPage ? buildUrl(1) : '#'} passHref>
             <LuChevronsLeft />
           </Link>
         </Button>
@@ -50,9 +68,7 @@ export function Pagination({ page, limit, total }: PaginationProps) {
               page === pageNumber ? 'pointer-events-none border opacity-50' : ''
             }`}
           >
-            <Link
-              href={page !== pageNumber ? `/Projects?page=${pageNumber}` : '#'}
-            >
+            <Link href={page !== pageNumber ? buildUrl(pageNumber) : '#'}>
               {pageNumber}
             </Link>
           </Button>
@@ -66,10 +82,7 @@ export function Pagination({ page, limit, total }: PaginationProps) {
           }`}
           asChild
         >
-          <Link
-            href={!isLastPage ? `/Projects?page=${page + 1}` : '#'}
-            passHref
-          >
+          <Link href={!isLastPage ? buildUrl(page + 1) : '#'} passHref>
             <LuChevronsRight />
           </Link>
         </Button>
