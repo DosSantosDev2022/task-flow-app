@@ -4,6 +4,7 @@ import { usePagination } from '@/hooks/usePagination'
 import { Button } from '@/components/global/button'
 import Link from 'next/link'
 import { LuChevronsLeft, LuChevronsRight } from 'react-icons/lu'
+import { error } from 'console'
 
 interface PaginationProps {
   page: number
@@ -30,13 +31,25 @@ export function Pagination({
   const isLastPage = page === Math.ceil(total / limit)
 
   const buildUrl = (pageNumber: string | number) => {
-    const url = new URL(baseUrl, window.location.origin)
-    url.searchParams.set('page', pageNumber.toString())
-    Object.entries(queryParams).forEach(([key, value]) => {
-      url.searchParams.set(key, value.toString())
-    })
+  
+    try {
+      if(!baseUrl) {
+          throw new Error('baseUrl deve ser uma string válida')
+      }
 
-    return url.toString()
+      // crie a url
+      const url = new URL(baseUrl, window.location.origin)
+      url.searchParams.set('page', pageNumber.toString())
+
+      // Adicione parâmetros de consulta adicionais, se existirem
+      Object.entries(queryParams).forEach(([key, value]) => {
+        url.searchParams.set(key, value.toString())
+      })
+      return url.toString()
+    } catch(error ) {
+      console.error ('Erro ao construír URL', error)
+      return ''
+    } 
   }
 
   return (
