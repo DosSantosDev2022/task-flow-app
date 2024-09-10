@@ -9,8 +9,8 @@ interface ProjectDetailsParams {
 }
 const fetchProjectData = async (slug: string) => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-    const response = await fetch(`${baseUrl}/api/project/${slug}`)
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ''
+    const response = await fetch(`${baseUrl}/api/projects/${slug}`)
 
     if (!response.ok) {
       const errorData = await response.json()
@@ -18,6 +18,7 @@ const fetchProjectData = async (slug: string) => {
     }
 
     const data: Project = await response.json()
+    console.log(data)
     return data
   } catch (error) {
     console.error(error, 'Erro ao buscar o projeto')
