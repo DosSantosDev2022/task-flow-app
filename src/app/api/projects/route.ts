@@ -6,6 +6,7 @@ import { authOptions } from '../auth/[...nextauth]/route' */
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
+    const search = searchParams.get('search') || ''
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
 
@@ -24,13 +25,23 @@ export async function GET(req: NextRequest) {
     /* const userId = session?.user.id */
     /* console.log('userId da seção', userId) */
     const projects = await prisma.project.findMany({
-      /*  where: { userId }, */
+      where: {
+        title: {
+          contains: search,
+          mode: 'insensitive'
+        }
+      },
       skip: (page - 1) * limit,
       take: limit,
     })
 
     const totalProjects = await prisma.project.count({
-      /*  where: { userId }, */
+      where: {
+        title: {
+          contains: search,
+          mode: 'insensitive'
+        }
+      },
     })
 
     return NextResponse.json({ projects, totalProjects }, { status: 200 })
