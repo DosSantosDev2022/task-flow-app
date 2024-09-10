@@ -7,5 +7,7 @@ interface NavigationListProps {
 }
 
 export function NavigationList({ children, className }: NavigationListProps) {
-  return <ul className={twMerge(' space-y-4', className)}>{children} </ul>
+  return (
+    <ul className={twMerge('space-y-4 font-medium', className)}>{children} </ul>
+  )
 }

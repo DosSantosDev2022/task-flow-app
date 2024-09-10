@@ -7,5 +7,5 @@ interface NavigationRootProps {
 }
 
 export function NavigationRoot({ children, className }: NavigationRootProps) {
-  return <nav className={twMerge('', className)}>{children}</nav>
+  return <nav className={twMerge('w-full', className)}>{children}</nav>
 }
