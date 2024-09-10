@@ -1,22 +1,29 @@
 'use client'
 import { Button } from '@/components/global/button'
 import { Navigation } from '@/components/global/navigation'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { FaEllipsisVertical } from 'react-icons/fa6'
 import { EditProjectModal } from './modal/editProjectModal'
 import { DeleteProjectModal } from './modal/deletProjectModal'
+import { Project } from '@prisma/client'
+import { Avatar } from '@/components/global/avatar'
 
-interface ProjectCardsProps {
-  name: string
-  image: string
-  id: string
-}
-
-export function ProjectCards({ name, id }: ProjectCardsProps) {
+export function ProjectCards({
+  title,
+  slug,
+  id,
+  description,
+  startDate,
+  endDate,
+  userId,
+  price,
+  payment,
+  clientId,
+}: Project) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeModal, setActiveModal] = useState<'edit' | 'delete' | null>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
@@ -44,21 +51,44 @@ export function ProjectCards({ name, id }: ProjectCardsProps) {
   const projectLinks = [
     {
       id: '1',
-      name: 'Tarefas do projeto',
+      name: 'Tarefas',
       action: () => {
-        // Navegar para a página de tarefas
-        router.push(`/tasks/${id}`)
+        router.push(`/tasks/${slug}`)
       },
     },
     {
       id: '2',
-      name: 'Editar projeto',
-      action: () => setActiveModal('edit'),
+      name: 'Editar',
+      action: () => {
+        const projectData = {
+          id,
+          title,
+          slug,
+          description,
+          endDate,
+          startDate,
+          userId,
+          price,
+          payment,
+          clientId,
+        }
+        setSelectedProject(projectData)
+        setActiveModal('edit')
+      },
     },
     {
       id: '3',
-      name: 'Excluir projeto',
-      action: () => setActiveModal('delete'),
+      name: 'Excluir',
+      action: () => {
+        setActiveModal('delete')
+      },
+    },
+    {
+      id: '4',
+      name: 'Arquivar',
+      action: () => {
+        setActiveModal('delete')
+      },
     },
   ]
 
@@ -67,16 +97,9 @@ export function ProjectCards({ name, id }: ProjectCardsProps) {
       <div className="px-2 py-3  bg-zinc-50 border border-zinc-100 rounded-lg flex flex-col items-center justify-between w-full">
         <div className="flex w-full justify-between gap-2 items-start">
           <div className="flex items-center justify-center gap-2 w-full border py-2 px-1">
-            <Image
-              src={'/cover.jpg'}
-              alt="Icone do projeto"
-              width={36}
-              height={36}
-              quality={100}
-              className="bg-zinc-800 rounded-full"
-            />
+            <Avatar Alt="Icone do projeto" name={title} Url="" />
             <span className="text-zinc-600 font-normal text-sm w-full">
-              {name}
+              {title}
             </span>
           </div>
 
@@ -117,10 +140,13 @@ export function ProjectCards({ name, id }: ProjectCardsProps) {
       </div>
 
       {/* Modal para Editar Projeto */}
-      <EditProjectModal
-        isOpen={activeModal === 'edit'}
-        isOnChange={() => setActiveModal(null)}
-      />
+      {selectedProject && (
+        <EditProjectModal
+          isOpen={activeModal === 'edit'}
+          isOnChange={() => setActiveModal(null)}
+          projectData={selectedProject} // Agora é garantido que não será null
+        />
+      )}
       {/* Modal para Excluir Projeto */}
       <DeleteProjectModal
         isOpen={activeModal === 'delete'}

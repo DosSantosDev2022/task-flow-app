@@ -1,3 +1,4 @@
+'use client'
 import { PiPlus } from 'react-icons/pi'
 import {
   Dialog,
@@ -10,66 +11,59 @@ import { Input } from '@/components/global/input'
 import { Label } from '@/components/global/label'
 import { Button } from '@/components/global/button'
 import TextArea from '@/components/global/textArea'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  SelectContent,
-  SelectInput,
-  SelectOption,
-  SelectProvider,
-  SelectRoot,
-  SelectTrigger,
-} from '@/components/global/select'
+import { FormTaskSchema, TaskFormData } from '@/@types/schemas/FormSchemaTasks'
+import { addNewTaskAction } from '@/app/actions/tasks/addNewTask'
+import { useNotification } from '@/contexts/NotificationContext'
+import { useSession } from 'next-auth/react'
+import { useState } from 'react'
+import { Task } from '@prisma/client'
 
-export function AddNewTasksModal() {
-  const taskSchema = z.object({
-    taskName: z.string().min(1, 'O nome da tarefa é obrigatório'),
-    projectName: z.string().min(1, 'Selecione um projeto'),
-    startDate: z.string().min(1, 'Selecione uma data inicial'),
-    endDate: z.string().min(1, 'Selecione uma data de entrega'),
-    description: z.string().min(1, 'A descrição da tarefa é obrigatória'),
-  })
+interface TaskAddFormProps {
+  projectId: string
+  onAddTask: (task: Task) => void // Adiciona a prop onAddTask
+}
 
-  type Form = z.infer<typeof taskSchema>
-
+export function TaskAddForm({projectId,onAddTask}: TaskAddFormProps) {
+  const { data } = useSession()
+  const [isLoading, setIsLoading] = useState(false)
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const { showNotification } = useNotification()
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm<Form>({
-    resolver: zodResolver(taskSchema),
+  } = useForm<TaskFormData>({
+    resolver: zodResolver(FormTaskSchema),
   })
 
-  const creatTask = () => {}
+  const onSubmitAction: SubmitHandler<TaskFormData> = async (formData) => {
+    try {
+      setIsLoading(true)
+      const newTask = await addNewTaskAction({...formData, projectId}) // server action
+      console.log(newTask)
+       if(newTask) {
+        onAddTask(newTask)
+       } else {
+        throw new Error('A terefa criada é indefinida')
+       }
 
-  const onSubmit = async (data) => {
-    await creatTask(data)
-    console.log(data)
-    reset()
+      
+      setIsOpenModal(false)
+      showNotification('Tarefa cadastrada com sucesso!', 'success', 5000)
+    } catch (error) {
+      console.error('Erro ao criar projtarefa, verifique :', error)
+      setIsOpenModal(false)
+      showNotification('Erro ao cadastrar tarefa, verifique!', 'error', 5000)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const options = [
-    {
-      label: 'Projeto 001',
-    },
-    {
-      label: 'Projeto 002',
-    },
-    {
-      label: 'Projeto 003',
-    },
-    {
-      label: 'Projeto 004',
-    },
-    {
-      label: 'Projeto 005',
-    },
-  ]
 
   return (
-    <Dialog>
+    <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <DialogTrigger className="bg-violet-600 w-40 rounded-2xl px-2 py-3 text-zinc-50 justify-center  flex gap-1 items-center">
         <PiPlus />
         <span className="text-base">Nova tarefa</span>
@@ -82,9 +76,19 @@ export function AddNewTasksModal() {
         </DialogHeader>
 
         <form
+          onSubmit={handleSubmit(onSubmitAction)}
           className="overflow-y-auto overflow-x-hidden max-h-[468px]"
-          onSubmit={handleSubmit(onSubmit)}
         >
+          <input
+            {...register('userId')}
+            value={data?.user.id}
+            className="hidden"
+          />
+           <input
+            {...register('projectId')}
+            value={projectId}
+            className="hidden"
+          />
           <div className="flex flex-col gap-3 px-1 py-2 ">
             <div className="flex flex-col gap-1">
               <Label>Nome da tarefa</Label>
@@ -92,32 +96,12 @@ export function AddNewTasksModal() {
                 <Input.Input
                   type="text"
                   placeholder="Digite o nome da sua tarefa"
-                  {...register('taskName')}
+                  {...register('title')}
                 />
               </Input.Root>
-              {errors.taskName && (
+              {errors.title && (
                 <span className="text-red-500 text-sm font-normal">
-                  {errors.taskName.message}
-                </span>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <Label>Projeto</Label>
-              <SelectProvider searchable>
-                <SelectRoot>
-                  <SelectTrigger />
-                  <SelectContent>
-                    <SelectInput placeholder="Buscar projetos" />
-                    {options.map((option) => (
-                      <SelectOption key={option.label} option={option.label} />
-                    ))}
-                  </SelectContent>
-                </SelectRoot>
-              </SelectProvider>
-              {errors.projectName && (
-                <span className="text-red-500 text-sm font-normal">
-                  {errors.projectName.message}
+                  {errors.title.message}
                 </span>
               )}
             </div>
@@ -171,8 +155,16 @@ export function AddNewTasksModal() {
             </div>
 
             <div className="w-full flex items-center gap-2 justify-end p-2">
-              <Button variant="highlight">Cadastrar</Button>
-              <Button variant="danger">Cancelar</Button>
+            <Button
+              isLoading={isLoading}
+              variant="highlight"
+              sizes="full"
+              className="text-base flex items-center justify-center"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Cadastrando...' : 'Cadastrar'}
+            </Button>
+              
             </div>
           </div>
         </form>
