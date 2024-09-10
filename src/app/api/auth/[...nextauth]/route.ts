@@ -13,26 +13,21 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  // Configuração para usar JWT
   /* session: {
     strategy: 'jwt',
-  }, */
+  },
+  secret: process.env.NEXTAUTH_SECRET, */
   callbacks: {
-    /* async jwt({ token, user }) {
-      if (user) {
-        console.log('JWT Callback - Token:', token)
-        console.log('JWT Callback - User:', user)
-        token.id = user.id
-      }
-      return token
-    }, */
     async session({ session, user }) {
-      console.log('Session:', session)
-      session.user.id = user.id
+      console.log('Session callback:', { session, user })
+      session.user = { ...session.user, id: user.id } as {
+        id: string
+        name: string
+        email: string
+      }
       return session
     },
   },
-  /* secret: process.env.NEXTAUTH_SECRET, */
 }
 
 const handler = NextAuth(authOptions)
