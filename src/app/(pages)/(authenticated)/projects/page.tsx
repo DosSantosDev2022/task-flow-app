@@ -15,13 +15,16 @@ import { RxOpenInNewWindow } from 'react-icons/rx'
 import { CiSearch } from 'react-icons/ci'
 import { BiExport } from 'react-icons/bi'
 import { FilterProjects } from '@/components/pages/projects/filterProjects'
-import { CreatedProject } from '@/components/pages/projects/createdProject/createdProject'
+/* import { CreatedProject } from '@/components/pages/projects/createdProject/createdProject' */
+import { ProjectCreationForm } from '@/components/pages/projects/createdProject/ProjectCreationForm'
 import { LuCalendarDays, LuList, LuLoader2, LuUser } from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
-import { MdOutlineTitle } from 'react-icons/md'
+import { MdArchive, MdOutlineTitle } from 'react-icons/md'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { Project } from '@prisma/client'
-/* import { getServerSession } from 'next-auth' */
+import { DeleteProject } from '@/components/pages/projects/deleteProject/deleteProject'
+import { getServerSession, Session } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 const tableHead = [
   {
@@ -53,27 +56,22 @@ const tableHead = [
     icon: <LuLoader2 />,
   },
   {
-    title: 'Visualizar',
+    title: 'Ações',
     icon: <LuCalendarDays />,
   },
 ]
 
 interface getProjectsResponse {
   projects: Project[]
-  totalProjects?: number
+  totalProjects: number
 }
 
 async function getProjects(
   page: number,
   limit: number,
+  session?: Session | null,
 ): Promise<getProjectsResponse> {
   try {
-    /*  const session = await getSession()
-
-    if (!session || !session.user || !session.user.id) {
-      throw new Error('Usuário não autenticado')
-    } */
-
     // Faz a requisição à rota da API que retorna os projetos
     const baseUrl =
       typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
@@ -83,7 +81,9 @@ async function getProjects(
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.user.id}`,
         },
+        cache: 'no-cache',
       },
     )
 
@@ -93,12 +93,11 @@ async function getProjects(
 
     // Obtém os dados da resposta
     const { projects, totalProjects } = await res.json()
-    console.log(projects)
-    console.log(totalProjects)
+
     return { projects, totalProjects }
   } catch (error) {
     console.error('Erro ao buscar projetos:', error)
-    return { projects: [] }
+    return { projects: [], totalProjects: 0 }
   }
 }
 
@@ -110,15 +109,19 @@ interface ProjectSearchParams {
 }
 
 export default async function Projects({ searchParams }: ProjectSearchParams) {
+  const session = await getServerSession(authOptions)
   const page = Number(searchParams.page) || 1
   const limit = Number(searchParams.limit) || 10
 
-  const { projects, totalProjects } = await getProjects(page, limit)
+  const { projects, totalProjects } = await getProjects(page, limit, session)
+  console.log('Session da pagina:', session)
+  const baseUrl = '/projects'
+
   return (
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
         <div className="flex items-center gap-2 px-2 py-3">
-          <CreatedProject />
+          <ProjectCreationForm />
         </div>
 
         <div className="flex items-center gap-2">
@@ -145,12 +148,18 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
         ) : (
           <Table>
             <TableCaption>
-              <Pagination limit={limit} page={page} total={limit} />
+              <Pagination
+                limit={limit}
+                page={page}
+                total={totalProjects}
+                baseUrl={baseUrl}
+                queryParams={{}}
+              />
             </TableCaption>
             <TableHeader className="rounded-t-md">
-              <TableRow className="hover:opacity-100 bg-zinc-800 ">
+              <TableRow className=" bg-zinc-800">
                 {tableHead.map((item, index) => (
-                  <TableHead key={index}>
+                  <TableHead key={index} className="whitespace-nowrap">
                     <div className="flex items-center gap-2 justify-start">
                       {item.icon && (
                         <span className="text-lg font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
@@ -183,9 +192,21 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                       status
                     </TableItem>
                   </TableCell>
-                  <TableCell>
-                    <Button variant="link" sizes="icon">
-                      <RxOpenInNewWindow size={24} />
+                  <TableCell className="flex items-center justify-center gap-1">
+                    <Button
+                      className="hover:scale-105 duration-200"
+                      variant="outline"
+                      sizes="icon"
+                    >
+                      <RxOpenInNewWindow size={14} />
+                    </Button>
+                    <DeleteProject id={project.id} />
+                    <Button
+                      className="hover:scale-105 duration-200"
+                      variant="secundary"
+                      sizes="icon"
+                    >
+                      <MdArchive size={14} />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -193,8 +214,9 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
             </TableBody>
             <TableFooter>
               <TableRow className="hover:opacity-100">
-                <TableCell colSpan={5}>
-                  Total de Projetos:{totalProjects}{' '}
+                <TableCell colSpan={8} className="font-bold ">
+                  Total de Projetos:{' '}
+                  <span className="font-normal">{totalProjects}</span>
                 </TableCell>
               </TableRow>
             </TableFooter>

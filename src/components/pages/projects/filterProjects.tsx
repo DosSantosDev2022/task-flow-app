@@ -5,13 +5,6 @@ import { IoFilter } from 'react-icons/io5'
 import { Button } from '@/components/global/button'
 import { Input } from '@/components/global/input'
 import { Label } from '@/components/global/label'
-import {
-  SelectProvider,
-  SelectRoot,
-  SelectTrigger,
-  SelectOption,
-  SelectContent,
-} from '@/components/global/select'
 
 export function FilterProjects() {
   const status = [
@@ -56,16 +49,14 @@ export function FilterProjects() {
 
             <div className="flex flex-col gap-1">
               <Label>Status</Label>
-              <SelectProvider>
-                <SelectRoot>
-                  <SelectTrigger />
-                  <SelectContent>
-                    {status.map((status, index) => (
-                      <SelectOption option={status.label} key={index} />
-                    ))}
-                  </SelectContent>
-                </SelectRoot>
-              </SelectProvider>
+
+              <select>
+                {status.map((status, index) => (
+                  <option value={status.label} key={index}>
+                    {status.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

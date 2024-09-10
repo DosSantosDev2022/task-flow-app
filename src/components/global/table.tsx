@@ -61,7 +61,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, ComponentProps<'tr'>>(
   ({ className, ...props }, ref) => (
     <tr
       className={twMerge(
-        'border-b  hover:opacity-60 duration-300 transition-all data-[state=selected]:bg-zinc-200',
+        'border-b duration-300 transition-all data-[state=selected]:bg-zinc-200',
         className,
       )}
       {...props}
@@ -76,7 +76,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, ComponentProps<'th'>>(
   ({ className, ...props }, ref) => (
     <th
       className={twMerge(
-        'h-10 px-2 text-left align-middle font-medium text-zinc-700 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'h-10 px-2  text-left align-middle font-medium text-zinc-700 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
         className,
       )}
       {...props}
@@ -91,7 +91,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, ComponentProps<'td'>>(
   ({ className, ...props }, ref) => (
     <td
       className={twMerge(
-        'p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'p-2 align-middle max-w-xs truncate text-zinc-500 font-normal text-sm [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
         className,
       )}
       {...props}
@@ -114,6 +114,18 @@ const TableCaption = React.forwardRef<
 ))
 TableCaption.displayName = 'TableCaption'
 
+const TableItem = React.forwardRef<HTMLSpanElement, ComponentProps<'span'>>(
+  ({ className, ...props }, ref) => (
+    <span
+      className={twMerge('w-full px-2 py-1.5 flex-1', className)}
+      {...props}
+      ref={ref}
+    />
+  ),
+)
+
+TableItem.displayName = ''
+
 export {
   TableBody,
   TableCaption,
@@ -123,4 +135,5 @@ export {
   TableHeader,
   TableRow,
   Table,
+  TableItem,
 }

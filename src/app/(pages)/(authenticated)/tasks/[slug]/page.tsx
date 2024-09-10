@@ -2,7 +2,6 @@ import { Avatar } from '@/components/global/avatar'
 import { Deadiline } from '@/components/pages/tasks/deadline'
 import { ProgressBar } from '@/components/pages/tasks/progressBar'
 import { Tasks } from '@/components/pages/tasks/tasks'
-import { prisma } from '@/lib/prisma'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import Image from 'next/image'
@@ -45,9 +44,7 @@ async function getTasks({ params }: TasksPageParams) {
 
 export default async function TasksPage({ params }: TasksPageParams) {
   const { project, tasks } = await getTasks({ params })
-
-
-
+  
   return (
     <>
       <div className="bg-zinc-50 h-20 flex items-center justify-between w-full p-2">
@@ -78,7 +75,7 @@ export default async function TasksPage({ params }: TasksPageParams) {
         </Deadiline.Root>
       </div>
 
-      <Tasks tasks={tasks || []} />
+      <Tasks projectId={project.id} tasks={tasks || []} />
     </>
   )
 }
