@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import '@/styles/globals.css'
 import { SideBar } from '@/components/global/sideBar'
 import { Header } from '@/components/global/header'
+import { NotificationProvider } from '@/contexts/NotificationContext'
 
 export const metadata: Metadata = {
   title: 'Task Flow App',
@@ -14,12 +15,18 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <div className="flex flex-row w-screen h-screen overflow-hidden ">
+    <>
+      <NotificationProvider>
+      <div className="flex flex-row w-screen h-screen overflow-hidden ">
       <SideBar />
       <div className="flex-1 flex flex-col">
         <Header />
         <div className="flex-1 min-h-0 overflow-auto">{children}</div>
       </div>
     </div>
+
+      </NotificationProvider>
+    </>
+    
   )
 }
