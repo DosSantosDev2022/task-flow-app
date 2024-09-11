@@ -9,6 +9,7 @@ export interface ButtonProps
   isLoading?: boolean
   asChild?: boolean
   sizes?: 'xs' | 'sm' | 'lg' | 'icon' | 'full'
+  effects?: 'scale' | 'none'
   variant?:
     | 'primary'
     | 'secundary'
@@ -28,6 +29,7 @@ export function Button({
   className,
   isLoading = false,
   sizes = 'xs',
+  effects = 'none',
   variant = 'primary',
   asChild = false,
   ref,
@@ -37,7 +39,7 @@ export function Button({
     primary: 'bg-primary-900 text-secondary-50 hover:bg-primary-800',
     secundary: 'bg-zinc-300 text-zinc-900 hover:bg-zinc-200',
     outline:
-      'bg-transparent border border-secundary text-light hover:bg-primary ',
+      'bg-transparent border border-zinc-100 text-light hover:bg-zinc-200 ',
     highlight: 'text-zinc-50 hover:bg-violet-800 duration-300 bg-violet-900',
     disabled:
       'bg-opacity-80 bg-primary-950 border border-primary-800 text-secondary-950',
@@ -57,11 +59,16 @@ export function Button({
     icon: 'h-6 w-6 p-1 ',
     full: 'h-10 px-4 py-2 w-full text-lg',
   }
+  const effectsClasses = {
+    scale: 'active:scale-75 duration-200',
+    none: 'scele-0',
+  }
 
   const _className = twMerge(
     variantClasses[variant],
     sizeClasses[sizes],
-    `appearance-none rounded-md  flex items-center justify-center  font-normal transition-all duration-500 `,
+    effectsClasses[effects],
+    `appearance-none rounded-md py-1.5  text-sm flex items-center justify-center  font-normal transition-all duration-500 `,
     className,
   )
   const Comp = asChild ? Slot : 'button'
