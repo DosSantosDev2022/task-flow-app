@@ -8,13 +8,14 @@ import {
   PopoverTrigger,
 } from '@/components/global/popover'
 import { IoFilterCircle } from 'react-icons/io5'
+import { LuX } from 'react-icons/lu'
 
 export function FilterByDate() {
   return (
     <>
       <Popover>
-        <PopoverTrigger>
-          <IoFilterCircle size={24} />
+        <PopoverTrigger className='text-sm active:scale-95 duration-200'>
+          <IoFilterCircle size={18} />
           <span>Data</span>
         </PopoverTrigger>
 
@@ -24,7 +25,12 @@ export function FilterByDate() {
           side="bottom"
           align="end"
         >
-          <h3 className="text-base font-medium mb-2">Filtros</h3>
+          <div className='flex items-center w-full justify-between'>
+            <h3 className="text-base font-medium mb-2">Filtros</h3>
+            <PopoverClose className='active:scale-95 p-1 border rounded-md hover:bg-zinc-200 duration-200'>
+               <LuX size={16}/>
+            </PopoverClose>
+          </div>
 
           <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-1">
@@ -41,12 +47,9 @@ export function FilterByDate() {
               </Input.Root>
             </div>
           </div>
-
-          <PopoverClose asChild>
-            <Button sizes="full" variant="highlight" className="mt-4 text-md">
-              Aplicar
-            </Button>
-          </PopoverClose>
+          <Button sizes="full" variant="highlight" className="mt-4 text-md">
+            Aplicar
+          </Button>
         </PopoverContent>
       </Popover>
     </>

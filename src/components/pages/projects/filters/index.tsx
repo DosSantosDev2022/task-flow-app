@@ -28,7 +28,7 @@ export function FilterProjects() {
 
   return (
     <div className="flex items-center gap-2">
-      <Input.Root>
+      <Input.Root className='h-9'>
         <Input.Icon>
           <CiSearch size={24} className="text-zinc-400" />
         </Input.Icon>
