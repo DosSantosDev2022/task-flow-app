@@ -81,18 +81,20 @@ model Client {
 }
 
 model Project {
-  id          String   @id @default(uuid())
+  id          String          @id @default(uuid())
   title       String
-  slug        String   @unique @default("")
+  slug        String          @unique @default("")
   description String?
   startDate   DateTime
   endDate     DateTime
-  price       Decimal  @db.Decimal(10, 2)
-  payment     Payment  @default(DEBITO)
+  price       Decimal         @db.Decimal(10, 2)
+  payment     Payment
+  status      ProjectStatus   @default(PENDENTES)
+  priority    ProjectPriority
   tasks       Task[]
-  user        User     @relation(fields: [userId], references: [id])
+  user        User            @relation(fields: [userId], references: [id])
   userId      String
-  client      Client?  @relation("ClientProjects", fields: [clientId], references: [id])
+  client      Client?         @relation("ClientProjects", fields: [clientId], references: [id])
   clientId    String?
 
   @@map("projects")
@@ -124,4 +126,16 @@ enum TaskStatus {
   A_FAZER
   EM_ANDAMENTO
   CONCLUIDO
+}
+
+enum ProjectStatus {
+  TODOS
+  PENDENTES
+  FINALIZADOS
+}
+
+enum ProjectPriority {
+  ALTA
+  MEDIA
+  BAIXA
 }

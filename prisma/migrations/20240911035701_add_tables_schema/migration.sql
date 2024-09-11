@@ -5,7 +5,10 @@ CREATE TYPE "Payment" AS ENUM ('CREDITO', 'DEBITO', 'DINHEIRO', 'PIX');
 CREATE TYPE "TaskStatus" AS ENUM ('A_FAZER', 'EM_ANDAMENTO', 'CONCLUIDO');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('TODOS', 'PENDENTES', 'FINALIZADOS');
+CREATE TYPE "ProjectStatus" AS ENUM ('TODOS', 'PENDENTES', 'FINALIZADOS');
+
+-- CreateEnum
+CREATE TYPE "ProjectPriority" AS ENUM ('ALTA', 'MEDIA', 'BAIXA');
 
 -- CreateTable
 CREATE TABLE "accounts" (
@@ -77,11 +80,12 @@ CREATE TABLE "projects" (
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL DEFAULT '',
     "description" TEXT,
-    "status" "Status" NOT NULL DEFAULT 'PENDENTES',
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
     "price" DECIMAL(10,2) NOT NULL,
-    "payment" "Payment" NOT NULL DEFAULT 'DEBITO',
+    "payment" "Payment" NOT NULL,
+    "status" "ProjectStatus" NOT NULL DEFAULT 'PENDENTES',
+    "priority" "ProjectPriority" NOT NULL,
     "userId" TEXT NOT NULL,
     "clientId" TEXT,
 
