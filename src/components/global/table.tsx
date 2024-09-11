@@ -47,7 +47,7 @@ const TableFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     className={twMerge(
-      'border-t bg-zinc-100 font-medium [&>tr]:last:border-b-0 ',
+      'border-t bg-zinc-100 font-medium [&>tr]:last:border-b-0 w-full flex items-center',
       className,
     )}
     {...props}

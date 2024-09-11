@@ -11,60 +11,17 @@ import {
 } from '@/components/global/table'
 import { FilterProjects } from '@/components/pages/projects/filters/'
 import { ProjectCreationForm } from '@/components/pages/projects/createdProject/ProjectCreationForm'
-import {
-  LuCalendarDays,
-  LuList,
-  LuLoader2,
-  LuRedoDot,
-  LuUser,
-} from 'react-icons/lu'
-import { RiProgress1Line } from 'react-icons/ri'
-import { MdOutlineTitle, MdPriorityHigh } from 'react-icons/md'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { Project } from '@prisma/client'
 import { getServerSession, Session } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { TableActions } from '@/components/pages/projects/tableActions/actions'
 import { ProgressBar } from '@/components/global/progressBar'
-const tableHead = [
-  {
-    title: 'Título',
-    icon: <MdOutlineTitle />,
-  },
-  {
-    title: 'Descrição',
-    icon: <LuList />,
-  },
-  {
-    title: 'Cliente',
-    icon: <LuUser />,
-  },
-  {
-    title: 'Data de início',
-    icon: <LuCalendarDays />,
-  },
-  {
-    title: 'Data de entrega',
-    icon: <LuCalendarDays />,
-  },
-  {
-    title: 'Progresso',
-    icon: <RiProgress1Line />,
-  },
-  {
-    title: 'Status',
-    icon: <LuLoader2 />,
-  },
-  {
-    title: 'Prioridade',
-    icon: <MdPriorityHigh />,
-  },
-  {
-    title: 'Ações',
-    icon: <LuRedoDot />,
-  },
-]
+import { MdOutlineTitle, MdPriorityHigh } from 'react-icons/md'
+import { LuList, LuLoader2, LuRedoDot, LuCalendarDays, LuUser } from 'react-icons/lu'
+import { RiProgress1Line } from 'react-icons/ri'
 
+// Definindo as cores de status e prioridade
 const statusColors = {
   TODOS: 'bg-zinc-500',
   FINALIZADOS: 'bg-blue-500',
@@ -89,7 +46,6 @@ async function getProjects(
   search?: string,
 ): Promise<getProjectsResponse> {
   try {
-    // Faz a requisição à rota da API que retorna os projetos
     const baseUrl =
       typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
     const res = await fetch(
@@ -108,7 +64,6 @@ async function getProjects(
       throw new Error('Erro ao buscar projetos')
     }
 
-    // Obtém os dados da resposta
     const { projects, totalProjects } = await res.json()
 
     return { projects, totalProjects }
@@ -138,14 +93,24 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
     session,
     search,
   )
-  console.log('Session da pagina:', session)
-  const baseUrl = '/projects'
+
+  const headers = [
+    { title: 'Título', icon: <MdOutlineTitle /> },
+    { title: 'Descrição', icon: <LuList /> },
+    { title: 'Cliente', icon: <LuUser /> },
+    { title: 'Data de início', icon: <LuCalendarDays /> },
+    { title: 'Data de entrega', icon: <LuCalendarDays /> },
+    { title: 'Progresso', icon: <RiProgress1Line /> },
+    { title: 'Status', icon: <LuLoader2 /> },
+    { title: 'Prioridade', icon: <MdPriorityHigh /> },
+    { title: 'Ações', icon: <LuRedoDot />, className: 'w-[30px]' },
+  ]
 
   return (
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
-        <ProjectCreationForm /> {/* Form para registro de projetos */}
-        <FilterProjects /> {/* Filtros */}
+        <ProjectCreationForm />
+        <FilterProjects />
       </div>
 
       {/* Lista de projetos */}
@@ -154,51 +119,39 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
           <p>Nenhum projeto encontrado.</p>
         ) : (
           <Table>
-            <TableCaption></TableCaption>
             <TableHeader className="rounded-t-md">
-              <TableRow className=" bg-zinc-800">
-                {tableHead.map((item, index) => (
-                  <TableHead key={index} className="whitespace-nowrap">
+              <TableRow className="bg-zinc-800">
+                {headers.map((header) => (
+                  <TableHead key={header.title} className={header.className || 'whitespace-nowrap'}>
                     <div className="flex items-center gap-2 justify-start">
-                      {item.icon && (
-                        <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
-                          {item.icon}
-                        </span>
-                      )}
-                      <span className="font-medium text-zinc-50">
-                        {item.title}
+                      <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
+                        {header.icon}
                       </span>
+                      <span className="font-medium text-zinc-50">{header.title}</span>
                     </div>
                   </TableHead>
                 ))}
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {projects.map((project: Project) => (
                 <TableRow key={project.id}>
                   <TableCell>{project.title}</TableCell>
                   <TableCell>{project.description}</TableCell>
                   <TableCell>{project.clientId}</TableCell>
+                  <TableCell>{new Date(project.startDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(project.endDate).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    {new Date(project.startDate).toLocaleDateString()}
+                    <ProgressBar value={50} />
                   </TableCell>
                   <TableCell>
-                    {new Date(project.endDate).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <ProgressBar value={50}  />
-                  </TableCell>
-                  <TableCell>
-                    <TableItem
-                      className={`rounded-md text-zinc-100 ${statusColors[project.status]}`}
-                    >
+                    <TableItem className={`rounded-md text-zinc-100 ${statusColors[project.status]}`}>
                       {project.status}
                     </TableItem>
                   </TableCell>
                   <TableCell>
-                    <TableItem
-                      className={`rounded-md  text-zinc-100 ${priorityColors[project.priority]}`}
-                    >
+                    <TableItem className={`rounded-md text-zinc-100 ${priorityColors[project.priority]}`}>
                       {project.priority}
                     </TableItem>
                   </TableCell>
@@ -208,23 +161,18 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                 </TableRow>
               ))}
             </TableBody>
-            <TableFooter>
-              <TableRow className="hover:opacity-100">
-                <TableCell colSpan={8} className="font-bold ">
-                  Total de Projetos:{' '}
-                  <span className="font-normal">{totalProjects}</span>
-                </TableCell>
-                <Pagination
-                  limit={limit}
-                  page={page}
-                  total={totalProjects}
-                  baseUrl={baseUrl}
-                  queryParams={{}}
-                />
-              </TableRow>
-            </TableFooter>
           </Table>
         )}
+
+        <div className='bg-zinc-100 border-t px-3 py-2.5 '>
+          <Pagination
+            limit={limit}
+            page={page}
+            total={totalProjects}
+            baseUrl="/projects"
+            queryParams={{}}
+          />
+        </div>
       </div>
     </div>
   )

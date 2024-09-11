@@ -56,7 +56,7 @@ export function Button({
     xs: 'h-10 w-20  px-3 py-2 text-xs',
     sm: 'h-14 w-24  px-3 py-2 text-sm',
     lg: 'h-16 w-28  px-8 py-4 text-lg',
-    icon: 'h-6 w-6 p-1 ',
+    icon: 'h-6 w-6 p-1.5',
     full: 'h-10 px-4 py-2 w-full text-lg',
   }
   const effectsClasses = {
