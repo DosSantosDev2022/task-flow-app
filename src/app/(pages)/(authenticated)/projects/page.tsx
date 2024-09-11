@@ -11,9 +11,15 @@ import {
 } from '@/components/global/table'
 import { FilterProjects } from '@/components/pages/projects/filters/'
 import { ProjectCreationForm } from '@/components/pages/projects/createdProject/ProjectCreationForm'
-import { LuCalendarDays, LuList, LuLoader2, LuUser } from 'react-icons/lu'
+import {
+  LuCalendarDays,
+  LuList,
+  LuLoader2,
+  LuRedoDot,
+  LuUser,
+} from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
-import { MdOutlineTitle } from 'react-icons/md'
+import { MdOutlineTitle, MdPriorityHigh } from 'react-icons/md'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { Project } from '@prisma/client'
 import { getServerSession, Session } from 'next-auth'
@@ -49,10 +55,26 @@ const tableHead = [
     icon: <LuLoader2 />,
   },
   {
+    title: 'Prioridade',
+    icon: <MdPriorityHigh />,
+  },
+  {
     title: 'Ações',
-    icon: <LuCalendarDays />,
+    icon: <LuRedoDot />,
   },
 ]
+
+const statusColors = {
+  TODOS: 'bg-zinc-500',
+  FINALIZADOS: 'bg-blue-500',
+  PENDENTES: 'bg-red-500',
+}
+
+const priorityColors = {
+  BAIXA: 'bg-green-500',
+  MEDIA: 'bg-yellow-500',
+  ALTA: 'bg-red-500',
+}
 
 interface getProjectsResponse {
   projects: Project[]
@@ -117,7 +139,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   )
   console.log('Session da pagina:', session)
   const baseUrl = '/projects'
-  console.log(projects)
+
   return (
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
@@ -146,7 +168,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                   <TableHead key={index} className="whitespace-nowrap">
                     <div className="flex items-center gap-2 justify-start">
                       {item.icon && (
-                        <span className="text-lg font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
+                        <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
                           {item.icon}
                         </span>
                       )}
@@ -172,8 +194,17 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                   </TableCell>
                   <TableCell></TableCell>
                   <TableCell>
-                    <TableItem className="rounded-md bg-green-500 text-zinc-100">
+                    <TableItem
+                      className={`rounded-md text-zinc-100 ${statusColors[project.status]}`}
+                    >
                       {project.status}
+                    </TableItem>
+                  </TableCell>
+                  <TableCell>
+                    <TableItem
+                      className={`rounded-md  text-zinc-100 ${priorityColors[project.priority]}`}
+                    >
+                      {project.priority}
                     </TableItem>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-1">
