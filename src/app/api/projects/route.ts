@@ -33,6 +33,9 @@ export async function GET(req: NextRequest) {
       },
       skip: (page - 1) * limit,
       take: limit,
+      include: {
+        client: true
+      }
     })
 
     const totalProjects = await prisma.project.count({

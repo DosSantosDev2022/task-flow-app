@@ -1,8 +1,6 @@
 import {
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -12,7 +10,7 @@ import {
 import { FilterProjects } from '@/components/pages/projects/filters/'
 import { ProjectCreationForm } from '@/components/pages/projects/createdProject/ProjectCreationForm'
 import { Pagination } from '@/components/global/pagination/pagination'
-import { Project } from '@prisma/client'
+import { Client, Project, Task } from '@prisma/client'
 import { getServerSession, Session } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { TableActions } from '@/components/pages/projects/tableActions/actions'
@@ -20,6 +18,7 @@ import { ProgressBar } from '@/components/global/progressBar'
 import { MdOutlineTitle, MdPriorityHigh } from 'react-icons/md'
 import { LuList, LuLoader2, LuRedoDot, LuCalendarDays, LuUser } from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
+/* import { ProjectData } from '@/@types/prisma' */
 
 // Definindo as cores de status e prioridade
 const statusColors = {
@@ -34,17 +33,23 @@ const priorityColors = {
   ALTA: 'bg-red-500',
 }
 
-interface getProjectsResponse {
-  projects: Project[]
+interface ProjectData extends Project {
+  client: Client
+  tasks: Task[]
+}
+
+interface ProjectsResponse {
+  projects: ProjectData[]
   totalProjects: number
 }
+
 
 async function getProjects(
   page: number,
   limit: number,
   session?: Session | null,
   search?: string,
-): Promise<getProjectsResponse> {
+): Promise<ProjectsResponse> {
   try {
     const baseUrl =
       typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
@@ -64,9 +69,9 @@ async function getProjects(
       throw new Error('Erro ao buscar projetos')
     }
 
-    const { projects, totalProjects } = await res.json()
+    const { projects, totalProjects  } = await res.json()
 
-    return { projects, totalProjects }
+    return { projects, totalProjects}
   } catch (error) {
     console.error('Erro ao buscar projetos:', error)
     return { projects: [], totalProjects: 0 }
@@ -93,7 +98,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
     session,
     search,
   )
-
+  /* console.log(projects[0].tasks) */
   const headers = [
     { title: 'Título', icon: <MdOutlineTitle /> },
     { title: 'Descrição', icon: <LuList /> },
@@ -116,10 +121,12 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
       {/* Lista de projetos */}
       <div className="px-3 py-4">
         {projects.length === 0 ? (
-          <p>Nenhum projeto encontrado.</p>
+          <div className='w-full h-screen flex items-start px-10 py-16 justify-center'>
+            <p>Nenhum projeto encontrado.</p>
+          </div>
         ) : (
           <Table>
-            <TableHeader className="rounded-t-md">
+            <TableHeader>
               <TableRow className="bg-zinc-800">
                 {headers.map((header) => (
                   <TableHead key={header.title} className={header.className || 'whitespace-nowrap'}>
@@ -135,11 +142,11 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
             </TableHeader>
 
             <TableBody>
-              {projects.map((project: Project) => (
+              {projects.map((project: ProjectData) => (
                 <TableRow key={project.id}>
                   <TableCell>{project.title}</TableCell>
                   <TableCell>{project.description}</TableCell>
-                  <TableCell>{project.clientId}</TableCell>
+                  <TableCell>{project.client?.name || 'Cliente não especificado'}</TableCell>
                   <TableCell>{new Date(project.startDate).toLocaleDateString()}</TableCell>
                   <TableCell>{new Date(project.endDate).toLocaleDateString()}</TableCell>
                   <TableCell>
