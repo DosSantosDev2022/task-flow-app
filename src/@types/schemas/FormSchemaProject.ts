@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 const paymentSchema = ['DINHEIRO', 'CREDITO', 'DEBITO', 'PIX'] as const
+const statusSchema = ['TODOS', 'FINALIZADOS', 'PENDENTES'] as const
+const prioritySchema = ['BAIXA', 'MEDIA', 'ALTA'] as const
 
 export const FormSchema = z.object({
   title: z.string().min(1, 'O nome do projeto é obrigatório'),
@@ -10,6 +12,8 @@ export const FormSchema = z.object({
   price: z.string().min(1, 'O preço é obrigatório'),
   payment: z.enum(paymentSchema),
   userId: z.string(),
+  status: z.enum(statusSchema),
+  priority: z.enum(prioritySchema),
 })
 
 export type FormDataProject = z.infer<typeof FormSchema>

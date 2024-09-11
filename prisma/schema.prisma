@@ -89,7 +89,7 @@ model Project {
   endDate     DateTime
   price       Decimal         @db.Decimal(10, 2)
   payment     Payment
-  status      ProjectStatus   @default(PENDENTES)
+  status      ProjectStatus   @default('PENDENTES')
   priority    ProjectPriority
   tasks       Task[]
   user        User            @relation(fields: [userId], references: [id])

@@ -36,6 +36,18 @@ const payments = [
   },
 ]
 
+const priority = [
+  {
+    label: 'BAIXA',
+  },
+  {
+    label: 'MEDIA',
+  },
+  {
+    label: 'ALTA',
+  },
+]
+
 export function ProjectCreationForm() {
   const {
     register,
@@ -101,6 +113,11 @@ export function ProjectCreationForm() {
             <input
               {...register('userId')}
               value={session?.user.id}
+              className="hidden"
+            />
+            <input
+              {...register('status')}
+              value={'PENDENTES'}
               className="hidden"
             />
             <div className="flex flex-col gap-1">
@@ -205,7 +222,27 @@ export function ProjectCreationForm() {
                 )}
               </div>
             </div>
+            <div className="flex flex-col gap-1">
+              <Label className="">Prioriades</Label>
 
+              <div className="w-full mx-auto">
+                <select
+                  {...register('priority')}
+                  className="bg-gray-50 w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  <option selected> Selecione</option>
+                  {priority.map((item) => (
+                    <option key={item.label} value={item.label}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {errors && (
+                <span className="text-red-800">{errors.priority?.message}</span>
+              )}
+            </div>
             <Button
               isLoading={isLoading}
               variant="highlight"

@@ -176,7 +176,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                   <TableCell></TableCell>
                   <TableCell>
                     <TableItem className="rounded-md bg-green-500 text-zinc-100">
-                      status
+                      {project.status}
                     </TableItem>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-1">
