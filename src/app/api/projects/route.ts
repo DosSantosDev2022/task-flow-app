@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 /* import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]/route' */
+type ProjectPriorityType = 'ALTA' | 'MEDIA' | 'BAIXA';
+
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const search = searchParams.get('search') || ''
+    const priority = searchParams.get('priority') || ''
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
 
@@ -24,13 +28,27 @@ export async function GET(req: NextRequest) {
     // Obter ID do usuário da sessão
     /* const userId = session?.user.id */
     /* console.log('userId da seção', userId) */
+
+
+   // Validar se o valor da prioridade é um dos aceitos
+   const validPriorities: ProjectPriorityType[] = ['ALTA', 'MEDIA', 'BAIXA']
+   const isValidPriority = validPriorities.includes(priority as ProjectPriorityType)
+
+   // Montar a condição dinamicamente
+   const whereCondition: Prisma.ProjectWhereInput = {
+     title: {
+       contains: search,
+       mode: 'insensitive',
+     },
+   }
+
+   if (isValidPriority) {
+     whereCondition.priority = priority as ProjectPriorityType
+   }
+  
+
     const projects = await prisma.project.findMany({
-      where: {
-        title: {
-          contains: search,
-          mode: 'insensitive',
-        },
-      },
+      where: whereCondition,
       skip: (page - 1) * limit,
       take: limit,
       include: {

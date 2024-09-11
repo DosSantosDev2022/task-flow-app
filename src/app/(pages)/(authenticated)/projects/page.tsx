@@ -49,12 +49,13 @@ async function getProjects(
   limit: number,
   session?: Session | null,
   search?: string,
+  priority?:string
 ): Promise<ProjectsResponse> {
   try {
     const baseUrl =
       typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
     const res = await fetch(
-      `${baseUrl}/api/projects?search=${search}&page=${page}&limit=${limit}`,
+      `${baseUrl}/api/projects?search=${search}&priority=${priority}&page=${page}&limit=${limit}`,
       {
         method: 'GET',
         headers: {
@@ -83,6 +84,7 @@ interface ProjectSearchParams {
     search: string
     page: string
     limit: string
+    priority:string
   }
 }
 
@@ -91,12 +93,13 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   const page = Number(searchParams.page) || 1
   const limit = Number(searchParams.limit) || 10
   const search = searchParams.search || ''
-
+  const priority = searchParams.priority || ''
   const { projects, totalProjects } = await getProjects(
     page,
     limit,
     session,
     search,
+    priority
   )
   /* console.log(projects[0].tasks) */
   const headers = [
