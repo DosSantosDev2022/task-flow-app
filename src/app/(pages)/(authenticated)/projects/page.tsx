@@ -9,19 +9,16 @@ import {
   TableItem,
   Table,
 } from '@/components/global/table'
-import { Button } from '@/components/global/button'
-import { RxOpenInNewWindow } from 'react-icons/rx'
 import { FilterProjects } from '@/components/pages/projects/filters/'
 import { ProjectCreationForm } from '@/components/pages/projects/createdProject/ProjectCreationForm'
 import { LuCalendarDays, LuList, LuLoader2, LuUser } from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
-import { MdArchive, MdOutlineTitle } from 'react-icons/md'
+import { MdOutlineTitle } from 'react-icons/md'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { Project } from '@prisma/client'
-import { DeleteProject } from '@/components/pages/projects/deleteProject/deleteProject'
 import { getServerSession, Session } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-
+import { TableActions } from '@/components/pages/projects/tableActions/actions'
 const tableHead = [
   {
     title: 'Título',
@@ -180,21 +177,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                     </TableItem>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-1">
-                    <Button
-                      className="hover:scale-105 duration-200"
-                      variant="outline"
-                      sizes="icon"
-                    >
-                      <RxOpenInNewWindow size={14} />
-                    </Button>
-                    <DeleteProject id={project.id} />
-                    <Button
-                      className="hover:scale-105 duration-200"
-                      variant="secundary"
-                      sizes="icon"
-                    >
-                      <MdArchive size={14} />
-                    </Button>
+                    <TableActions project={project} />
                   </TableCell>
                 </TableRow>
               ))}
