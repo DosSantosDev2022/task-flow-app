@@ -25,7 +25,7 @@ export async function createProjectAction(dataProject: FormDataProject) {
         price: parseFloat(validatedData.price),
       },
     })
-    console.log(project)
+
     revalidatePath('/projects')
     return project
   } catch (error) {

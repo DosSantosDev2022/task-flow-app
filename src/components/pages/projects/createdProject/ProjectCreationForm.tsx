@@ -88,15 +88,20 @@ export function ProjectCreationForm() {
     <>
       <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
         <DialogTrigger asChild>
-          <Button sizes="xs" variant="highlight" className="w-[112px] ">
-            Novo Projeto +
+          <Button
+            effects="scale"
+            sizes="xs"
+            variant="highlight"
+            className="w-[120px]"
+          >
+            Novo Projeto
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <div className="flex items-center justify-between ">
               <DialogTitle>Vamos criar um novo projeto</DialogTitle>
-              <DialogClose className="rounded-md bg-zinc-200 border hover:opacity-80 duration-300">
+              <DialogClose className="rounded-md bg-zinc-200 border hover:opacity-80 active:scale-75 duration-300">
                 <BiX size={25} />
               </DialogClose>
             </div>
@@ -247,6 +252,7 @@ export function ProjectCreationForm() {
               isLoading={isLoading}
               variant="highlight"
               sizes="full"
+              effects="scale"
               className="text-base flex items-center justify-center"
               disabled={isLoading}
             >
