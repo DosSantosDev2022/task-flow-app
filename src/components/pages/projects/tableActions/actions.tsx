@@ -22,6 +22,7 @@ import { FaSpinner } from 'react-icons/fa'
 
 import { Project } from '@prisma/client'
 import { deleteProjectAction } from '@/app/actions/project/delete'
+import { EditProjectModal } from './EditProjectModal'
 
 interface TableActionsProps {
   project: Project
@@ -32,7 +33,7 @@ export function TableActions({ project }: TableActionsProps) {
   const { showNotification } = useNotification()
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleDelete = async () => {
+  const handleDeleteProject = async () => {
     try {
       setIsLoading(true)
       await deleteProjectAction(project.id)
@@ -45,6 +46,8 @@ export function TableActions({ project }: TableActionsProps) {
       setIsOpen(false)
     }
   }
+
+  const handleArchiveProject = async () => {}
 
   return (
     <>
@@ -59,13 +62,16 @@ export function TableActions({ project }: TableActionsProps) {
           </Button>
 
           {/* Botão para arquivar projeto */}
-          <Button sizes="full" variant="outline" effects="scale">
+          <Button
+            onClick={handleArchiveProject}
+            sizes="full"
+            variant="outline"
+            effects="scale"
+          >
             Arquivar
           </Button>
           {/* Botão para editar projeto */}
-          <Button sizes="full" variant="outline" effects="scale">
-            Editar
-          </Button>
+          <EditProjectModal projectId={project.id} />
           {/* Botão para deletar projeto */}
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -88,7 +94,8 @@ export function TableActions({ project }: TableActionsProps) {
                   <Button
                     variant="danger"
                     effects="scale"
-                    onClick={handleDelete}
+                    onClick={handleDeleteProject}
+                    disabled={isLoading}
                   >
                     Excluir
                   </Button>
