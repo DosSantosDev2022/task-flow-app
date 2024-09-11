@@ -75,7 +75,6 @@ async function getProjects(
     const res = await fetch(
       `${baseUrl}/api/projects?search=${search}&page=${page}&limit=${limit}`,
       {
-
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -113,15 +112,20 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   const limit = Number(searchParams.limit) || 10
   const search = searchParams.search || ''
 
-  const { projects, totalProjects } = await getProjects(page, limit, session,search)
+  const { projects, totalProjects } = await getProjects(
+    page,
+    limit,
+    session,
+    search,
+  )
   console.log('Session da pagina:', session)
   const baseUrl = '/projects'
-   console.log(projects)
+  console.log(projects)
   return (
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
         <ProjectCreationForm /> {/* Form para registro de projetos */}
-        <FilterProjects projects={projects} /> {/* Filtros */}
+        <FilterProjects /> {/* Filtros */}
       </div>
 
       {/* Lista de projetos */}

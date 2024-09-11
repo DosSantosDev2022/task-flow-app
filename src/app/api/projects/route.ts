@@ -28,8 +28,8 @@ export async function GET(req: NextRequest) {
       where: {
         title: {
           contains: search,
-          mode: 'insensitive'
-        }
+          mode: 'insensitive',
+        },
       },
       skip: (page - 1) * limit,
       take: limit,
@@ -39,8 +39,8 @@ export async function GET(req: NextRequest) {
       where: {
         title: {
           contains: search,
-          mode: 'insensitive'
-        }
+          mode: 'insensitive',
+        },
       },
     })
 
