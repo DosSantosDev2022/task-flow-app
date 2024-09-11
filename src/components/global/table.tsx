@@ -91,7 +91,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, ComponentProps<'td'>>(
   ({ className, ...props }, ref) => (
     <td
       className={twMerge(
-        'p-2 align-middle max-w-xs truncate text-zinc-500 font-normal text-sm [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'p-1.5  max-w-xs truncate text-zinc-500 font-normal text-sm [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
         className,
       )}
       {...props}
@@ -117,7 +117,10 @@ TableCaption.displayName = 'TableCaption'
 const TableItem = React.forwardRef<HTMLSpanElement, ComponentProps<'span'>>(
   ({ className, ...props }, ref) => (
     <span
-      className={twMerge('w-full px-2 py-1.5 flex-1', className)}
+      className={twMerge(
+        'w-24 px-1 py-1.5 text-xs flex  items-center justify-center',
+        className,
+      )}
       {...props}
       ref={ref}
     />

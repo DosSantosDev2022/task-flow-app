@@ -25,6 +25,7 @@ import { Project } from '@prisma/client'
 import { getServerSession, Session } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { TableActions } from '@/components/pages/projects/tableActions/actions'
+import { ProgressBar } from '@/components/global/progressBar'
 const tableHead = [
   {
     title: 'Título',
@@ -153,15 +154,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
           <p>Nenhum projeto encontrado.</p>
         ) : (
           <Table>
-            <TableCaption>
-              <Pagination
-                limit={limit}
-                page={page}
-                total={totalProjects}
-                baseUrl={baseUrl}
-                queryParams={{}}
-              />
-            </TableCaption>
+            <TableCaption></TableCaption>
             <TableHeader className="rounded-t-md">
               <TableRow className=" bg-zinc-800">
                 {tableHead.map((item, index) => (
@@ -192,7 +185,9 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                   <TableCell>
                     {new Date(project.endDate).toLocaleDateString()}
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>
+                    <ProgressBar value={50}  />
+                  </TableCell>
                   <TableCell>
                     <TableItem
                       className={`rounded-md text-zinc-100 ${statusColors[project.status]}`}
@@ -219,6 +214,13 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                   Total de Projetos:{' '}
                   <span className="font-normal">{totalProjects}</span>
                 </TableCell>
+                <Pagination
+                  limit={limit}
+                  page={page}
+                  total={totalProjects}
+                  baseUrl={baseUrl}
+                  queryParams={{}}
+                />
               </TableRow>
             </TableFooter>
           </Table>
