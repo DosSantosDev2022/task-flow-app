@@ -60,7 +60,7 @@ export function Button({
     full: 'h-10 px-4 py-2 w-full text-lg',
   }
   const effectsClasses = {
-    scale: 'active:scale-75 duration-200',
+    scale: 'active:scale-95 duration-200',
     none: 'scele-0',
   }
 

@@ -56,12 +56,14 @@ async function getProjects(
   search?: string,
   priority?: string,
   status?: string,
+  sort?: string,
+  sortBy?: string,
 ): Promise<ProjectsResponse> {
   try {
     const baseUrl =
       typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
     const res = await fetch(
-      `${baseUrl}/api/projects?search=${search}&priority=${priority}&status=${status}&page=${page}&limit=${limit}`,
+      `${baseUrl}/api/projects?search=${search}&priority=${priority}&status=${status}&sort=${sort}&${sortBy}$&page=${page}&limit=${limit}`,
       {
         method: 'GET',
         headers: {
@@ -92,6 +94,8 @@ interface ProjectSearchParams {
     limit: string
     priority: string
     status: string
+    sort: string
+    sortBy: string
   }
 }
 
@@ -102,6 +106,8 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   const search = searchParams.search || ''
   const priority = searchParams.priority || ''
   const status = searchParams.status || ''
+  const sort = searchParams.sort || ''
+  const sortBy = searchParams.sortBy || 'startDate'
   const { projects, totalProjects } = await getProjects(
     page,
     limit,
@@ -109,6 +115,8 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
     search,
     priority,
     status,
+    sort,
+    sortBy,
   )
   /* console.log(projects[0].tasks) */
   const headers = [

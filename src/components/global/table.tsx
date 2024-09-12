@@ -21,7 +21,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={twMerge('[&_tr]:border-b bg-zinc-100 ', className)}
+    className={twMerge('[&_tr]:border-b bg-zinc-100 rounded-t-md ', className)}
     {...props}
   />
 ))

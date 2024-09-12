@@ -5,6 +5,13 @@ import { Prisma } from '@prisma/client'
 import { authOptions } from '../auth/[...nextauth]/route' */
 type ProjectPriorityType = 'ALTA' | 'MEDIA' | 'BAIXA'
 type StatusProjectType = 'TODOS' | 'FINALIZADOS' | 'PENDENTES'
+// Lista de campos válidos para ordenação no modelo Project
+const validSortFields: Array<keyof Prisma.ProjectOrderByWithRelationInput> = [
+  'title', // Verifique se esse campo existe no seu modelo Prisma
+  'priority', // Verifique se esse campo existe no seu modelo Prisma
+  'startDate', // Verifique se esse campo existe no seu modelo Prisma
+  // Adicione outros campos que são ordenáveis no modelo `Project`
+]
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,6 +19,8 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search') || ''
     const priority = searchParams.get('priority') || ''
     const status = searchParams.get('status') || ''
+    const sort = searchParams.get('sort') || 'asc'
+    const sortBy = searchParams.get('sortBy') || 'startDate'
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
 
@@ -51,7 +60,7 @@ export async function GET(req: NextRequest) {
       },
     }
 
-    if (isValidStatus) {
+    if (isValidStatus && status !== 'TODOS') {
       whereCondition.status = status as StatusProjectType
     }
 
@@ -59,22 +68,33 @@ export async function GET(req: NextRequest) {
       whereCondition.priority = priority as ProjectPriorityType
     }
 
+    // Verifique se `sortBy` é um campo de ordenação válido
+    const orderByCondition: Prisma.ProjectOrderByWithRelationInput = {}
+    if (
+      validSortFields.includes(
+        sortBy as keyof Prisma.ProjectOrderByWithRelationInput,
+      )
+    ) {
+      orderByCondition[sortBy as keyof Prisma.ProjectOrderByWithRelationInput] =
+        sort === 'desc' ? 'desc' : 'asc'
+    } else {
+      // Defina um valor de fallback caso `sortBy` seja inválido
+      orderByCondition.startDate = 'asc' // Supondo que 'startDate' exista
+    }
+
+    // Buscar projetos com filtros e ordenação
     const projects = await prisma.project.findMany({
       where: whereCondition,
       skip: (page - 1) * limit,
       take: limit,
+      orderBy: orderByCondition,
       include: {
         client: true,
       },
     })
 
     const totalProjects = await prisma.project.count({
-      where: {
-        title: {
-          contains: search,
-          mode: 'insensitive',
-        },
-      },
+      where: whereCondition,
     })
 
     return NextResponse.json({ projects, totalProjects }, { status: 200 })

@@ -1,57 +1,62 @@
-import { Button } from '@/components/global/button'
-import { Input } from '@/components/global/input'
-import { Label } from '@/components/global/label'
+import { Popover, PopoverTrigger } from '@/components/global/popover'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
-  Popover,
-  PopoverClose,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/global/popover'
-import { IoFilterCircle } from 'react-icons/io5'
-import { LuX } from 'react-icons/lu'
+  IoArrowDownCircle,
+  IoArrowUpCircle,
+  IoFilterCircle,
+} from 'react-icons/io5'
 
 export function FilterByDate() {
+  const searchParams = useSearchParams()
+  const pathName = usePathname()
+  const { replace } = useRouter()
+
+  function handleClick() {
+    const params = new URLSearchParams(searchParams)
+    const currentSort = params.get('sort')
+    const sortBy = 'startDate' // Campo de ordenação por data
+
+    // Alternar entre ascendente, descendente e sem ordenação
+    if (currentSort === 'asc' && params.get('sortBy') === sortBy) {
+      params.set('sort', 'desc')
+    } else if (currentSort === 'desc' && params.get('sortBy') === sortBy) {
+      params.delete('sort')
+      params.delete('sortBy')
+    } else {
+      // Definir como ascendente se não houver ordenação atual
+      params.set('sort', 'asc')
+      params.set('sortBy', sortBy)
+    }
+    console.log(sortBy)
+
+    const newUrl = `${pathName}?${params.toString()}`
+    console.log('URL atualizada:', newUrl) // Log da URL gerada
+
+    replace(newUrl, { scroll: false }) // Atualizando a URL
+  }
+
+  // Determinar qual ícone exibir
+  const sort = searchParams.get('sort')
+  const sortBy = searchParams.get('sortBy')
+  let IconComponent = IoFilterCircle // Ícone padrão
+
+  if (sortBy === 'startDate') {
+    if (sort === 'asc') {
+      IconComponent = IoArrowUpCircle
+    } else if (sort === 'desc') {
+      IconComponent = IoArrowDownCircle
+    }
+  }
+
   return (
-    <>
-      <Popover>
-        <PopoverTrigger className='text-sm active:scale-95 duration-200'>
-          <IoFilterCircle size={18} />
-          <span>Data</span>
-        </PopoverTrigger>
-
-        <PopoverContent
-          className="w-72 p-4 bg-white rounded-lg shadow-lg border"
-          sideOffset={5}
-          side="bottom"
-          align="end"
-        >
-          <div className='flex items-center w-full justify-between'>
-            <h3 className="text-base font-medium mb-2">Filtros</h3>
-            <PopoverClose className='active:scale-95 p-1 border rounded-md hover:bg-zinc-200 duration-200'>
-               <LuX size={16}/>
-            </PopoverClose>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col gap-1">
-              <Label className="">Data de Início</Label>
-              <Input.Root>
-                <Input.Input className="text-sm" type="date" />
-              </Input.Root>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <Label className="">Data de Fim</Label>
-              <Input.Root>
-                <Input.Input className="text-sm" type="date" />
-              </Input.Root>
-            </div>
-          </div>
-          <Button sizes="full" variant="highlight" className="mt-4 text-md">
-            Aplicar
-          </Button>
-        </PopoverContent>
-      </Popover>
-    </>
+    <Popover>
+      <PopoverTrigger
+        onClick={handleClick}
+        className="text-sm active:scale-95 duration-200"
+      >
+        <IconComponent size={18} />
+        <span>Data</span>
+      </PopoverTrigger>
+    </Popover>
   )
 }
