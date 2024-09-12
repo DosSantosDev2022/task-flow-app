@@ -59,18 +59,19 @@ async function getProjects(
   sort?: string,
   sortBy?: string,
 ): Promise<ProjectsResponse> {
+  const userSession = session?.user
+  console.log('userSession', userSession)
   try {
     const baseUrl =
       typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
     const res = await fetch(
-      `${baseUrl}/api/projects?search=${search}&priority=${priority}&status=${status}&sort=${sort}&${sortBy}$&page=${page}&limit=${limit}`,
+      `${baseUrl}/api/projects?search=${search}&priority=${priority}&status=${status}&sort=${sort}&sortBy=${sortBy}&page=${page}&limit=${limit}`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session?.user.id}`,
         },
-        cache: 'no-cache',
       },
     )
 
@@ -101,6 +102,7 @@ interface ProjectSearchParams {
 
 export default async function Projects({ searchParams }: ProjectSearchParams) {
   const session = await getServerSession(authOptions)
+  console.log('seção no projects', session)
   const page = Number(searchParams.page) || 1
   const limit = Number(searchParams.limit) || 10
   const search = searchParams.search || ''
