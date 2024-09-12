@@ -16,7 +16,13 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { TableActions } from '@/components/pages/projects/tableActions/actions'
 import { ProgressBar } from '@/components/global/progressBar'
 import { MdOutlineTitle, MdPriorityHigh } from 'react-icons/md'
-import { LuList, LuLoader2, LuRedoDot, LuCalendarDays, LuUser } from 'react-icons/lu'
+import {
+  LuList,
+  LuLoader2,
+  LuRedoDot,
+  LuCalendarDays,
+  LuUser,
+} from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
 /* import { ProjectData } from '@/@types/prisma' */
 
@@ -43,19 +49,19 @@ interface ProjectsResponse {
   totalProjects: number
 }
 
-
 async function getProjects(
   page: number,
   limit: number,
   session?: Session | null,
   search?: string,
-  priority?:string
+  priority?: string,
+  status?: string,
 ): Promise<ProjectsResponse> {
   try {
     const baseUrl =
       typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
     const res = await fetch(
-      `${baseUrl}/api/projects?search=${search}&priority=${priority}&page=${page}&limit=${limit}`,
+      `${baseUrl}/api/projects?search=${search}&priority=${priority}&status=${status}&page=${page}&limit=${limit}`,
       {
         method: 'GET',
         headers: {
@@ -70,9 +76,9 @@ async function getProjects(
       throw new Error('Erro ao buscar projetos')
     }
 
-    const { projects, totalProjects  } = await res.json()
+    const { projects, totalProjects } = await res.json()
 
-    return { projects, totalProjects}
+    return { projects, totalProjects }
   } catch (error) {
     console.error('Erro ao buscar projetos:', error)
     return { projects: [], totalProjects: 0 }
@@ -84,7 +90,8 @@ interface ProjectSearchParams {
     search: string
     page: string
     limit: string
-    priority:string
+    priority: string
+    status: string
   }
 }
 
@@ -94,12 +101,14 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   const limit = Number(searchParams.limit) || 10
   const search = searchParams.search || ''
   const priority = searchParams.priority || ''
+  const status = searchParams.status || ''
   const { projects, totalProjects } = await getProjects(
     page,
     limit,
     session,
     search,
-    priority
+    priority,
+    status,
   )
   /* console.log(projects[0].tasks) */
   const headers = [
@@ -124,7 +133,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
       {/* Lista de projetos */}
       <div className="px-3 py-4">
         {projects.length === 0 ? (
-          <div className='w-full h-screen flex items-start px-10 py-16 justify-center'>
+          <div className="w-full h-screen flex items-start px-10 py-16 justify-center">
             <p>Nenhum projeto encontrado.</p>
           </div>
         ) : (
@@ -132,12 +141,17 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
             <TableHeader>
               <TableRow className="bg-zinc-800">
                 {headers.map((header) => (
-                  <TableHead key={header.title} className={header.className || 'whitespace-nowrap'}>
+                  <TableHead
+                    key={header.title}
+                    className={header.className || 'whitespace-nowrap'}
+                  >
                     <div className="flex items-center gap-2 justify-start">
                       <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
                         {header.icon}
                       </span>
-                      <span className="font-medium text-zinc-50">{header.title}</span>
+                      <span className="font-medium text-zinc-50">
+                        {header.title}
+                      </span>
                     </div>
                   </TableHead>
                 ))}
@@ -149,19 +163,29 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                 <TableRow key={project.id}>
                   <TableCell>{project.title}</TableCell>
                   <TableCell>{project.description}</TableCell>
-                  <TableCell>{project.client?.name || 'Cliente não especificado'}</TableCell>
-                  <TableCell>{new Date(project.startDate).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(project.endDate).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {project.client?.name || 'Cliente não especificado'}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(project.startDate).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(project.endDate).toLocaleDateString()}
+                  </TableCell>
                   <TableCell>
                     <ProgressBar value={50} />
                   </TableCell>
                   <TableCell>
-                    <TableItem className={`rounded-md text-zinc-100 ${statusColors[project.status]}`}>
+                    <TableItem
+                      className={`rounded-md text-zinc-100 ${statusColors[project.status]}`}
+                    >
                       {project.status}
                     </TableItem>
                   </TableCell>
                   <TableCell>
-                    <TableItem className={`rounded-md text-zinc-100 ${priorityColors[project.priority]}`}>
+                    <TableItem
+                      className={`rounded-md text-zinc-100 ${priorityColors[project.priority]}`}
+                    >
                       {project.priority}
                     </TableItem>
                   </TableCell>
@@ -174,7 +198,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
           </Table>
         )}
 
-        <div className='bg-zinc-100 border-t px-3 py-2.5 '>
+        <div className="bg-zinc-100 border-t px-3 py-2.5 ">
           <Pagination
             limit={limit}
             page={page}

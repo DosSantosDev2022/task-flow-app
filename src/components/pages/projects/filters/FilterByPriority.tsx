@@ -11,12 +11,11 @@ import { LuX } from 'react-icons/lu'
 import { useEffect, useState } from 'react'
 
 export function FilterByPriority() {
+  // Definindo o estado dos checkboxes com base nos parâmetros da URL
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([])
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const { replace } = useRouter()
-  
-  // Definindo o estado dos checkboxes com base nos parâmetros da URL
-  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([])
 
   const priorities = [
     {
@@ -60,7 +59,7 @@ export function FilterByPriority() {
   return (
     <>
       <Popover>
-        <PopoverTrigger className='text-sm active:scale-95 duration-200'>
+        <PopoverTrigger className="text-sm active:scale-95 duration-200">
           <IoFilterCircle size={18} />
           <span>Prioridades</span>
         </PopoverTrigger>
@@ -68,7 +67,7 @@ export function FilterByPriority() {
         <PopoverContent sideOffset={5} side="bottom" align="end">
           <div className="flex items-center justify-between w-full">
             <h3 className="text-base font-medium">Filtros</h3>
-            <PopoverClose className='active:scale-95 p-1 border rounded-md hover:bg-zinc-200 duration-200'>
+            <PopoverClose className="active:scale-95 p-1 border rounded-md hover:bg-zinc-200 duration-200">
               <LuX size={16} />
             </PopoverClose>
           </div>
