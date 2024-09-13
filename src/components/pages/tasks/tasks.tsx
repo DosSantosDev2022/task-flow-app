@@ -17,24 +17,25 @@ export function Tasks({ tasks, projectId }: TasksProps) {
   const [filter, setFilter] = useState<FilterType>('all')
   const [activeFilter, setActiveFilter] = useState<FilterType>('all')
   const [isLoading, setIsLoading] = useState(false)
-  const { taskStatuses, updateTaskStatus, saveAllChanges } = useTaskStatusStore()
+  const { taskStatuses, updateTaskStatus, saveAllChanges } =
+    useTaskStatusStore()
 
   useEffect(() => {
     // Initialize the task statuses from tasks prop
-    tasks.forEach(task => {
+    tasks.forEach((task) => {
       if (!taskStatuses[task.id]) {
         updateTaskStatus(task.id, task.status)
       }
     })
   }, [tasks, taskStatuses, updateTaskStatus])
 
- // Filtra tarefas de acordo com o status atual
- const filteredTasks = (status: FilterType) => {
-  if (status === 'all') {
-    return tasks
+  // Filtra tarefas de acordo com o status atual
+  const filteredTasks = (status: FilterType) => {
+    if (status === 'all') {
+      return tasks
+    }
+    return tasks.filter((task) => taskStatuses[task.id] === status)
   }
-  return tasks.filter(task => taskStatuses[task.id] === status)
-}
 
   const statusOptions: { label: string; value: FilterType }[] = [
     {
@@ -72,9 +73,12 @@ export function Tasks({ tasks, projectId }: TasksProps) {
   }
 
   // Função para adicionar uma nova tarefa à lista
-  const handleAddTask = useCallback((newTask: Task) => {
-    updateTaskStatus(newTask.id, newTask.status)
-  }, [updateTaskStatus])
+  const handleAddTask = useCallback(
+    (newTask: Task) => {
+      updateTaskStatus(newTask.id, newTask.status)
+    },
+    [updateTaskStatus],
+  )
 
   return (
     <>

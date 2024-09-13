@@ -2,68 +2,37 @@
 
 import { Input } from '@/components/global/input'
 import { CiSearch } from 'react-icons/ci'
-import { ProjectCards } from './projectsCards'
 import { useForm } from 'react-hook-form'
 import { Project } from '@prisma/client'
-import { useEffect, useMemo, useState } from 'react'
-import { SkeletonProjectListCards } from './skeletons/SkeletonProjectList'
+import { useMemo } from 'react'
+import { Avatar } from '@/components/global/avatar'
+import { useRouter } from 'next/navigation'
 
 type InputSearch = {
   search: string
 }
 
-async function getProjects() {
-  try {
-    const baseUrl =
-      typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
-    const res = await fetch(`${baseUrl}/api/projects`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-cache',
-    })
-
-    if (!res.ok) {
-      throw new Error('Erro ao buscar projetos')
-    }
-
-    const data = await res.json()
-    console.log('Projetos obtidos:', data) // Log dos dados recebidos
-    return data.projects // Acessar a chave 'projects'
-  } catch (error) {
-    console.error('Erro ao buscar projetos:', error)
-    return []
-  }
+interface ProjectListProps {
+  projects: Project[]
 }
 
-export function ProjectList() {
+export function ProjectList({ projects }: ProjectListProps) {
   const { register, watch } = useForm<InputSearch>()
-  const [project, setProject] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
   const searchTerm = watch('search', '')
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setLoading(true)
-      const projects = await getProjects()
-      setProject(projects)
-      setLoading(false)
-    }
-
-    fetchProjects()
-  }, [])
+  const router = useRouter()
 
   const filteredProjects = useMemo(() => {
-    if (project.length > 0) {
-      return project.filter((p) =>
+    if (projects.length > 0) {
+      return projects.filter((p) =>
         p.title.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     }
     return []
-  }, [project, searchTerm])
+  }, [projects, searchTerm])
 
-  if (loading) return <SkeletonProjectListCards />
+  const handleProjectClick = (id: string) => {
+    router.push(`/tasks?projectId=${id}`)
+  }
 
   return (
     <div className="col-span-3 px-2 py-3 border h-full">
@@ -81,19 +50,16 @@ export function ProjectList() {
       <div className="flex flex-col gap-1 mt-2 overflow-y-auto max-h-[424px] scrollbar-thin scrollbar-track-zinc-50 scrollbar-thumb-zinc-600 p-2">
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
-            <ProjectCards
+            <div
+              onClick={() => handleProjectClick(project.id)}
               key={project.id}
-              slug={project.slug}
-              id={project.id}
-              title={project.title}
-              description={project.description}
-              endDate={project.endDate}
-              startDate={project.startDate}
-              userId={project.userId}
-              price={project.price}
-              payment={'CREDITO'}
-              clientId={null}
-            />
+              className="flex items-center justify-center gap-2 w-full border py-2 px-1 cursor-pointer"
+            >
+              <Avatar Alt="Icone do projeto" name={project.title} Url="" />
+              <span className="text-zinc-600 font-normal text-sm w-full">
+                {project.title}
+              </span>
+            </div>
           ))
         ) : (
           <span>Nenhum projeto encontrado!</span>

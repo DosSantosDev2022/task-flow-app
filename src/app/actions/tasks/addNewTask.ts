@@ -16,13 +16,12 @@ export async function addNewTaskAction(dataTask: TaskFormData) {
         ...validatedData,
         startDate: new Date(validatedData.startDate),
         endDate: new Date(validatedData.endDate),
-        projectId: validatedData.projectId
+        projectId: validatedData.projectId,
       },
     })
     revalidatePath('/tasks')
     console.log(newTask)
     return newTask
-   
   } catch (error) {
     console.error('Erro ao adicionar nova tarefa:', error)
   }

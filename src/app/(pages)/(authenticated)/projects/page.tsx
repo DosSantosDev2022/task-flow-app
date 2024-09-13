@@ -11,7 +11,7 @@ import { FilterProjects } from '@/components/pages/projects/filters/'
 import { ProjectCreationForm } from '@/components/pages/projects/createdProject/ProjectCreationForm'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { Client, Project, Task } from '@prisma/client'
-import { getServerSession, Session } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { TableActions } from '@/components/pages/projects/tableActions/actions'
 import { ProgressBar } from '@/components/global/progressBar'
@@ -24,7 +24,7 @@ import {
   LuUser,
 } from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
-/* import { ProjectData } from '@/@types/prisma' */
+import { getProjects, ProjectData } from '@/utils/getProjects'
 
 // Definindo as cores de status e prioridade
 const statusColors = {
@@ -39,54 +39,17 @@ const priorityColors = {
   ALTA: 'bg-red-500',
 }
 
-interface ProjectData extends Project {
-  client: Client
-  tasks: Task[]
-}
-
-interface ProjectsResponse {
-  projects: ProjectData[]
-  totalProjects: number
-}
-
-async function getProjects(
-  page: number,
-  limit: number,
-  session?: Session | null,
-  search?: string,
-  priority?: string,
-  status?: string,
-  sort?: string,
-  sortBy?: string,
-): Promise<ProjectsResponse> {
-  const userSession = session?.user
-  console.log('userSession', userSession)
-  try {
-    const baseUrl =
-      typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
-    const res = await fetch(
-      `${baseUrl}/api/projects?search=${search}&priority=${priority}&status=${status}&sort=${sort}&sortBy=${sortBy}&page=${page}&limit=${limit}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.user.id}`,
-        },
-      },
-    )
-
-    if (!res.ok) {
-      throw new Error('Erro ao buscar projetos')
-    }
-
-    const { projects, totalProjects } = await res.json()
-
-    return { projects, totalProjects }
-  } catch (error) {
-    console.error('Erro ao buscar projetos:', error)
-    return { projects: [], totalProjects: 0 }
-  }
-}
+const headers = [
+  { title: 'Título', icon: <MdOutlineTitle /> },
+  { title: 'Descrição', icon: <LuList /> },
+  { title: 'Cliente', icon: <LuUser /> },
+  { title: 'Data de início', icon: <LuCalendarDays /> },
+  { title: 'Data de entrega', icon: <LuCalendarDays /> },
+  { title: 'Progresso', icon: <RiProgress1Line /> },
+  { title: 'Status', icon: <LuLoader2 /> },
+  { title: 'Prioridade', icon: <MdPriorityHigh /> },
+  { title: 'Ações', icon: <LuRedoDot />, className: 'w-[30px]' },
+]
 
 interface ProjectSearchParams {
   searchParams: {
@@ -102,7 +65,6 @@ interface ProjectSearchParams {
 
 export default async function Projects({ searchParams }: ProjectSearchParams) {
   const session = await getServerSession(authOptions)
-  console.log('seção no projects', session)
   const page = Number(searchParams.page) || 1
   const limit = Number(searchParams.limit) || 10
   const search = searchParams.search || ''
@@ -110,7 +72,8 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   const status = searchParams.status || ''
   const sort = searchParams.sort || ''
   const sortBy = searchParams.sortBy || 'startDate'
-  const { projects, totalProjects } = await getProjects(
+  /* Função para busca de projetos */
+  const { projects, totalProjects } = await getProjects({
     page,
     limit,
     session,
@@ -119,19 +82,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
     status,
     sort,
     sortBy,
-  )
-  /* console.log(projects[0].tasks) */
-  const headers = [
-    { title: 'Título', icon: <MdOutlineTitle /> },
-    { title: 'Descrição', icon: <LuList /> },
-    { title: 'Cliente', icon: <LuUser /> },
-    { title: 'Data de início', icon: <LuCalendarDays /> },
-    { title: 'Data de entrega', icon: <LuCalendarDays /> },
-    { title: 'Progresso', icon: <RiProgress1Line /> },
-    { title: 'Status', icon: <LuLoader2 /> },
-    { title: 'Prioridade', icon: <MdPriorityHigh /> },
-    { title: 'Ações', icon: <LuRedoDot />, className: 'w-[30px]' },
-  ]
+  })
 
   return (
     <div>
