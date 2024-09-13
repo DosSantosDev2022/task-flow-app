@@ -1,40 +1,65 @@
-import { prisma } from '@/lib/prisma'
 import {
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
   Table,
 } from '@/components/global/table'
-import { Input } from '@/components/global/input'
-import { Button } from '@/components/global/button'
-import { CiSearch } from 'react-icons/ci'
-import { BiExport } from 'react-icons/bi'
-import { FilterProjects } from '@/components/pages/projects/filterProjects'
+import { FilterProjects } from '@/components/pages/projects/filters'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth'
 import { CreatedClients } from '@/components/pages/clients/createdClients/createdClients'
+import { ClientData, getClients } from '@/utils/getClients'
+import { Button } from '@/components/global/button'
+import { BiExport } from 'react-icons/bi'
+import { Pagination } from '@/components/global/pagination/pagination'
+import { BsCalendar2DateFill } from 'react-icons/bs'
+import { MdAttachEmail, MdMyLocation, MdOutlineTitle } from 'react-icons/md'
+import { FaCity, FaMap, FaPhone } from 'react-icons/fa'
+import { FaLocationDot, FaMapLocation } from 'react-icons/fa6'
 
-async function getClients() {
-  const session = await getServerSession(authOptions)
-  try {
-    const clients = await prisma.client.findMany({
-      where: {
-        userId: session?.user.id,
-      },
-    })
-    return clients
-  } catch (error) {
-    console.error('Erro ao buscar clientes, verifique !', error)
-    return []
+interface ClientsSearchParams {
+  searchParams: {
+    search: string
+    page: string
+    limit: string
+    sort: string
+    sortBy: string
   }
 }
 
-export default async function ClientsPage() {
-  const clients = await getClients()
+const headers = [
+  { label: 'name', icon: <MdOutlineTitle /> },
+  { label: 'email', icon: <MdAttachEmail /> },
+  { label: 'phone', icon: <FaPhone /> },
+  { label: 'address', icon: <FaLocationDot /> },
+  { label: 'city', icon: <FaCity /> },
+  { label: 'state', icon: <FaMapLocation /> },
+  { label: 'postalCode', icon: <MdMyLocation /> },
+  { label: 'country', icon: <FaMap /> },
+  { label: 'createdAt', icon: <BsCalendar2DateFill />, className: 'w-[30px]' },
+]
+
+export default async function ClientsPage({
+  searchParams,
+}: ClientsSearchParams) {
+  const session = await getServerSession(authOptions)
+  const page = Number(searchParams.page) || 1
+  const limit = Number(searchParams.limit) || 10
+  const search = searchParams.search || ''
+  const sort = searchParams.sort || ''
+  const sortBy = searchParams.sortBy || 'createdAt'
+  console.log('seção do client', session)
+  /* Função para busca de clients */
+  const { clients, totalClients } = await getClients({
+    search,
+    session,
+    page,
+    limit,
+    sort,
+    sortBy,
+  })
 
   return (
     <div>
@@ -44,13 +69,6 @@ export default async function ClientsPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Input.Root>
-            <Input.Icon>
-              <CiSearch size={24} className="text-zinc-400" />
-            </Input.Icon>
-            <Input.Input placeholder="Buscar cliente..." />
-          </Input.Root>
-
           <FilterProjects />
 
           <Button sizes="icon" variant="outline" className="w-12">
@@ -62,40 +80,64 @@ export default async function ClientsPage() {
       {/* List and projects */}
 
       <div className="px-3 py-4">
-        {clients.length === 0 ? (
-          <p>Nenhum projeto encontrado.</p>
+        {clients?.length === 0 ? (
+          <div className="w-full h-screen flex items-start px-10 py-16 justify-center">
+            <p>Nenhum projeto encontrado.</p>
+          </div>
         ) : (
           <Table>
-            <TableCaption>Lista de Projetos</TableCaption>
             <TableHeader>
-              <TableRow className="hover:opacity-100">
-                <TableHead>Título</TableHead>
-                <TableHead>Descrição</TableHead>
-                <TableHead>Início</TableHead>
-                <TableHead>Fim</TableHead>
-                <TableHead>Visualizar</TableHead>
+              <TableRow className="bg-zinc-800">
+                {headers.map((header) => (
+                  <TableHead
+                    key={header.label}
+                    className={header.className || 'whitespace-nowrap'}
+                  >
+                    <div className="flex items-center gap-2 justify-start">
+                      <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
+                        {header.icon}
+                      </span>
+                      <span className="font-medium text-zinc-50">
+                        {header.label}
+                      </span>
+                    </div>
+                  </TableHead>
+                ))}
               </TableRow>
             </TableHeader>
+
             <TableBody>
-              {clients.map((client) => (
+              {clients?.map((client: ClientData) => (
                 <TableRow key={client.id}>
                   <TableCell>{client.name}</TableCell>
                   <TableCell>{client.email}</TableCell>
+                  <TableCell>{client.phone}</TableCell>
                   <TableCell>{client.address}</TableCell>
                   <TableCell>{client.city}</TableCell>
                   <TableCell>{client.state}</TableCell>
+                  <TableCell>{client.postalCode}</TableCell>
+                  <TableCell>{client.country}</TableCell>
+                  <TableCell>
+                    {new Date(client.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  {/*  <TableCell className="flex items-center justify-center gap-1">
+                    <TableActions project={project} />
+                  </TableCell> */}
                 </TableRow>
               ))}
             </TableBody>
-            <TableFooter>
-              <TableRow className="hover:opacity-100">
-                <TableCell colSpan={5}>
-                  Total de Projetos: {clients.length}
-                </TableCell>
-              </TableRow>
-            </TableFooter>
           </Table>
         )}
+
+        <div className="bg-zinc-100 border-t px-3 py-2.5 ">
+          <Pagination
+            limit={limit}
+            page={page}
+            total={totalClients}
+            baseUrl="/clients"
+            queryParams={{}}
+          />
+        </div>
       </div>
     </div>
   )
