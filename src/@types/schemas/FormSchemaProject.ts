@@ -12,6 +12,7 @@ export const FormSchema = z.object({
   price: z.string().min(1, 'O preço é obrigatório'),
   payment: z.enum(paymentSchema),
   userId: z.string(),
+  clientId: z.string(),
   status: z.enum(statusSchema),
   priority: z.enum(prioritySchema),
 })

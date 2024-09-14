@@ -48,6 +48,17 @@ const priority = [
   },
 ]
 
+const clients = [
+  {
+    label: 'Juliano Santos',
+    id: '740ea0fe-5db2-4e43-b4c5-d5a878a3fe66',
+  },
+  {
+    label: 'Amanda Oliveira',
+    id: 'f46bfc07-0c1b-4676-8100-8d8b79f24ab6',
+  },
+]
+
 export function ProjectCreationForm() {
   const {
     register,
@@ -226,6 +237,25 @@ export function ProjectCreationForm() {
                   </span>
                 )}
               </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <Label>Cliente</Label>
+              <div className="w-full mx-auto">
+                <select
+                  {...register('clientId')}
+                  className="bg-gray-50 w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                >
+                  <option selected>Selecione</option>
+                  {clients.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {errors && (
+                <span className="text-red-800">{errors.clientId?.message}</span>
+              )}
             </div>
             <div className="flex flex-col gap-1">
               <Label className="">Prioriades</Label>
