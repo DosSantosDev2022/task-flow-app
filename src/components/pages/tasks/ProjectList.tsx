@@ -1,6 +1,6 @@
 'use client'
 
-import { Input } from '@/components/global/input'
+import { Input } from '@/components/global/Form/input'
 import { CiSearch } from 'react-icons/ci'
 import { useForm } from 'react-hook-form'
 import { Project } from '@prisma/client'

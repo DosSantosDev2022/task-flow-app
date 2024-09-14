@@ -2,7 +2,7 @@
 import React from 'react'
 import { FilterByStatus } from '@/components/pages/projects/filters/FilterByStatus'
 import { FilterByPriority } from '@/components/pages/projects/filters/FilterByPriority'
-import { Input } from '@/components/global/input'
+import { Input } from '@/components/global/Form/input'
 import { CiSearch } from 'react-icons/ci'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'

@@ -14,7 +14,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNotification } from '@/contexts/NotificationContext'
 import { updateProjectAction } from '@/app/actions/project/update'
 import { useSession } from 'next-auth/react'
-import { Label } from '@/components/global/label'
+import { Label } from '@/components/global/Form/label'
 
 type ProjectType = {
   id: string

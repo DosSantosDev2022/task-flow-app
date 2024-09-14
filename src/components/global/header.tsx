@@ -1,5 +1,5 @@
 import { IoNotifications } from 'react-icons/io5'
-import { Input } from './input'
+import { Input } from '@/components/global/Form/input'
 import { AiFillMessage } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 import { User } from './user'

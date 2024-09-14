@@ -7,10 +7,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/global/modal'
-import { Input } from '@/components/global/input'
-import { Label } from '@/components/global/label'
+import { Input } from '@/components/global/Form/input'
+import { Label } from '@/components/global/Form/label'
 import { Button } from '@/components/global/button'
-import TextArea from '@/components/global/textArea'
+import TextArea from '@/components/global/Form/textArea'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormTaskSchema, TaskFormData } from '@/@types/schemas/FormSchemaTasks'
@@ -25,7 +25,7 @@ interface TaskAddFormProps {
   onAddTask: (task: Task) => void // Adiciona a prop onAddTask
 }
 
-export function TaskAddForm({projectId,onAddTask}: TaskAddFormProps) {
+export function TaskAddForm({ projectId, onAddTask }: TaskAddFormProps) {
   const { data } = useSession()
   const [isLoading, setIsLoading] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState(false)
@@ -41,15 +41,14 @@ export function TaskAddForm({projectId,onAddTask}: TaskAddFormProps) {
   const onSubmitAction: SubmitHandler<TaskFormData> = async (formData) => {
     try {
       setIsLoading(true)
-      const newTask = await addNewTaskAction({...formData, projectId}) // server action
+      const newTask = await addNewTaskAction({ ...formData, projectId }) // server action
       console.log(newTask)
-       if(newTask) {
+      if (newTask) {
         onAddTask(newTask)
-       } else {
+      } else {
         throw new Error('A terefa criada é indefinida')
-       }
+      }
 
-      
       setIsOpenModal(false)
       showNotification('Tarefa cadastrada com sucesso!', 'success', 5000)
     } catch (error) {
@@ -60,7 +59,6 @@ export function TaskAddForm({projectId,onAddTask}: TaskAddFormProps) {
       setIsLoading(false)
     }
   }
-
 
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
@@ -84,7 +82,7 @@ export function TaskAddForm({projectId,onAddTask}: TaskAddFormProps) {
             value={data?.user.id}
             className="hidden"
           />
-           <input
+          <input
             {...register('projectId')}
             value={projectId}
             className="hidden"
@@ -155,16 +153,15 @@ export function TaskAddForm({projectId,onAddTask}: TaskAddFormProps) {
             </div>
 
             <div className="w-full flex items-center gap-2 justify-end p-2">
-            <Button
-              isLoading={isLoading}
-              variant="highlight"
-              sizes="full"
-              className="text-base flex items-center justify-center"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Cadastrando...' : 'Cadastrar'}
-            </Button>
-              
+              <Button
+                isLoading={isLoading}
+                variant="highlight"
+                sizes="full"
+                className="text-base flex items-center justify-center"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Cadastrando...' : 'Cadastrar'}
+              </Button>
             </div>
           </div>
         </form>
