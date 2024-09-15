@@ -11,7 +11,7 @@ interface FormFieldProps<TFormValues extends FieldValues> {
   error?: FieldError
 }
 
-export const FormField = <TFormValues extends Record<string, unknown>>({
+export const FormField = <TFormValues extends FieldValues>({
   label,
   type,
   placeholder,

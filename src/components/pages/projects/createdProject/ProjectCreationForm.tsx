@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSession } from 'next-auth/react'
@@ -32,6 +32,7 @@ const clients = [
 
 export function ProjectCreationForm() {
   const {
+    setValue,
     register,
     handleSubmit,
     formState: { errors },
@@ -43,6 +44,13 @@ export function ProjectCreationForm() {
   const { showNotification } = useNotification()
   const { data } = useSession()
   const session = data
+
+  useEffect(() => {
+    if (session) {
+      setValue('userId', session.user.id)
+      setValue('status', 'PENDENTES')
+    }
+  }, [session, setValue])
 
   const onSubmitAction: SubmitHandler<FormDataProject> = async (formData) => {
     try {
@@ -85,17 +93,6 @@ export function ProjectCreationForm() {
           </DialogHeader>
 
           <form onSubmit={handleSubmit(onSubmitAction)} className="space-y-3">
-            <input
-              {...register('userId')}
-              value={session?.user.id}
-              className="hidden"
-            />
-            <input
-              {...register('status')}
-              value="PENDENTES"
-              className="hidden"
-            />
-
             <FormField
               label="Nome do projeto"
               type="text"

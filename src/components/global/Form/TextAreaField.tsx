@@ -10,7 +10,7 @@ interface TextAreaFieldProps<TFormValues extends FieldValues> {
   error?: FieldError
 }
 
-export const TextAreaField = <TFormValues extends Record<string, unknown>>({
+export const TextAreaField = <TFormValues extends FieldValues>({
   label,
   placeholder,
   register,

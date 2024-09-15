@@ -9,7 +9,7 @@ interface SelectFieldProps<TFormValues extends FieldValues> {
   error?: FieldError
 }
 
-export const SelectField = <TFormValues extends Record<string, unknown>>({
+export const SelectField = <TFormValues extends FieldValues>({
   label,
   options,
   register,

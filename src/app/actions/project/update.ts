@@ -1,24 +1,9 @@
 'use server'
+import { FormDataProject } from '@/@types/schemas/FormSchemaProject'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
-import { z } from 'zod'
 
-const UpdateProjectSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  description: z.string().nullable(),
-  startDate: z.string(),
-  endDate: z.string(),
-  price: z.string(),
-  payment: z.enum(['DINHEIRO', 'CREDITO', 'DEBITO', 'PIX']),
-  status: z.enum(['TODOS', 'FINALIZADOS', 'PENDENTES']),
-  userId: z.string(),
-  priority: z.enum(['BAIXA', 'MEDIA', 'ALTA']),
-})
-
-export type UpdateProjectInput = z.infer<typeof UpdateProjectSchema>
-
-export async function updateProjectAction(formData: UpdateProjectInput) {
+export async function updateProjectAction(formData: FormDataProject) {
   try {
     const updateProject = await prisma.project.update({
       where: { id: formData.id },
