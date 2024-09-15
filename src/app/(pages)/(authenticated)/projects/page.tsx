@@ -8,9 +8,8 @@ import {
   Table,
 } from '@/components/global/table'
 import { FilterProjects } from '@/components/pages/projects/filters/'
-import { ProjectCreationForm } from '@/components/pages/projects/createdProject/ProjectCreationForm'
+import { ProjectCreationModal } from '@/components/pages/projects/createdProject/ProjectModal'
 import { Pagination } from '@/components/global/pagination/pagination'
-import { Client, Project, Task } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { TableActions } from '@/components/pages/projects/tableActions/actions'
@@ -87,7 +86,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   return (
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
-        <ProjectCreationForm />
+        <ProjectCreationModal />
         <FilterProjects />
       </div>
 

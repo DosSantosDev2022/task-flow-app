@@ -1,36 +1,35 @@
-import { FieldError, FieldValues, Path, UseFormRegister } from 'react-hook-form'
+import { FieldError, UseFormRegisterReturn } from 'react-hook-form'
 import { Label } from '@/components/global/Form/label'
 
-interface SelectFieldProps<TFormValues extends FieldValues> {
+interface SelectOption {
   label: string
-  options: string[]
-  register: UseFormRegister<TFormValues>
-  name: Path<TFormValues>
+  value: string
+}
+
+interface SelectFieldProps {
+  label: string
+  options: SelectOption[] // Agora aceita um array de objetos contendo label e value
+  register: UseFormRegisterReturn // O objeto retornado por register()
   error?: FieldError
 }
 
-export const SelectField = <TFormValues extends FieldValues>({
+export const SelectField = ({
   label,
   options,
-  register,
-  name,
+  register, // Agora é o retorno de register()
   error,
-}: SelectFieldProps<TFormValues>) => (
+}: SelectFieldProps) => (
   <div className="flex flex-col gap-1">
     <Label>{label}</Label>
-    <div className="w-full mx-auto">
-      <select
-        {...register(name)}
-        className="bg-gray-50 w-full border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5"
-      >
-        <option value="">Selecione</option>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-    {error && <span className="text-red-800">{error.message}</span>}
+    <select {...register} className="text-sm">
+      <option value="">Selecione uma opção</option>{' '}
+      {/* Placeholder para seleção */}
+      {options.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+    {error?.message && <span className="text-red-800">{error.message}</span>}
   </div>
 )

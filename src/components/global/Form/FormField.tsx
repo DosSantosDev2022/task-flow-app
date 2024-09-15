@@ -1,24 +1,22 @@
-import { FieldError, UseFormRegister, Path, FieldValues } from 'react-hook-form'
+import { FieldError, UseFormRegisterReturn } from 'react-hook-form'
 import { Input } from '@/components/global/Form/input'
 import { Label } from '@/components/global/Form/label'
 
-interface FormFieldProps<TFormValues extends FieldValues> {
+interface FormFieldProps {
   label: string
   type: string
   placeholder?: string
-  register: UseFormRegister<TFormValues>
-  name: Path<TFormValues> // Usar Path para garantir que o nome seja uma chave válida
+  register: UseFormRegisterReturn // Alterado para aceitar o objeto retornado por register()
   error?: FieldError
 }
 
-export const FormField = <TFormValues extends FieldValues>({
+export const FormField = ({
   label,
   type,
   placeholder,
-  register,
-  name,
+  register, // Agora é o retorno de register()
   error,
-}: FormFieldProps<TFormValues>) => (
+}: FormFieldProps) => (
   <div className="flex flex-col gap-1">
     <Label>{label}</Label>
     <Input.Root>
@@ -26,7 +24,7 @@ export const FormField = <TFormValues extends FieldValues>({
         className="text-sm"
         type={type}
         placeholder={placeholder}
-        {...register(name)}
+        {...register} // Espalha as propriedades de register diretamente no input
       />
     </Input.Root>
     {error?.message && <span className="text-red-800">{error.message}</span>}
