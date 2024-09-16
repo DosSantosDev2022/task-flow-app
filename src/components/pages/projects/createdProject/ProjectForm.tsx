@@ -61,7 +61,6 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
     control,
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm<FormDataProject>({
     resolver: zodResolver(FormSchema),
@@ -70,9 +69,6 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   const { showNotification } = useNotification()
   const { data } = useSession()
   const session = data
-
-  const values = getValues() // Exibe todos os valores do formulário
-  console.log(values)
 
   useEffect(() => {
     if (session) {

@@ -87,7 +87,7 @@ CREATE TABLE "projects" (
     "status" "ProjectStatus" NOT NULL DEFAULT 'PENDENTES',
     "priority" "ProjectPriority" NOT NULL,
     "userId" TEXT NOT NULL,
-    "clientId" TEXT,
+    "clientId" TEXT NOT NULL,
 
     CONSTRAINT "projects_pkey" PRIMARY KEY ("id")
 );
@@ -137,7 +137,7 @@ ALTER TABLE "clients" ADD CONSTRAINT "clients_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "projects" ADD CONSTRAINT "projects_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "projects" ADD CONSTRAINT "projects_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "projects" ADD CONSTRAINT "projects_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "tasks" ADD CONSTRAINT "tasks_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "projects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

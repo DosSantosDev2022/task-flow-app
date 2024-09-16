@@ -11,6 +11,7 @@ interface SelectFieldProps {
   options: SelectOption[] // Agora aceita um array de objetos contendo label e value
   register: UseFormRegisterReturn // O objeto retornado por register()
   error?: FieldError
+  disabled?: boolean
 }
 
 export const SelectField = ({
@@ -18,10 +19,15 @@ export const SelectField = ({
   options,
   register, // Agora é o retorno de register()
   error,
+  disabled,
 }: SelectFieldProps) => (
   <div className="flex flex-col gap-1">
     <Label>{label}</Label>
-    <select {...register} className="text-sm">
+    <select
+      disabled={disabled}
+      {...register}
+      className={disabled ? 'cursor-not-allowed' : 'text-sm'}
+    >
       <option value="">Selecione uma opção</option>{' '}
       {/* Placeholder para seleção */}
       {options.map((option, index) => (

@@ -8,6 +8,7 @@ interface FormFieldProps {
   placeholder?: string
   register: UseFormRegisterReturn // Alterado para aceitar o objeto retornado por register()
   error?: FieldError
+  disabled?: boolean
 }
 
 export const FormField = ({
@@ -16,15 +17,17 @@ export const FormField = ({
   placeholder,
   register, // Agora é o retorno de register()
   error,
+  disabled,
 }: FormFieldProps) => (
   <div className="flex flex-col gap-1 w-full">
     <Label>{label}</Label>
     <Input.Root>
       <Input.Input
-        className="text-sm"
+        className={disabled ? 'cursor-not-allowed' : 'text-sm'}
         type={type}
         placeholder={placeholder}
         {...register} // Espalha as propriedades de register diretamente no input
+        disabled={disabled}
       />
     </Input.Root>
     {error?.message && <span className="text-red-800">{error.message}</span>}

@@ -62,18 +62,18 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   }
 
   return (
-    <div className="w-full max-w-[330px] px-6 py-7 border border-gray-300 rounded-2xl">
+    <div className="w-full max-w-[300px] flex flex-col items-center justify-center p-4 border border-zinc-300 rounded-2xl">
       <div className="flex items-center gap-2 mb-2">
-        <div className="flex items-center gap-8 border border-gray-300 w-full justify-between rounded-xl py-0.5 px-0.5 text-sm font-medium text-gray-900">
+        <div className="flex items-center gap-8 border text-zinc-900 border-zinc-300 w-full justify-between rounded-xl py-0.5 px-0.5 text-sm font-medium ">
           <button
-            className="text-gray-900 p-2 rounded-lg transition-all duration-500 hover:bg-indigo-100 hover:text-indigo-600"
+            className="p-2 rounded-lg transition-all duration-500 hover:bg-violet-100 hover:text-violet-800"
             onClick={prevMonth}
           >
             <LuChevronLeft />
           </button>
           {format(currentDate, 'MMMM yyyy')}
           <button
-            className="text-gray-900 p-2 rounded-lg transition-all duration-500 hover:bg-indigo-100 hover:text-indigo-600"
+            className=" p-2 rounded-lg transition-all duration-500 hover:bg-violet-100 hover:text-violet-800"
             onClick={nextMonth}
           >
             <LuChevronRight />
@@ -84,16 +84,18 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
       <table className="pb-3 w-full">
         <thead className="mb-2">
           <tr className="flex">
-            {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((dayName) => (
-              <td
-                key={dayName}
-                className="flex items-center justify-center w-10 h-10"
-              >
-                <p className="text-sm font-medium text-gray-900 rounded-full flex items-center justify-center w-full h-full transition-all duration-300 hover:bg-indigo-100 hover:text-indigo-600">
-                  {dayName}
-                </p>
-              </td>
-            ))}
+            {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'].map(
+              (dayName) => (
+                <td
+                  key={dayName}
+                  className="flex items-center justify-center w-10 h-10"
+                >
+                  <p className="text-sm font-medium text-gray-900 rounded-full flex items-center justify-center w-full h-full">
+                    {dayName}
+                  </p>
+                </td>
+              ),
+            )}
           </tr>
         </thead>
         <tbody>
@@ -117,13 +119,13 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
                         <p
                           onClick={() => handleSelectDate(date)}
                           className={`text-sm font-medium cursor-pointer ${
-                            isCurrentMonth ? 'text-gray-900' : 'text-gray-300'
+                            isCurrentMonth ? 'text-zinc-900' : 'text-zinc-300'
                           } rounded-full flex items-center justify-center w-full h-full transition-all duration-300 ${
                             isSelected
-                              ? 'bg-indigo-600 text-white'
+                              ? 'bg-violet-600 text-zinc-50'
                               : isToday
-                                ? 'bg-indigo-400 text-white'
-                                : 'hover:bg-indigo-100 hover:text-indigo-600'
+                                ? 'bg-violet-400 text-zinc-50'
+                                : 'hover:bg-violet-100'
                           }`}
                         >
                           {date.getDate()}

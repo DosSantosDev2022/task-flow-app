@@ -15,6 +15,7 @@ interface FormDatePickerProps<T extends FieldValues> {
   control: Control<T>
   label: string
   error?: string
+  disabled?: boolean
 }
 
 export function FormDatePicker<T extends FieldValues>({
@@ -22,6 +23,7 @@ export function FormDatePicker<T extends FieldValues>({
   control,
   label,
   error,
+  disabled,
 }: FormDatePickerProps<T>) {
   return (
     <div className="flex flex-col gap-1 w-full">
@@ -41,7 +43,14 @@ export function FormDatePicker<T extends FieldValues>({
 
             return (
               <>
-                <PopoverTrigger className="w-full p-1.5 border border-gray-300 rounded-md active:scale-95 duration-300">
+                <PopoverTrigger
+                  className={`w-full p-1.5 border rounded-md active:scale-95 duration-300 ${
+                    disabled
+                      ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
+                      : 'border-gray-300'
+                  }`}
+                  disabled={disabled}
+                >
                   <div className="flex gap-2 items-center justify-center text-zinc-400">
                     <LuCalendarDays size={18} />
                     {field.value && isValid(parsedDate) ? (

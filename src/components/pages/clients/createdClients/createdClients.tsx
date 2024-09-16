@@ -1,8 +1,8 @@
 'use client'
 
 import { Button } from '@/components/global/button'
-import { Input } from '@/components/global/input'
-import { Label } from '@/components/global/label'
+import { Input } from '@/components/global/Form/input'
+import { Label } from '@/components/global/Form/label'
 import {
   Dialog,
   DialogContent,
