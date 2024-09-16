@@ -11,6 +11,7 @@ import { SelectField } from '@/components/global/Form/SelectField'
 import { createProjectAction } from '@/app/actions/project/create'
 import { FormDataProject, FormSchema } from '@/@types/schemas/FormSchemaProject'
 import { TextAreaField } from '@/components/global/Form/TextAreaField'
+import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
 
 // Dados fixos
 const payments = [
@@ -57,6 +58,7 @@ interface ProjectCreationFormProps {
 export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   const {
     setValue,
+    control,
     register,
     handleSubmit,
     getValues,
@@ -68,10 +70,10 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   const { showNotification } = useNotification()
   const { data } = useSession()
   const session = data
-  console.log(setIsLoading)
+
   const values = getValues() // Exibe todos os valores do formulário
   console.log(values)
-  console.log('erros', errors)
+
   useEffect(() => {
     if (session) {
       setValue('userId', session.user.id)
@@ -111,35 +113,38 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
       />
 
       <div className="flex w-full items-center justify-between gap-2">
-        <FormField
-          label="Data de início"
-          type="date"
-          register={register('startDate')}
-          error={errors.startDate}
-        />
+        <div className="w-full flex items-center space-x-3">
+          <FormDatePicker
+            name="startDate"
+            control={control}
+            label="Data de Início"
+            error={errors.startDate?.message}
+          />
 
-        <FormField
-          label="Data de entrega"
-          type="date"
-          register={register('endDate')}
-          error={errors.endDate}
-        />
+          <FormDatePicker
+            name="endDate"
+            control={control}
+            label="Data de Início"
+            error={errors.startDate?.message}
+          />
+        </div>
 
-        <FormField
-          label="Preço"
-          type="number"
-          placeholder="R$: 0,00"
-          register={register('price')}
-          error={errors.price}
-        />
+        <div className="flex items-center justify-center w-full space-x-3">
+          <FormField
+            label="Preço"
+            type="number"
+            placeholder="R$: 0,00"
+            register={register('price')}
+            error={errors.price}
+          />
+          <SelectField
+            label="Forma de pagamento"
+            options={payments}
+            register={register('payment')}
+            error={errors.payment}
+          />
+        </div>
       </div>
-
-      <SelectField
-        label="Forma de pagamento"
-        options={payments}
-        register={register('payment')}
-        error={errors.payment}
-      />
 
       <SelectField
         label="Cliente"

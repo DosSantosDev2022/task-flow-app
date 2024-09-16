@@ -17,7 +17,7 @@ export const FormField = ({
   register, // Agora é o retorno de register()
   error,
 }: FormFieldProps) => (
-  <div className="flex flex-col gap-1">
+  <div className="flex flex-col gap-1 w-full">
     <Label>{label}</Label>
     <Input.Root>
       <Input.Input
