@@ -21,7 +21,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={twMerge('[&_tr]:border-b bg-zinc-100 rounded-t-md ', className)}
+    className={twMerge('[&_tr]:border-b bg-zinc-800 rounded-t-md ', className)}
     {...props}
   />
 ))
@@ -33,7 +33,7 @@ const TableBody = React.forwardRef<
   ComponentProps<'tbody'>
 >(({ className, ...props }, ref) => (
   <tbody
-    className={twMerge('[&_tr:last-child]:border-0 ', className)}
+    className={twMerge('[&_tr:last-child]:border-0  ', className)}
     {...props}
     ref={ref}
   />
@@ -61,7 +61,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, ComponentProps<'tr'>>(
   ({ className, ...props }, ref) => (
     <tr
       className={twMerge(
-        'border-b duration-300 transition-all data-[state=selected]:bg-zinc-200',
+        'border-b  transition-all  hover:opacity-40 duration-300 data-[state=selected]:bg-zinc-200',
         className,
       )}
       {...props}
@@ -76,7 +76,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, ComponentProps<'th'>>(
   ({ className, ...props }, ref) => (
     <th
       className={twMerge(
-        'h-10 px-2  text-left align-middle font-medium text-zinc-700 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'h-10 px-2 whitespace-nowrap text-left align-middle font-medium text-zinc-700',
         className,
       )}
       {...props}
@@ -91,7 +91,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, ComponentProps<'td'>>(
   ({ className, ...props }, ref) => (
     <td
       className={twMerge(
-        'p-1.5  max-w-xs truncate text-zinc-500 font-normal text-sm [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'px-2 py-1.5 max-w-[320px] border truncate text-zinc-400 font-normal text-[13.5] hover:bg-opacity-40',
         className,
       )}
       {...props}
@@ -118,7 +118,7 @@ const TableItem = React.forwardRef<HTMLSpanElement, ComponentProps<'span'>>(
   ({ className, ...props }, ref) => (
     <span
       className={twMerge(
-        'w-24 px-1 py-1.5 text-xs flex  items-center justify-center',
+        'w-[72px] p-1 rounded-md text-zinc-100 text-[11.5px] flex  items-center justify-center',
         className,
       )}
       {...props}

@@ -47,8 +47,8 @@ const priorities = [
   },
 ]
 const clients = [
-  { label: 'Juliano Santos', value: '740ea0fe-5db2-4e43-b4c5-d5a878a3fe66' },
-  { label: 'Amanda Oliveira', value: 'f46bfc07-0c1b-4676-8100-8d8b79f24ab6' },
+  { label: 'Juliano Santos', value: 'ce01a50c-3235-4212-ba8f-0c6e12296455' },
+  /* { label: 'Amanda Oliveira', value: 'f46bfc07-0c1b-4676-8100-8d8b79f24ab6' }, */
 ]
 
 interface ProjectCreationFormProps {

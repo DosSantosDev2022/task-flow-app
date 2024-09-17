@@ -19,7 +19,7 @@ export function ModalEdit({ projectId }: { projectId: string }) {
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <DialogTrigger
-        className="w-full rounded-md bg-violet-700 hover:bg-violet-500 duration-500 text-zinc-50 
+        className="w-full h-8 rounded-md bg-violet-700 hover:bg-violet-500 duration-500 text-zinc-50 
        active:scale-95"
       >
         Editar

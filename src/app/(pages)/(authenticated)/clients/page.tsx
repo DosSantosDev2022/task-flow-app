@@ -108,7 +108,7 @@ export default async function ClientsPage({
 
             <TableBody>
               {clients?.map((client: ClientData) => (
-                <TableRow key={client.id}>
+                <TableRow className="overflow-auto" key={client.id}>
                   <TableCell>{client.name}</TableCell>
                   <TableCell>{client.email}</TableCell>
                   <TableCell>{client.phone}</TableCell>

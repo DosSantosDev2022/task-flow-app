@@ -45,9 +45,13 @@ const headers = [
   { title: 'Data de início', icon: <LuCalendarDays /> },
   { title: 'Data de entrega', icon: <LuCalendarDays /> },
   { title: 'Progresso', icon: <RiProgress1Line /> },
-  { title: 'Status', icon: <LuLoader2 /> },
-  { title: 'Prioridade', icon: <MdPriorityHigh /> },
-  { title: 'Ações', icon: <LuRedoDot />, className: 'w-[30px]' },
+  { title: 'Status', icon: <LuLoader2 />, className: 'w-[30px] ' },
+  { title: 'Prioridade', icon: <MdPriorityHigh />, className: 'w-[30px] ' },
+  {
+    title: '',
+    icon: <LuRedoDot />,
+    className: 'w-full flex items-center justify-center',
+  },
 ]
 
 interface ProjectSearchParams {
@@ -84,7 +88,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   })
 
   return (
-    <div>
+    <>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
         <ProjectCreationModal />
         <FilterProjects />
@@ -99,11 +103,11 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
         ) : (
           <Table>
             <TableHeader>
-              <TableRow className="bg-zinc-800">
+              <TableRow className="hover:opacity-100">
                 {headers.map((header) => (
                   <TableHead
                     key={header.title}
-                    className={header.className || 'whitespace-nowrap'}
+                    className={header.className || ''}
                   >
                     <div className="flex items-center gap-2 justify-start">
                       <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
@@ -121,8 +125,12 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
             <TableBody>
               {projects.map((project: ProjectData) => (
                 <TableRow key={project.id}>
-                  <TableCell>{project.title}</TableCell>
-                  <TableCell>{project.description}</TableCell>
+                  <TableCell className="max-w-[210px] ">
+                    {project.title}
+                  </TableCell>
+                  <TableCell className="max-w-[210px] ">
+                    {project.description}
+                  </TableCell>
                   <TableCell>
                     {project.client?.name || 'Cliente não especificado'}
                   </TableCell>
@@ -135,21 +143,19 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                   <TableCell>
                     <ProgressBar value={50} />
                   </TableCell>
-                  <TableCell>
-                    <TableItem
-                      className={`rounded-md text-zinc-100 ${statusColors[project.status]}`}
-                    >
+                  <TableCell className="w-[30px] ">
+                    <TableItem className={`${statusColors[project.status]}`}>
                       {project.status}
                     </TableItem>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="w-[30px]">
                     <TableItem
-                      className={`rounded-md text-zinc-100 ${priorityColors[project.priority]}`}
+                      className={`${priorityColors[project.priority]}`}
                     >
                       {project.priority}
                     </TableItem>
                   </TableCell>
-                  <TableCell className="flex items-center justify-center gap-1">
+                  <TableCell className="flex items-center justify-center">
                     <TableActions project={project} />
                   </TableCell>
                 </TableRow>
@@ -168,6 +174,6 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
           />
         </div>
       </div>
-    </div>
+    </>
   )
 }

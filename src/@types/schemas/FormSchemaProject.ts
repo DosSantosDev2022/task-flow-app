@@ -5,7 +5,7 @@ const statusSchema = ['TODOS', 'FINALIZADOS', 'PENDENTES'] as const
 const prioritySchema = ['BAIXA', 'MEDIA', 'ALTA'] as const
 
 export const FormSchema = z.object({
-  /* id: z.string().optional(), */
+  id: z.string().optional(),
   title: z.string().min(1, 'O nome do projeto é obrigatório'),
   description: z.string().min(1, 'A descrição do projeto é obrigatória'),
   startDate: z.string(),

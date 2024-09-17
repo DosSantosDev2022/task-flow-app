@@ -52,14 +52,14 @@ export function TableActions({ project }: TableActionsProps) {
   return (
     <>
       <Popover>
-        <PopoverTrigger className="active:scale-75">
+        <PopoverTrigger className="active:scale-95">
           <LuMoreVertical />
         </PopoverTrigger>
-        <PopoverContent className="z-50 w-[130px]   overflow-hidden rounded-md border px-2 py-2.5 space-y-1">
+        <PopoverContent className="z-50 w-[130px] overflow-hidden rounded-md border px-1.5 py-2 space-y-1.5">
           {/* Botão para arquivar projeto */}
           <Button
             onClick={handleArchiveProject}
-            sizes="full"
+            className="w-full h-8"
             variant="outline"
             effects="scale"
           >
@@ -70,11 +70,11 @@ export function TableActions({ project }: TableActionsProps) {
           {/* Botão para deletar projeto */}
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button sizes="full" variant="danger" effects="scale">
+              <Button className="w-full h-8" variant="danger" effects="scale">
                 Deletar
               </Button>
             </DialogTrigger>
-            <DialogContent className="">
+            <DialogContent>
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-10">
                   <FaSpinner className="animate-spin duration-500" />
