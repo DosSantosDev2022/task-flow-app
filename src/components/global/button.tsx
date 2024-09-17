@@ -37,9 +37,9 @@ export function Button({
 }: ButtonProps) {
   const variantClasses = {
     primary: 'bg-primary-900 text-secondary-50 hover:bg-primary-800',
-    secundary: 'bg-zinc-300 text-zinc-900 hover:bg-zinc-200',
+    secundary: 'bg-zinc-100 text-zinc-900 hover:bg-zinc-200',
     outline:
-      'bg-transparent border border-zinc-100 text-light hover:bg-zinc-200 ',
+      'bg-transparent border border-zinc-200 text-light hover:bg-zinc-200 ',
     highlight: 'text-zinc-50 hover:bg-violet-800 duration-300 bg-violet-900',
     disabled:
       'bg-opacity-80 bg-primary-950 border border-primary-800 text-secondary-950',
