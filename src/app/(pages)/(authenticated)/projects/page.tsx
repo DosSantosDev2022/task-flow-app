@@ -4,7 +4,6 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableItem,
   Table,
 } from '@/components/global/table'
 import { FilterProjects } from '@/components/pages/projects/filters/'
@@ -24,19 +23,7 @@ import {
 } from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
 import { getProjects, ProjectData } from '@/utils/getProjects'
-
-// Definindo as cores de status e prioridade
-const statusColors = {
-  TODOS: 'bg-zinc-500',
-  FINALIZADOS: 'bg-blue-500',
-  PENDENTES: 'bg-red-500',
-}
-
-const priorityColors = {
-  BAIXA: 'bg-green-500',
-  MEDIA: 'bg-yellow-500',
-  ALTA: 'bg-red-500',
-}
+import { Badge } from '@/components/global/badge'
 
 const headers = [
   { title: 'Título', icon: <MdOutlineTitle /> },
@@ -144,16 +131,10 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                     <ProgressBar value={50} />
                   </TableCell>
                   <TableCell className="w-[30px] ">
-                    <TableItem className={`${statusColors[project.status]}`}>
-                      {project.status}
-                    </TableItem>
+                    <Badge status={project.status}>{project.status}</Badge>
                   </TableCell>
                   <TableCell className="w-[30px]">
-                    <TableItem
-                      className={`${priorityColors[project.priority]}`}
-                    >
-                      {project.priority}
-                    </TableItem>
+                    <Badge status={project.priority}>{project.priority}</Badge>
                   </TableCell>
                   <TableCell className="flex items-center justify-center">
                     <TableActions project={project} />
