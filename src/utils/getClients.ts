@@ -8,6 +8,8 @@ interface getClientParams {
   search?: string
   sort?: string
   sortBy?: string
+  state?: string
+  city?: string
 }
 
 export interface ClientData extends Client {
@@ -26,6 +28,8 @@ export async function getClients({
   search = '',
   sort = '',
   sortBy = 'createdAt',
+  state,
+  city,
 }: getClientParams): Promise<ClientsResponse> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || ''
@@ -33,6 +37,8 @@ export async function getClients({
     // Construa a URL de consulta dinamicamente
     const queryParams = new URLSearchParams({
       search: search ?? '',
+      state: state ?? '',
+      city: city ?? '',
       sort: sort ?? '',
       sortBy: sortBy ?? 'createdAt',
       page: page?.toString() ?? '1',
@@ -46,15 +52,6 @@ export async function getClients({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session?.user.id ?? ''}`,
       },
-    })
-    console.log('Base URL:', process.env.NEXT_PUBLIC_API_URL)
-    console.log('Search Params:', {
-      search,
-      session,
-      page,
-      limit,
-      sort,
-      sortBy,
     })
 
     if (!res.ok) {
