@@ -6,13 +6,11 @@ import {
   TableRow,
   Table,
 } from '@/components/global/table'
-import { FilterProjects } from '@/components/pages/projects/filters'
+import { FilterProjects } from '@/components/pages/clients/filters'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth'
-import { CreatedClients } from '@/components/pages/clients/createdClients/createdClients'
+import { ClientModal } from '@/components/pages/clients/createdClients/clientModal'
 import { ClientData, getClients } from '@/utils/getClients'
-import { Button } from '@/components/global/button'
-import { BiExport } from 'react-icons/bi'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { BsCalendar2DateFill } from 'react-icons/bs'
 import { MdAttachEmail, MdMyLocation, MdOutlineTitle } from 'react-icons/md'
@@ -26,6 +24,8 @@ interface ClientsSearchParams {
     limit: string
     sort: string
     sortBy: string
+    state: string
+    city: string
   }
 }
 
@@ -50,7 +50,9 @@ export default async function ClientsPage({
   const search = searchParams.search || ''
   const sort = searchParams.sort || ''
   const sortBy = searchParams.sortBy || 'createdAt'
-  console.log('seção do client', session)
+  const state = searchParams.state || ''
+  const city = searchParams.city || ''
+
   /* Função para busca de clients */
   const { clients, totalClients } = await getClients({
     search,
@@ -59,21 +61,16 @@ export default async function ClientsPage({
     limit,
     sort,
     sortBy,
+    state,
+    city,
   })
 
   return (
     <div>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
-        <div className="flex items-center gap-2 px-2 py-3">
-          <CreatedClients />
-        </div>
-
-        <div className="flex items-center gap-2">
+        <div className="flex items-center w-full justify-between gap-2 px-2 py-3">
+          <ClientModal />
           <FilterProjects />
-
-          <Button sizes="icon" variant="outline" className="w-12">
-            <BiExport />
-          </Button>
         </div>
       </div>
 
@@ -87,7 +84,7 @@ export default async function ClientsPage({
         ) : (
           <Table>
             <TableHeader>
-              <TableRow className="bg-zinc-800">
+              <TableRow className="hover:opacity-100">
                 {headers.map((header) => (
                   <TableHead
                     key={header.label}
@@ -110,9 +107,13 @@ export default async function ClientsPage({
               {clients?.map((client: ClientData) => (
                 <TableRow className="overflow-auto" key={client.id}>
                   <TableCell>{client.name}</TableCell>
-                  <TableCell>{client.email}</TableCell>
+                  <TableCell className="max-w-[210px] ">
+                    {client.email}
+                  </TableCell>
                   <TableCell>{client.phone}</TableCell>
-                  <TableCell>{client.address}</TableCell>
+                  <TableCell className="max-w-[210px] ">
+                    {client.address}
+                  </TableCell>
                   <TableCell>{client.city}</TableCell>
                   <TableCell>{client.state}</TableCell>
                   <TableCell>{client.postalCode}</TableCell>

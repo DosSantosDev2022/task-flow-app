@@ -24,8 +24,6 @@ export async function createClientAction(dataClient: FormDataClient) {
         state: validatedData.state,
         postalCode: validatedData.postalCode,
         country: validatedData.country,
-        type: validatedData.type,
-        payment: validatedData.payment,
       },
     })
 
