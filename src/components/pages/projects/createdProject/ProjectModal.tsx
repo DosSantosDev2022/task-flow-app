@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/global/modal'
-import { BiX } from 'react-icons/bi'
+import { BiPlus, BiX } from 'react-icons/bi'
 import { ProjectCreationForm } from './ProjectForm'
 
 export function ProjectCreationModal() {
@@ -19,10 +19,11 @@ export function ProjectCreationModal() {
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <DialogTrigger
-        className="w-[120px] rounded-md bg-violet-700 hover:bg-violet-500 duration-500 text-zinc-50 px-2 py-3
+        className="w-[130px] flex items-center justify-center gap-1 rounded-md bg-violet-700 hover:bg-violet-500 duration-500 text-zinc-50 px-1 py-2
        active:scale-95"
       >
-        Novo Projeto
+        <span className="text-sm font-semibold">Novo Projeto</span>
+        <BiPlus size={20} className="font-bold" />
       </DialogTrigger>
       <DialogContent className="max-w-[720px] h-[620px] overflow-auto scrollbar-thin">
         <DialogHeader>

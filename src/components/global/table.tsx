@@ -61,7 +61,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, ComponentProps<'tr'>>(
   ({ className, ...props }, ref) => (
     <tr
       className={twMerge(
-        'border-b  transition-all  hover:opacity-40 duration-300 data-[state=selected]:bg-zinc-200',
+        'border-b  transition-all  hover:opacity-40 duration-300',
         className,
       )}
       {...props}
@@ -91,7 +91,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, ComponentProps<'td'>>(
   ({ className, ...props }, ref) => (
     <td
       className={twMerge(
-        'px-2 py-1.5 max-w-[320px] border truncate text-zinc-400 font-normal text-[13.5] hover:bg-opacity-40',
+        'px-2 py-1.5 max-w-[320px]  truncate text-zinc-400 font-normal text-[13.5] hover:bg-opacity-40',
         className,
       )}
       {...props}
@@ -114,21 +114,6 @@ const TableCaption = React.forwardRef<
 ))
 TableCaption.displayName = 'TableCaption'
 
-const TableItem = React.forwardRef<HTMLSpanElement, ComponentProps<'span'>>(
-  ({ className, ...props }, ref) => (
-    <span
-      className={twMerge(
-        'w-[72px] p-1 rounded-md text-zinc-100 text-[11.5px] flex  items-center justify-center',
-        className,
-      )}
-      {...props}
-      ref={ref}
-    />
-  ),
-)
-
-TableItem.displayName = ''
-
 export {
   TableBody,
   TableCaption,
@@ -138,5 +123,4 @@ export {
   TableHeader,
   TableRow,
   Table,
-  TableItem,
 }

@@ -39,7 +39,7 @@ export function Button({
     primary: 'bg-primary-900 text-secondary-50 hover:bg-primary-800',
     secundary: 'bg-zinc-100 text-zinc-900 hover:bg-zinc-200',
     outline:
-      'bg-transparent border border-zinc-200 text-light hover:bg-zinc-200 ',
+      'bg-transparent border border-zinc-200 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800',
     highlight: 'text-zinc-50 hover:bg-violet-800 duration-300 bg-violet-900',
     disabled:
       'bg-opacity-80 bg-primary-950 border border-primary-800 text-secondary-950',
@@ -68,7 +68,7 @@ export function Button({
     variantClasses[variant],
     sizeClasses[sizes],
     effectsClasses[effects],
-    `appearance-none rounded-md py-1.5  text-sm flex items-center justify-center  font-normal transition-all duration-500 `,
+    `appearance-none rounded-md text-sm flex items-center justify-center  font-normal transition-all duration-500 `,
     className,
   )
   const Comp = asChild ? Slot : 'button'

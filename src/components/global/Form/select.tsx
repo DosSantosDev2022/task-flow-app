@@ -1,166 +1,52 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react'
-import { BiChevronDown } from 'react-icons/bi'
-import { AiOutlineSearch } from 'react-icons/ai'
+// components/Select.tsx
+import React from 'react'
+import * as RadixSelect from '@radix-ui/react-select'
 import { twMerge } from 'tailwind-merge'
+import { LuChevronDown, LuCheck } from 'react-icons/lu'
 
-interface SelectContextProps {
-  isOpen: boolean
-  selectedOptions: string[]
-  toggleOpen: () => void
-  selectOption: (option: string) => void
-  isSelected: (option: string) => boolean
-  isMultiple: boolean
-  isSearchable: boolean
-  inputValue: string
-  setInputValue: (value: string) => void
+interface SelectOption {
+  label: string
+  value: string
 }
 
-const SelectContext = createContext<SelectContextProps | undefined>(undefined)
-
-const useSelectContext = () => {
-  const context = useContext<SelectContextProps | undefined>(SelectContext)
-  if (!context) {
-    throw new Error('Select components must be used within a Select provider')
-  }
-  return context
+interface SelectProps {
+  options: SelectOption[]
+  label: string
+  value: string
+  onChange: (value: string) => void
+  disabled?: boolean
 }
 
-interface SelectProviderProps {
-  children: ReactNode
-  multiple?: boolean
-  searchable?: boolean
-}
-
-const SelectProvider = ({
-  children,
-  multiple = false,
-  searchable = false,
-}: SelectProviderProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-  const [inputValue, setInputValue] = useState('')
-
-  const toggleOpen = () => setIsOpen((prev) => !prev)
-
-  const selectOption = (option: string) => {
-    if (multiple) {
-      setSelectedOptions((prev) =>
-        prev.includes(option)
-          ? prev.filter((opt) => opt !== option)
-          : [...prev, option],
-      )
-    } else {
-      setSelectedOptions([option])
-      setIsOpen(false)
-    }
-  }
-
-  const isSelected = (option: string) => selectedOptions.includes(option)
-
-  return (
-    <SelectContext.Provider
-      value={{
-        isOpen,
-        selectedOptions,
-        toggleOpen,
-        selectOption,
-        isSelected,
-        isMultiple: multiple,
-        isSearchable: searchable,
-        inputValue,
-        setInputValue,
-      }}
-    >
-      {children}
-    </SelectContext.Provider>
-  )
-}
-
-const SelectRoot = ({ children }: { children: ReactNode }) => {
-  return <div className="w-full font-medium">{children}</div>
-}
-
-const SelectTrigger = () => {
-  const { isOpen, toggleOpen, selectedOptions } = useSelectContext()
-  const displayValue =
-    selectedOptions.length > 0
-      ? selectedOptions.join(', ').substring(0, 25) +
-        (selectedOptions.join(', ').length > 25 ? '...' : '')
-      : 'Selecione...'
-
-  return (
-    <div
-      onClick={toggleOpen}
-      className="bg-white border w-full p-2 flex items-center justify-between rounded text-gray-500 text-sm cursor-pointer"
-    >
-      {displayValue}
-      <BiChevronDown
-        size={20}
-        className={
-          isOpen
-            ? 'rotate-180 duration-300 transition-all'
-            : 'duration-300 transition-all'
-        }
-      />
-    </div>
-  )
-}
-
-const SelectContent = ({ children }: { children: ReactNode }) => {
-  const { isOpen } = useSelectContext()
-  return isOpen ? (
-    <ul className="bg-white mt-1 overflow-y-auto max-h-32 border rounded-md">
-      {children}
-    </ul>
-  ) : null
-}
-
-const SelectOption = ({ option }: { option: string }) => {
-  const { selectOption, isSelected, inputValue } = useSelectContext()
-
-  if (inputValue && !option.toLowerCase().includes(inputValue.toLowerCase())) {
-    return null
-  }
-
-  return (
-    <li
-      onClick={() => selectOption(option)}
+const Select = ({ options, label, value, onChange, disabled }: SelectProps) => (
+  <RadixSelect.Root value={value} onValueChange={onChange} disabled={disabled}>
+    <RadixSelect.Trigger
       className={twMerge(
-        'p-2 text-sm hover:bg-zinc-300 duration-300 rounded-sm  cursor-pointer',
-        isSelected(option) && 'bg-zinc-600 text-white',
+        'flex h-10 w-full items-center justify-between rounded-md border bg-zinc-50 px-3 py-2 text-sm text-gray-900',
+        disabled && 'opacity-50 cursor-not-allowed',
       )}
+      aria-label={label}
     >
-      {option}
-    </li>
-  )
-}
+      <RadixSelect.Value placeholder={label} />
+      <LuChevronDown className="h-4 w-4 text-gray-500" />
+    </RadixSelect.Trigger>
 
-const SelectInput = ({ placeholder = '' }: { placeholder?: string }) => {
-  const { isSearchable, inputValue, setInputValue } = useSelectContext()
+    <RadixSelect.Content className="mt-1 rounded-md border border-gray-300 bg-white shadow-lg">
+      <RadixSelect.Viewport>
+        {options.map((option) => (
+          <RadixSelect.Item
+            key={option.value}
+            value={option.value}
+            className="relative flex w-full cursor-pointer items-center py-2 pl-3 pr-9 text-sm text-gray-900 hover:bg-gray-100"
+          >
+            <RadixSelect.ItemIndicator>
+              <LuCheck className="w-4 h-4 text-blue-600" />
+            </RadixSelect.ItemIndicator>
+            {option.label}
+          </RadixSelect.Item>
+        ))}
+      </RadixSelect.Viewport>
+    </RadixSelect.Content>
+  </RadixSelect.Root>
+)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value.toLowerCase())
-  }
-
-  return isSearchable ? (
-    <div className="flex items-center px-2 sticky top-0 bg-white">
-      <AiOutlineSearch size={18} className="text-gray-300" />
-      <input
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        placeholder={placeholder}
-        className="placeholder:text-gray-300 font-light p-2 outline-none w-full"
-      />
-    </div>
-  ) : null
-}
-
-export {
-  SelectProvider,
-  SelectRoot,
-  SelectTrigger,
-  SelectContent,
-  SelectOption,
-  SelectInput,
-}
+export default Select

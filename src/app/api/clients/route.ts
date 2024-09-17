@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(req: NextRequest) {
-  const { search, page, limit, sort, sortBy } = Object.fromEntries(
+  const { search, page, limit, sort, sortBy, state, city } = Object.fromEntries(
     req.nextUrl.searchParams,
   )
 
@@ -16,7 +16,6 @@ export async function GET(req: NextRequest) {
 
     // Verificar autenticação e obter sessão
     const token = req.headers.get('Authorization')?.replace('Bearer ', '')
-    console.log(token)
 
     if (!token) {
       return NextResponse.json(
@@ -30,6 +29,8 @@ export async function GET(req: NextRequest) {
     const whereClause: any = {
       userId,
       ...(search ? { name: { contains: search, mode: 'insensitive' } } : {}),
+      ...(state ? { state: { equals: state } } : {}),
+      ...(city ? { city: { equals: city } } : {}),
     }
 
     // Buscando clientes e total de clientes com base nos parâmetros fornecidos

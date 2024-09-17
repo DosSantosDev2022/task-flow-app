@@ -10,6 +10,7 @@ export const FormSchema = z.object({
   postalCode: z.string().optional(),
   country: z.string().optional(),
   project: z.string().optional(),
+  userId: z.string(),
 })
 
 export type FormDataClient = z.infer<typeof FormSchema>

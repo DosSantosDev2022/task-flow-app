@@ -12,6 +12,7 @@ import {
 } from '@/components/global/modal'
 import { BiX } from 'react-icons/bi'
 import { FormEditProject } from './FormEditProject'
+import { FaEdit } from 'react-icons/fa'
 
 export function ModalEdit({ projectId }: { projectId: string }) {
   const [isOpenModal, setIsOpenModal] = useState(false)
@@ -19,9 +20,10 @@ export function ModalEdit({ projectId }: { projectId: string }) {
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <DialogTrigger
-        className="w-full h-8 rounded-md bg-violet-700 hover:bg-violet-500 duration-500 text-zinc-50 
+        className="w-full px-3.5 py-2 h-8 flex items-center justify-start gap-1 rounded-md bg-transparent border border-zinc-200 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800 transition-all duration-500 
        active:scale-95"
       >
+        <FaEdit size={16} />
         Editar
       </DialogTrigger>
       <DialogContent className="max-w-[720px] h-[620px] overflow-auto scrollbar-thin">
