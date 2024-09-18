@@ -66,6 +66,7 @@ export function ClientForm({ closeModal }: ClientFormProps) {
   const { showNotification } = useNotification()
   const session = useSession()
   const {
+    control,
     register,
     handleSubmit,
     setValue,
@@ -139,20 +140,23 @@ export function ClientForm({ closeModal }: ClientFormProps) {
           <SelectField
             label="País"
             options={countrys}
-            register={register('country')}
+            name="country"
+            control={control}
             error={errors.country}
           />
 
           <SelectField
             label="Cidade"
             options={cities}
-            register={register('city')}
+            control={control}
+            name="city"
             error={errors.city}
           />
           <SelectField
             label="Estados"
             options={states}
-            register={register('state')}
+            control={control}
+            name="state"
             error={errors.state}
           />
         </div>

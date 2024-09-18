@@ -30,7 +30,7 @@ export async function getProjects({
   priority = '',
   status = '',
   sort = '',
-  sortBy = 'startDate',
+  sortBy = '',
 }: getProjectsParams): Promise<ProjectsResponse> {
   try {
     const baseUrl =
@@ -42,7 +42,7 @@ export async function getProjects({
       priority: priority ?? '',
       status: status ?? '',
       sort: sort ?? '',
-      sortBy: sortBy ?? 'startDate',
+      sortBy: sortBy ?? '',
       page: page?.toString() ?? '1',
       limit: limit?.toString() ?? '10',
     }).toString()

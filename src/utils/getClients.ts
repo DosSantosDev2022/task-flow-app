@@ -40,7 +40,7 @@ export async function getClients({
       state: state ?? '',
       city: city ?? '',
       sort: sort ?? '',
-      sortBy: sortBy ?? 'createdAt',
+      sortBy: sortBy ?? '',
       page: page?.toString() ?? '1',
       limit: limit?.toString() ?? '10',
     }).toString()

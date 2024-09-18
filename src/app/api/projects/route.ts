@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const pageSize = parseInt(limit as string, 10) || 10
     const skip = (pageNumber - 1) * pageSize
     const orderBy: any = {}
-    orderBy[(sortBy as string) || 'startDate'] = sort || 'asc'
+    orderBy[(sortBy as string) || ''] = sort || 'asc'
 
     // Verificar autenticação e obter sessão
     const token = req.headers.get('Authorization')?.replace('Bearer ', '')
