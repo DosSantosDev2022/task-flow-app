@@ -1,8 +1,8 @@
 'use client'
 import { usePagination } from '@/hooks/usePagination'
-import { ItemsPerPageSelector } from "./ItemsPerPageSelector";
-import { PaginationControls } from "./PaginationControls";
-import { PaginationItemCount } from "./PaginationItemCount";
+import { ItemsPerPageSelector } from './ItemsPerPageSelector'
+import { PaginationControls } from './PaginationControls'
+import { PaginationItemCount } from './PaginationItemCount'
 
 interface PaginationProps {
   page: number
@@ -35,7 +35,8 @@ export function Pagination({
       }
 
       // Converta pageNumber para number, se necessário
-      const pageAsNumber = typeof pageNumber === 'string' ? parseInt(pageNumber, 10) : pageNumber
+      const pageAsNumber =
+        typeof pageNumber === 'string' ? parseInt(pageNumber, 10) : pageNumber
 
       const url = new URL(baseUrl, window.location.origin)
       url.searchParams.set('page', pageAsNumber.toString())
@@ -60,7 +61,6 @@ export function Pagination({
       </span>
       {/* Botão de ação para alterar total por página */}
       <div className="flex items-center space-x-2">
-
         <ItemsPerPageSelector />
         {/*  total por pagina */}
         <PaginationItemCount limit={limit} page={page} total={total} />

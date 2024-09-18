@@ -12,8 +12,6 @@ import { createProjectAction } from '@/app/actions/project/create'
 import { FormDataProject, FormSchema } from '@/@types/schemas/FormSchemaProject'
 import { TextAreaField } from '@/components/global/Form/TextAreaField'
 import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
-import { ClientsResponse, getClients } from '@/utils/getClients'
-import { Client } from '@prisma/client'
 
 // Dados fixos
 const payments = [
@@ -67,13 +65,11 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   } = useForm<FormDataProject>({
     resolver: zodResolver(FormSchema),
   })
-  const [clients, setClients] = useState<ClientsResponse>()
+
   const [isLoading, setIsLoading] = useState(false)
   const { showNotification } = useNotification()
   const { data } = useSession()
   const session = data
-  
-  
 
   useEffect(() => {
     if (session) {
@@ -81,8 +77,6 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
       setValue('status', 'PENDENTES')
     }
   }, [session, setValue])
-
- 
 
   const onSubmitAction: SubmitHandler<FormDataProject> = async (formData) => {
     try {
@@ -144,7 +138,7 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
             label="Pagamento"
             options={payments}
             control={control}
-            name='payment'
+            name="payment"
             error={errors.payment}
           />
         </div>
@@ -154,12 +148,12 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
         label="Cliente"
         options={clientsFakes}
         control={control}
-        name='clientId'
+        name="clientId"
         error={errors.clientId}
       />
 
       <SelectField
-        name='priority'
+        name="priority"
         label="Prioridades"
         options={priorities}
         control={control}

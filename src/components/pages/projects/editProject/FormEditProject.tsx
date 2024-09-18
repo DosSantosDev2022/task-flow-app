@@ -174,7 +174,8 @@ export function FormEditProject({
           <SelectField
             label="Forma de pagamento"
             options={payments}
-            register={register('payment')}
+            name="payment"
+            control={control}
             error={errors.payment}
             disabled={!isEditing}
           />
@@ -183,7 +184,8 @@ export function FormEditProject({
         <SelectField
           label="Cliente"
           options={clients}
-          register={register('clientId')}
+          name="clientId"
+          control={control}
           error={errors.clientId}
           disabled={!isEditing}
         />
@@ -191,7 +193,8 @@ export function FormEditProject({
         <SelectField
           label="Prioridade"
           options={priorities}
-          register={register('priority')}
+          name="priority"
+          control={control}
           error={errors.priority}
           disabled={!isEditing}
         />
