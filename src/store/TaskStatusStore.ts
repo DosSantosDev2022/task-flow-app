@@ -17,7 +17,9 @@ const loadTaskStatusesFromLocalStorage = () => {
 }
 
 // Função para salvar o estado no localStorage
-const saveTaskStatusesToLocalStorage = (taskStatuses: Record<string, TaskStatus>) => {
+const saveTaskStatusesToLocalStorage = (
+  taskStatuses: Record<string, TaskStatus>,
+) => {
   localStorage.setItem('taskStatuses', JSON.stringify(taskStatuses))
 }
 

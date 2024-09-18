@@ -1,7 +1,7 @@
 'use client'
 import { useState, useCallback, useEffect } from 'react'
 import { TaskByStatus } from './TaskByStatus'
-import { Task } from '@prisma/client'
+import { Task, TaskStatus } from '@prisma/client'
 import { TaskAddForm } from './TaskAddForm'
 import { Button } from '@/components/global/button'
 import { useTaskStatusStore } from '@/store/TaskStatusStore'
@@ -38,22 +38,10 @@ export function Tasks({ tasks, projectId }: TasksProps) {
   }
 
   const statusOptions: { label: string; value: FilterType }[] = [
-    {
-      label: 'Todas',
-      value: 'all',
-    },
-    {
-      label: 'A fazer',
-      value: 'A_FAZER',
-    },
-    {
-      label: 'Em andamento',
-      value: 'EM_ANDAMENTO',
-    },
-    {
-      label: 'Concluído',
-      value: 'CONCLUIDO',
-    },
+    { label: 'Todas', value: 'all' },
+    { label: 'A fazer', value: 'A_FAZER' },
+    { label: 'Em andamento', value: 'EM_ANDAMENTO' },
+    { label: 'Concluído', value: 'CONCLUIDO' },
   ]
 
   const handleFilterClick = (filter: FilterType) => {

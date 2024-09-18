@@ -2,6 +2,12 @@ import { Task } from '@prisma/client'
 import { TaskCard } from './taskCard'
 import { TaskStatus } from '@/store/TaskStatusStore'
 
+const statusLabels: Record<TaskStatus, string> = {
+  A_FAZER: 'A fazer',
+  EM_ANDAMENTO: 'Em andamento',
+  CONCLUIDO: 'Concluído',
+}
+
 interface TypeTaskProps {
   status: TaskStatus
   tasks: Task[]
@@ -22,12 +28,14 @@ export function TaskByStatus({ status, tasks }: TypeTaskProps) {
   }
 
   const borderTopClass = getBorderTopColors(status)
-
+  const statusLabel = statusLabels[status] || 'Desconhecido'
   return (
     <div className="col-span-4 border p-2 rounded-md  overflow-y-auto max-h-[468px] scrollbar-thin scrollbar-track-zinc-50 scrollbar-thumb-zinc-600 ">
       <div className={`border-t-2 p-4 ${borderTopClass} `}>
         <div className="flex items-center justify-between gap-1 rounded-lg">
-          <span className="text-sm font-normal text-zinc-600">{status}</span>
+          <span className="text-sm font-normal text-zinc-600">
+            {statusLabel}
+          </span>
           <div className="w-6 h-6 text-xs rounded-full flex items-center justify-center text-zinc-800 bg-zinc-300">
             {tasks.length}
           </div>
@@ -39,7 +47,9 @@ export function TaskByStatus({ status, tasks }: TypeTaskProps) {
             id={task.id}
             status={task.status as TaskStatus}
             title={task.title}
-            key={index}
+            description={task.description || ''}
+            key={task.id}
+            index={index}
           />
         ))}
       </div>

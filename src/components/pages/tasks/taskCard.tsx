@@ -1,31 +1,52 @@
 import { TaskStatus, useTaskStatusStore } from '@/store/TaskStatusStore'
 import { Deadiline } from './deadline'
+import { TbArrowBadgeRightFilled } from 'react-icons/tb'
+import { Button } from '@/components/global/button'
+import { twMerge } from 'tailwind-merge'
 
 interface TaskCardProps {
   id: string
   title: string
   status: TaskStatus
+  description: string
+  index: number
 }
 
-export function TaskCard({ title, id, status }: TaskCardProps) {
-  const updateTaskStatus = useTaskStatusStore((state) => state.updateTaskStatus)
-
-  const handleChangeStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newStatus = event.target.value as TaskStatus
-    updateTaskStatus(id, newStatus)
+export function TaskCard({ title, status, description }: TaskCardProps) {
+  // Função para mapear o status para a cor
+  const getStatusColor = (status: TaskStatus) => {
+    switch (status) {
+      case 'A_FAZER':
+        return 'text-red-600' // Cor para "A fazer"
+      case 'EM_ANDAMENTO':
+        return 'text-yellow-400' // Cor para "Em andamento"
+      case 'CONCLUIDO':
+        return 'text-green-600' // Cor para "Concluído"
+      default:
+        return 'text-gray-500'
+    }
   }
-  // Definindo as opções do select
-  const statusOptions: { value: TaskStatus; label: string }[] = [
-    { value: 'A_FAZER', label: 'A fazer' },
-    { value: 'EM_ANDAMENTO', label: 'Em andamento' },
-    { value: 'CONCLUIDO', label: 'Concluído' },
-  ]
 
   return (
-    <div className="border rounded-md p-4 flex items-center gap-2 justify-between w-full">
-      <div className="w-full space-y-2">
-        <div className="flex w-full justify-between">
-          <h4 className="text-base font-medium text-zinc-600">{title}</h4>
+    <>
+      <div className="border rounded-md p-4 flex flex-col items-start gap-2 justify-between w-full">
+        <div className="flex w-full justify-between items-center">
+          <div className="flex items-center justify-center gap-2">
+            <TbArrowBadgeRightFilled
+              className={getStatusColor(status)}
+              size={24}
+            />
+            <h4 className="text-base font-normal text-zinc-600">{title}</h4>
+          </div>
+
+          <span
+            className={twMerge(
+              `w-[65px] h-[22px] px-1.5 py-[2px] rounded-2xl text-zinc-600 
+                 text-[10px] font-normal leading-7 flex items-center justify-center`,
+            )}
+          >
+            status
+          </span>
         </div>
 
         <Deadiline.Root className="justify-start">
@@ -33,18 +54,16 @@ export function TaskCard({ title, id, status }: TaskCardProps) {
           <Deadiline.Date date="20/05/2024" />
         </Deadiline.Root>
 
-        <select
-          value={status}
-          onChange={handleChangeStatus}
-          className="mt-2 p-1 border rounded-md text-sm"
-        >
-          {statusOptions.map((option) => (
-            <option key={option.label} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <div className="px-1 py-1.5 w-full">
+          <p className="truncate">{description}</p>
+        </div>
+
+        <div className="w-full flex items-center justify-between">
+          <Button variant="outline" sizes="full">
+            Abrir tarefa
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
