@@ -5,16 +5,23 @@ import { Task, TaskStatus } from '@prisma/client'
 import { TaskAddForm } from './TaskAddForm'
 import { Button } from '@/components/global/button'
 import { useTaskStatusStore } from '@/store/TaskStatusStore'
-
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 interface TasksProps {
   tasks: Task[]
   projectId: string
 }
 
 export type FilterType = 'all' | 'A_FAZER' | 'EM_ANDAMENTO' | 'CONCLUIDO'
+const statusOptions: { label: string; value: FilterType }[] = [
+  { label: 'Todas', value: 'all' },
+  { label: 'A fazer', value: 'A_FAZER' },
+  { label: 'Em andamento', value: 'EM_ANDAMENTO' },
+  { label: 'Concluído', value: 'CONCLUIDO' },
+]
 
 export function Tasks({ tasks, projectId }: TasksProps) {
-  const [filter, setFilter] = useState<FilterType>('all')
+  const [filterTasks, setFilterTasks] = useState<FilterType>('all')
   const [activeFilter, setActiveFilter] = useState<FilterType>('all')
   const [isLoading, setIsLoading] = useState(false)
   const { taskStatuses, updateTaskStatus, saveAllChanges } =
@@ -29,29 +36,40 @@ export function Tasks({ tasks, projectId }: TasksProps) {
     })
   }, [tasks, taskStatuses, updateTaskStatus])
 
-  // Filtra tarefas de acordo com o status atual
-  const filteredTasks = (status: FilterType) => {
-    if (status === 'all') {
-      return tasks
+  // Atualiza o filtro quando `taskStatuses` mudar
+  useEffect(() => {
+    console.log('Task statuses updated:', taskStatuses)
+  }, [taskStatuses])
+
+  // Filtra tarefas de acordo com o filtro atual
+  const filteredTasks = (filter: FilterType) => {
+    if (filter === 'all') {
+      // Organize tasks into a status-based grouping
+      return {
+        A_FAZER: tasks.filter((task) => taskStatuses[task.id] === 'A_FAZER'),
+        EM_ANDAMENTO: tasks.filter(
+          (task) => taskStatuses[task.id] === 'EM_ANDAMENTO',
+        ),
+        CONCLUIDO: tasks.filter(
+          (task) => taskStatuses[task.id] === 'CONCLUIDO',
+        ),
+      }
     }
-    return tasks.filter((task) => taskStatuses[task.id] === status)
+    // Return tasks filtered by specific status
+    return {
+      [filter]: tasks.filter((task) => task.status === filter),
+    }
   }
+  const taskGroups = filteredTasks(filterTasks)
 
-  const statusOptions: { label: string; value: FilterType }[] = [
-    { label: 'Todas', value: 'all' },
-    { label: 'A fazer', value: 'A_FAZER' },
-    { label: 'Em andamento', value: 'EM_ANDAMENTO' },
-    { label: 'Concluído', value: 'CONCLUIDO' },
-  ]
-
-  const handleFilterClick = (filter: FilterType) => {
-    setActiveFilter(filter)
-    setFilter(filter)
+  const handleFilterClick = (status: FilterType) => {
+    setActiveFilter(status)
+    setFilterTasks(status)
   }
 
   const handleSaveChanges = async () => {
-    setIsLoading(true)
     try {
+      setIsLoading(true)
       await saveAllChanges()
     } catch (error) {
       console.error('Error saving changes:', error)
@@ -69,7 +87,7 @@ export function Tasks({ tasks, projectId }: TasksProps) {
   )
 
   return (
-    <>
+    <DndProvider backend={HTML5Backend}>
       <div className="flex items-center gap-2 px-2 py-4">
         <TaskAddForm projectId={projectId} onAddTask={handleAddTask} />
         <div className="rounded-xl w-full bg-zinc-50 h-[46px] flex justify-start px-4 py-2 items-center gap-11">
@@ -100,19 +118,15 @@ export function Tasks({ tasks, projectId }: TasksProps) {
       </div>
 
       <div className="grid grid-cols-12 gap-2 px-2">
-        <div className="col-span-4">
-          <TaskByStatus status="A_FAZER" tasks={filteredTasks('A_FAZER')} />
-        </div>
-        <div className="col-span-4">
-          <TaskByStatus
-            status="EM_ANDAMENTO"
-            tasks={filteredTasks('EM_ANDAMENTO')}
-          />
-        </div>
-        <div className="col-span-4">
-          <TaskByStatus status="CONCLUIDO" tasks={filteredTasks('CONCLUIDO')} />
-        </div>
+        {['A_FAZER', 'EM_ANDAMENTO', 'CONCLUIDO'].map((status, index) => (
+          <div key={index} className="col-span-4">
+            <TaskByStatus
+              status={status as TaskStatus}
+              tasks={taskGroups[status as TaskStatus] || []}
+            />
+          </div>
+        ))}
       </div>
-    </>
+    </DndProvider>
   )
 }

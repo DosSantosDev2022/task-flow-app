@@ -1,6 +1,8 @@
 import { Task } from '@prisma/client'
 import { TaskCard } from './taskCard'
-import { TaskStatus } from '@/store/TaskStatusStore'
+import { TaskStatus, useTaskStatusStore } from '@/store/TaskStatusStore'
+import { DropTargetMonitor, useDrop } from 'react-dnd'
+import React from 'react'
 
 const statusLabels: Record<TaskStatus, string> = {
   A_FAZER: 'A fazer',
@@ -26,11 +28,22 @@ export function TaskByStatus({ status, tasks }: TypeTaskProps) {
         return 'border-t-zinc-600'
     }
   }
-
+  const { updateTaskStatus } = useTaskStatusStore()
+  const [, drop] = useDrop({
+    accept: 'TASK',
+    drop: (item: { id: string }, monitor: DropTargetMonitor) => {
+      if (monitor.canDrop()) {
+        updateTaskStatus(item.id, status)
+      }
+    },
+  })
   const borderTopClass = getBorderTopColors(status)
   const statusLabel = statusLabels[status] || 'Desconhecido'
   return (
-    <div className="col-span-4 border p-2 rounded-md  overflow-y-auto max-h-[468px] scrollbar-thin scrollbar-track-zinc-50 scrollbar-thumb-zinc-600 ">
+    <div
+      ref={drop as unknown as React.LegacyRef<HTMLDivElement>}
+      className="col-span-4 border p-2 rounded-md  overflow-y-auto max-h-[468px] scrollbar-thin scrollbar-track-zinc-50 scrollbar-thumb-zinc-600 "
+    >
       <div className={`border-t-2 p-4 ${borderTopClass} `}>
         <div className="flex items-center justify-between gap-1 rounded-lg">
           <span className="text-sm font-normal text-zinc-600">
@@ -43,14 +56,15 @@ export function TaskByStatus({ status, tasks }: TypeTaskProps) {
       </div>
       <div className="flex flex-col gap-2">
         {tasks.map((task, index) => (
-          <TaskCard
-            id={task.id}
-            status={task.status as TaskStatus}
-            title={task.title}
-            description={task.description || ''}
-            key={task.id}
-            index={index}
-          />
+          <div key={index}>
+            <TaskCard
+              id={task.id}
+              status={status}
+              title={task.title}
+              description={task.description || ''}
+              index={index}
+            />
+          </div>
         ))}
       </div>
     </div>
