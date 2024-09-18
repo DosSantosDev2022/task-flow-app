@@ -9,6 +9,7 @@ import { Controller, Control, FieldValues, Path } from 'react-hook-form'
 import { format, isValid, parse } from 'date-fns' // Incluindo parse para conversão de string para Date
 import { LuCalendarDays } from 'react-icons/lu'
 import DatePicker from './datePicker'
+import { Label } from './label'
 
 interface FormDatePickerProps<T extends FieldValues> {
   name: Path<T>
@@ -27,7 +28,7 @@ export function FormDatePicker<T extends FieldValues>({
 }: FormDatePickerProps<T>) {
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-gray-700">{label}</label>
+      <Label className="text-gray-700">{label}</Label>
       <Popover>
         <Controller
           name={name}
@@ -44,7 +45,7 @@ export function FormDatePicker<T extends FieldValues>({
             return (
               <>
                 <PopoverTrigger
-                  className={`w-full p-1.5 border rounded-md active:scale-95 duration-300 ${
+                  className={`w-full p-1 h-10 border rounded-md active:scale-95 duration-300 ${
                     disabled
                       ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
                       : 'border-gray-300'

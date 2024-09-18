@@ -1,5 +1,12 @@
-import { FieldError, UseFormRegisterReturn } from 'react-hook-form'
+import { Controller, FieldError, Control } from 'react-hook-form'
 import { Label } from '@/components/global/Form/label'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/global/Form/select'
 
 interface SelectOption {
   label: string
@@ -8,34 +15,45 @@ interface SelectOption {
 
 interface SelectFieldProps {
   label: string
-  options: SelectOption[] // Agora aceita um array de objetos contendo label e value
-  register: UseFormRegisterReturn // O objeto retornado por register()
-  error?: FieldError
-  disabled?: boolean
+  options: SelectOption[] // Lista de opções com label e value
+  name: string // Nome do campo de formulário
+  control: Control<any> // Control do react-hook-form
+  error?: FieldError // Erros do campo
+  disabled?: boolean // Desabilitar o campo
 }
 
 export const SelectField = ({
   label,
   options,
-  register, // Agora é o retorno de register()
+  name,
+  control,
   error,
   disabled,
 }: SelectFieldProps) => (
   <div className="flex flex-col gap-1">
     <Label>{label}</Label>
-    <select
-      disabled={disabled}
-      {...register}
-      className={disabled ? 'cursor-not-allowed' : 'text-sm'}
-    >
-      <option value="">Selecione uma opção</option>{' '}
-      {/* Placeholder para seleção */}
-      {options.map((option, index) => (
-        <option key={index} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <Select
+          disabled={disabled}
+          value={field.value} // Valor controlado pelo react-hook-form
+          onValueChange={field.onChange} // Atualiza o valor no formulário
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione" />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option, index) => (
+              <SelectItem key={index} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+    />
     {error?.message && <span className="text-red-800">{error.message}</span>}
   </div>
 )

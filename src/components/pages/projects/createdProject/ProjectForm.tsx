@@ -12,6 +12,8 @@ import { createProjectAction } from '@/app/actions/project/create'
 import { FormDataProject, FormSchema } from '@/@types/schemas/FormSchemaProject'
 import { TextAreaField } from '@/components/global/Form/TextAreaField'
 import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
+import { ClientsResponse, getClients } from '@/utils/getClients'
+import { Client } from '@prisma/client'
 
 // Dados fixos
 const payments = [
@@ -46,7 +48,7 @@ const priorities = [
     label: 'Baixa',
   },
 ]
-const clients = [
+const clientsFakes = [
   { label: 'Juliano Santos', value: 'ce01a50c-3235-4212-ba8f-0c6e12296455' },
   /* { label: 'Amanda Oliveira', value: 'f46bfc07-0c1b-4676-8100-8d8b79f24ab6' }, */
 ]
@@ -65,10 +67,13 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   } = useForm<FormDataProject>({
     resolver: zodResolver(FormSchema),
   })
+  const [clients, setClients] = useState<ClientsResponse>()
   const [isLoading, setIsLoading] = useState(false)
   const { showNotification } = useNotification()
   const { data } = useSession()
   const session = data
+  
+  
 
   useEffect(() => {
     if (session) {
@@ -76,6 +81,8 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
       setValue('status', 'PENDENTES')
     }
   }, [session, setValue])
+
+ 
 
   const onSubmitAction: SubmitHandler<FormDataProject> = async (formData) => {
     try {
@@ -108,7 +115,7 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
         error={errors.description}
       />
 
-      <div className="flex w-full items-center justify-between gap-2">
+      <div className="flex w-full items-center justify-between gap-2 ">
         <div className="w-full flex items-center space-x-3">
           <FormDatePicker
             name="startDate"
@@ -134,9 +141,10 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
             error={errors.price}
           />
           <SelectField
-            label="Forma de pagamento"
+            label="Pagamento"
             options={payments}
-            register={register('payment')}
+            control={control}
+            name='payment'
             error={errors.payment}
           />
         </div>
@@ -144,15 +152,17 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
 
       <SelectField
         label="Cliente"
-        options={clients}
-        register={register('clientId')}
+        options={clientsFakes}
+        control={control}
+        name='clientId'
         error={errors.clientId}
       />
 
       <SelectField
+        name='priority'
         label="Prioridades"
         options={priorities}
-        register={register('priority')}
+        control={control}
         error={errors.priority}
       />
 

@@ -16,7 +16,7 @@ export interface ClientData extends Client {
   Project: Project
 }
 
-interface ClientsResponse {
+export interface ClientsResponse {
   clients: ClientData[]
   totalClients: number
 }

@@ -19,11 +19,11 @@ export const FormField = ({
   error,
   disabled,
 }: FormFieldProps) => (
-  <div className="flex flex-col gap-1 w-full">
+  <div className="flex flex-col items-start justify-center gap-1 w-full">
     <Label>{label}</Label>
     <Input.Root>
       <Input.Input
-        className={disabled ? 'cursor-not-allowed' : 'text-sm'}
+        className={` h-4 ${disabled ? 'cursor-not-allowed' : 'text-sm'}`}
         type={type}
         placeholder={placeholder}
         {...register} // Espalha as propriedades de register diretamente no input
