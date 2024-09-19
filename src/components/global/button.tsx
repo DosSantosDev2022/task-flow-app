@@ -36,8 +36,8 @@ export function Button({
   ...props
 }: ButtonProps) {
   const variantClasses = {
-    primary: 'bg-primary-900 text-secondary-50 hover:bg-primary-800',
-    secundary: 'bg-zinc-100 text-zinc-900 hover:bg-zinc-200',
+    primary: 'bg-violet-700 text-zinc-50 hover:bg-violet-800',
+    secundary: 'bg-zinc-50 text-violet-900 hover:bg-zinc-100',
     outline:
       'bg-transparent border border-zinc-200 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800',
     highlight: 'text-zinc-50 hover:bg-violet-800 duration-300 bg-violet-900',
@@ -68,7 +68,7 @@ export function Button({
     variantClasses[variant],
     sizeClasses[sizes],
     effectsClasses[effects],
-    `appearance-none rounded-md text-sm flex items-center justify-center  font-normal transition-all duration-500 `,
+    `appearance-none rounded-xl text-sm flex items-center justify-center  font-normal transition-all duration-500 `,
     className,
   )
   const Comp = asChild ? Slot : 'button'

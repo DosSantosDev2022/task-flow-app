@@ -20,7 +20,9 @@ const ProgressBar = React.forwardRef<
       className="h-full flex items-center justify-end bg-blue-500 transition-all"
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
     >
-      <span className="text-xs font-medium text-white">{value}%</span>
+      <span className="text-xs font-medium text-white">
+        {value}% completado
+      </span>
     </ProgressPrimitive.Indicator>
   </ProgressPrimitive.Root>
 ))

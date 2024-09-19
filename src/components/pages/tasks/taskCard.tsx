@@ -1,10 +1,9 @@
-// components/TaskCard.tsx
 import { TaskStatus } from '@/store/TaskStatusStore'
 import { Deadiline } from './deadline'
 import { TbArrowBadgeRightFilled } from 'react-icons/tb'
-import { Button } from '@/components/global/button'
-import { twMerge } from 'tailwind-merge'
 import { useDrag, DragSourceMonitor } from 'react-dnd'
+import { Badge } from '@/components/global/badge'
+import { ModalTasksDetails } from './modal/tasksDetails'
 
 interface TaskCardProps {
   id: string
@@ -50,25 +49,17 @@ export function TaskCard({ title, status, description, id }: TaskCardProps) {
           />
           <h4 className="text-base font-normal text-zinc-600">{title}</h4>
         </div>
-        <span
-          className={twMerge(
-            `w-[65px] h-[22px] px-1.5 py-[2px] rounded-2xl text-zinc-600 text-[10px] font-normal leading-7 flex items-center justify-center`,
-          )}
-        >
-          {status}
-        </span>
+        <Badge status={status} className="px-1.5 py-1 w-[96px] " />
       </div>
       <Deadiline.Root className="justify-start">
         <Deadiline.Icon />
         <Deadiline.Date date="20/05/2024" />
       </Deadiline.Root>
       <div className="px-1 py-1.5 w-full">
-        <p className="truncate">{description}</p>
+        <p className="truncate text-xs text-zinc-500">{description}</p>
       </div>
       <div className="w-full flex items-center justify-between">
-        <Button variant="outline" sizes="full">
-          Abrir tarefa
-        </Button>
+        <ModalTasksDetails />
       </div>
     </div>
   )

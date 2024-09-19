@@ -1,5 +1,4 @@
 'use client'
-import { PiPlus } from 'react-icons/pi'
 import {
   Dialog,
   DialogContent,
@@ -7,44 +6,62 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/global/modal'
-import { Input } from '@/components/global/Form/input'
-import { Label } from '@/components/global/Form/label'
 import { Button } from '@/components/global/button'
-import TextArea from '@/components/global/Form/textArea'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormTaskSchema, TaskFormData } from '@/@types/schemas/FormSchemaTasks'
 import { addNewTaskAction } from '@/app/actions/tasks/addNewTask'
 import { useNotification } from '@/contexts/NotificationContext'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Task } from '@prisma/client'
+import { FormField } from '@/components/global/Form/FormField'
+import { TextAreaField } from '@/components/global/Form/TextAreaField'
+import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
+import { FaCirclePlus } from 'react-icons/fa6'
 
 interface TaskAddFormProps {
   projectId: string
   onAddTask: (task: Task) => void // Adiciona a prop onAddTask
+  disable?: boolean
 }
 
-export function TaskAddForm({ projectId, onAddTask }: TaskAddFormProps) {
+export function TaskAddForm({
+  projectId,
+  onAddTask,
+  disable = false,
+}: TaskAddFormProps) {
   const { data } = useSession()
   const [isLoading, setIsLoading] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState(false)
   const { showNotification } = useNotification()
   const {
+    setValue,
     register,
+    control,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<TaskFormData>({
     resolver: zodResolver(FormTaskSchema),
   })
 
+  useEffect(() => {
+    if (data) {
+      const session = data.user
+      setValue('userId', session.id)
+    }
+    setValue('projectId', projectId)
+  }, [setValue, data, projectId])
+
   const onSubmitAction: SubmitHandler<TaskFormData> = async (formData) => {
     try {
       setIsLoading(true)
       const newTask = await addNewTaskAction({ ...formData, projectId }) // server action
-      console.log(newTask)
+
       if (newTask) {
         onAddTask(newTask)
+        reset()
       } else {
         throw new Error('A terefa criada é indefinida')
       }
@@ -62,9 +79,9 @@ export function TaskAddForm({ projectId, onAddTask }: TaskAddFormProps) {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
-      <DialogTrigger className="bg-violet-600 w-40 rounded-2xl px-2 py-3 text-zinc-50 justify-center  flex gap-1 items-center">
-        <PiPlus />
-        <span className="text-base">Nova tarefa</span>
+      <DialogTrigger className="bg-violet-600 w-[72px] lg:w-[98px] h-10 rounded-2xl px-2 py-4 active:scale-95 duration-300 text-zinc-50 justify-center  flex gap-1 items-center">
+        <FaCirclePlus size={16} />
+        <span className="text-base">Nova</span>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -77,92 +94,51 @@ export function TaskAddForm({ projectId, onAddTask }: TaskAddFormProps) {
           onSubmit={handleSubmit(onSubmitAction)}
           className="overflow-y-auto overflow-x-hidden max-h-[468px]"
         >
-          <input
-            {...register('userId')}
-            value={data?.user.id}
-            className="hidden"
-          />
-          <input
-            {...register('projectId')}
-            value={projectId}
-            className="hidden"
-          />
           <div className="flex flex-col gap-3 px-1 py-2 ">
-            <div className="flex flex-col gap-1">
-              <Label>Nome da tarefa</Label>
-              <Input.Root className="rounded">
-                <Input.Input
-                  type="text"
-                  placeholder="Digite o nome da sua tarefa"
-                  {...register('title')}
-                />
-              </Input.Root>
-              {errors.title && (
-                <span className="text-red-500 text-sm font-normal">
-                  {errors.title.message}
-                </span>
-              )}
-            </div>
+            <FormField
+              label="Nome da tarefa"
+              register={register('title')}
+              placeholder="Digite o nome da sua tarefa"
+              disabled={disable}
+              error={errors.title}
+              type="text"
+            />
+
             <div className="flex gap-2 justify-between w-full">
-              <div className="flex flex-col gap-1">
-                <Label>Data inicial</Label>
-                <Input.Root className="rounded">
-                  <Input.Input
-                    type="date"
-                    placeholder="Selecione a data de início"
-                    {...register('startDate')}
-                  />
-                </Input.Root>
-
-                {errors.startDate && (
-                  <span className="text-red-500 text-sm font-normal">
-                    {errors.startDate.message}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col gap-1">
-                <Label>Data de entrega</Label>
-                <Input.Root className="rounded">
-                  <Input.Input
-                    type="date"
-                    placeholder="Selecione a data de entrega"
-                    {...register('endDate')}
-                  />
-                </Input.Root>
-
-                {errors.endDate && (
-                  <span className="text-red-500 text-sm font-normal">
-                    {errors.endDate.message}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <Label>Descrição da tarefa</Label>
-              <TextArea
-                placeholder="Descreva a sua tarefa"
-                {...register('description')}
+              <FormDatePicker
+                control={control}
+                label="Data de início"
+                name="startDate"
+                disabled={disable}
+                error={errors.startDate?.message}
               />
 
-              {errors.description && (
-                <span className="text-red-500 text-sm font-normal">
-                  {errors.description.message}
-                </span>
-              )}
+              <FormDatePicker
+                control={control}
+                label="Data de entrega"
+                name="endDate"
+                disabled={disable}
+                error={errors.endDate?.message}
+              />
             </div>
 
-            <div className="w-full flex items-center gap-2 justify-end p-2">
-              <Button
-                isLoading={isLoading}
-                variant="highlight"
-                sizes="full"
-                className="text-base flex items-center justify-center"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Cadastrando...' : 'Cadastrar'}
-              </Button>
-            </div>
+            <TextAreaField
+              label="Descrição"
+              register={register('description')}
+              disabled={disable}
+              placeholder="Descreva o seu projeto"
+              error={errors.description}
+            />
+
+            <Button
+              isLoading={isLoading}
+              variant="highlight"
+              sizes="full"
+              className="text-base flex items-center justify-center space-x-3"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Adicionando' : 'Adicionar'}
+            </Button>
           </div>
         </form>
       </DialogContent>

@@ -39,7 +39,7 @@ export function User() {
         )}
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex-col hidden lg:flex">
         <span className="text-base font-bold text-zinc-950">
           {data?.user?.name}
         </span>

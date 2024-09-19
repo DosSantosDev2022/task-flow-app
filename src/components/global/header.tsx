@@ -7,16 +7,20 @@ import { User } from './user'
 export function Header() {
   return (
     <header className="bg-zinc-50 h-24 flex items-center">
-      <div className="flex items-center justify-between w-full px-[18px] py-6 gap-3 ">
-        <span className="text-zinc-300">Dashboard</span>
-        <Input.Root className="w-[442px] ">
+      <div className="flex items-center justify-between w-full px-4 py-6 gap-3">
+        {/* Título do Dashboard */}
+        <span className="text-zinc-300 text-sm sm:text-lg">Dashboard</span>
+
+        {/* Campo de busca - se adapta à largura da tela */}
+        <Input.Root className="hidden md:flex w-[240px] lg:w-[442px]">
           <Input.Icon>
             <CiSearch size={24} className="text-zinc-400" />
           </Input.Icon>
           <Input.Input placeholder="Search" type="search" />
         </Input.Root>
 
-        <div className="flex items-center justify-between gap-4">
+        {/* Ícones de mensagem e notificação + Usuário */}
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <button>
               <AiFillMessage className="text-zinc-500" size={24} />
@@ -26,6 +30,7 @@ export function Header() {
             </button>
           </div>
 
+          {/* Usuário */}
           <User />
         </div>
       </div>

@@ -14,37 +14,38 @@ import { SiGoogletasks } from 'react-icons/si'
 import { FaGear } from 'react-icons/fa6'
 import { Button } from './button'
 import { useState } from 'react'
+import { TooltipComponent } from './tooltip'
 
 export function SideBar() {
   const navigationLinks = [
     {
       label: 'Dashboard',
-      icon: <MdSpaceDashboard size={22} />,
+      icon: <MdSpaceDashboard size={20} />,
       Url: '/dashboard',
     },
     {
       label: 'Clientes',
-      icon: <FaUsers size={22} />,
+      icon: <FaUsers size={20} />,
       Url: '/clients',
     },
     {
       label: 'Projetos',
-      icon: <MdEditDocument size={22} />,
+      icon: <MdEditDocument size={20} />,
       Url: '/projects',
     },
     {
       label: 'Tarefas',
-      icon: <SiGoogletasks size={22} />,
+      icon: <SiGoogletasks size={20} />,
       Url: '/tasks',
     },
     {
       label: 'Finanças',
-      icon: <FaMoneyBill size={22} />,
+      icon: <FaMoneyBill size={20} />,
       Url: '/finance',
     },
     {
       label: 'Configurações',
-      icon: <FaGear size={22} />,
+      icon: <FaGear size={20} />,
       Url: '/configurations',
     },
   ]
@@ -52,37 +53,77 @@ export function SideBar() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <aside
-      aria-label="SideBar"
-      className={`${isOpen ? 'w-64 px-4 py-6 ' : 'w-20 px-1 py-2'} h-screen left-0  flex duration-500 shadow-lg border z-40 flex-col bg-zinc-50  space-y-4`}
-    >
+    <>
+      {/* Botão para abrir a sidebar no mobile */}
       <div
-        className={`flex items-center justify-between w-full px-2 
-          py-2.5 gap-2 border-b border-zinc-200 ${isOpen ? 'justify-center' : ''}`}
+        className={`sm:hidden  top-4 left-4 z-50 ${isOpen ? 'hidden' : 'fixed'}`}
       >
-        <Logo className={isOpen ? 'transition-all' : 'hidden'} />
         <Button
-          className=" w-[40] h-[40] bg-zinc-50 rounded-lg flex items-center  justify-center"
-          onClick={() => setIsOpen(!isOpen)}
+          className="w-12 h-12 bg-zinc-50 rounded-lg flex items-center justify-center shadow-lg"
+          onClick={() => setIsOpen(true)}
           variant="outline"
         >
-          {isOpen ? <MdClose size={25} /> : <MdMenu size={25} />}
+          <MdMenu size={25} />
         </Button>
       </div>
-      <div className="px-3 py-4 h-full w-full">
-        <Navigation.Root>
-          <Navigation.List>
-            {navigationLinks.map((link) => (
-              <Navigation.Item key={link.label}>
-                <NavigationLinks isOpen url={link.Url}>
-                  <Navigation.Icon>{link.icon} </Navigation.Icon>
-                  {isOpen && <span>{link.label}</span>}
-                </NavigationLinks>
-              </Navigation.Item>
-            ))}
-          </Navigation.List>
-        </Navigation.Root>
-      </div>
-    </aside>
+
+      {/* Sidebar */}
+      <aside
+        aria-label="SideBar"
+        className={`fixed sm:relative sm:translate-x-0 top-0 left-0  h-screen z-40 sm:z-0 flex flex-col
+           bg-zinc-50 shadow-lg border border-zinc-200
+        transition-transform duration-500 ease-in-out ${
+          isOpen
+            ? 'translate-x-0 w-64 px-4 py-6'
+            : 'sm:w-20 px-1 py-2 -translate-x-full sm:translate-x-0'
+        }`}
+      >
+        {/* Header com logo e botão de abrir/fechar */}
+        <div
+          className={`flex items-center justify-between w-full px-2 py-2.5 gap-2 border-b border-zinc-200 ${
+            isOpen ? 'justify-center' : ''
+          }`}
+        >
+          <Logo className={isOpen ? 'transition-all' : 'hidden'} />
+          <Button
+            className="w-[40] h-[40] bg-zinc-50 rounded-lg flex items-center justify-center"
+            onClick={() => setIsOpen(!isOpen)}
+            variant="outline"
+          >
+            {isOpen ? <MdClose size={25} /> : <MdMenu size={25} />}
+          </Button>
+        </div>
+
+        {/* Links de navegação */}
+        <div className="px-3 py-4 h-full w-full">
+          <Navigation.Root>
+            <Navigation.List>
+              {navigationLinks.map((link, index) =>
+                isOpen ? (
+                  <NavigationLinks key={index} url={link.Url} className="">
+                    <Navigation.Icon>{link.icon}</Navigation.Icon>
+                    <span>{link.label}</span>
+                  </NavigationLinks>
+                ) : (
+                  <TooltipComponent key={index} content={link.label}>
+                    <NavigationLinks url={link.Url} className="justify-center">
+                      <Navigation.Icon>{link.icon}</Navigation.Icon>
+                    </NavigationLinks>
+                  </TooltipComponent>
+                ),
+              )}
+            </Navigation.List>
+          </Navigation.Root>
+        </div>
+      </aside>
+
+      {/* Overlay no mobile para fechar o menu ao clicar fora */}
+      {isOpen && (
+        <div
+          className="sm:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
+    </>
   )
 }

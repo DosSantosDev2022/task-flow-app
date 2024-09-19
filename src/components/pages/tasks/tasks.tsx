@@ -7,6 +7,10 @@ import { Button } from '@/components/global/button'
 import { useTaskStatusStore } from '@/store/TaskStatusStore'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { useNotification } from '@/contexts/NotificationContext'
+import { LoadingOverlay } from '../../global/loading/LoadingOverlaySaveTasks'
+import { MdSaveAlt } from 'react-icons/md'
+
 interface TasksProps {
   tasks: Task[]
   projectId: string
@@ -24,11 +28,11 @@ export function Tasks({ tasks, projectId }: TasksProps) {
   const [filterTasks, setFilterTasks] = useState<FilterType>('all')
   const [activeFilter, setActiveFilter] = useState<FilterType>('all')
   const [isLoading, setIsLoading] = useState(false)
+  const { showNotification } = useNotification()
   const { taskStatuses, updateTaskStatus, saveAllChanges } =
     useTaskStatusStore()
 
   useEffect(() => {
-    // Initialize the task statuses from tasks prop
     tasks.forEach((task) => {
       if (!taskStatuses[task.id]) {
         updateTaskStatus(task.id, task.status)
@@ -36,15 +40,8 @@ export function Tasks({ tasks, projectId }: TasksProps) {
     })
   }, [tasks, taskStatuses, updateTaskStatus])
 
-  // Atualiza o filtro quando `taskStatuses` mudar
-  useEffect(() => {
-    console.log('Task statuses updated:', taskStatuses)
-  }, [taskStatuses])
-
-  // Filtra tarefas de acordo com o filtro atual
   const filteredTasks = (filter: FilterType) => {
     if (filter === 'all') {
-      // Organize tasks into a status-based grouping
       return {
         A_FAZER: tasks.filter((task) => taskStatuses[task.id] === 'A_FAZER'),
         EM_ANDAMENTO: tasks.filter(
@@ -55,7 +52,6 @@ export function Tasks({ tasks, projectId }: TasksProps) {
         ),
       }
     }
-    // Return tasks filtered by specific status
     return {
       [filter]: tasks.filter((task) => taskStatuses[task.id] === filter),
     }
@@ -70,15 +66,16 @@ export function Tasks({ tasks, projectId }: TasksProps) {
   const handleSaveChanges = async () => {
     try {
       setIsLoading(true)
-      await saveAllChanges()
+      await saveAllChanges(projectId)
+      showNotification('Informações atualizadas', 'success')
     } catch (error) {
       console.error('Error saving changes:', error)
+      showNotification('Erro ao salvar alterações', 'error')
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Função para adicionar uma nova tarefa à lista
   const handleAddTask = useCallback(
     (newTask: Task) => {
       updateTaskStatus(newTask.id, newTask.status)
@@ -88,17 +85,21 @@ export function Tasks({ tasks, projectId }: TasksProps) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex items-center gap-2 px-2 py-4">
+      {/* Loading overlay */}
+      {isLoading && <LoadingOverlay label="Salvando..." />}
+
+      <div className="flex flex-col gap-2 px-2 py-4">
         <TaskAddForm projectId={projectId} onAddTask={handleAddTask} />
-        <div className="rounded-xl w-full bg-zinc-50 h-[46px] flex justify-start px-4 py-2 items-center gap-11">
+        <div className="rounded-xl w-full overflow-x-auto bg-zinc-50 shadow-sm flex justify-start lg:px-4 py-2 px-2 items-center gap-2 lg:gap-4">
           {statusOptions.map((status) => (
             <Button
-              variant="link"
+              variant="outline"
+              sizes="full"
               key={status.value}
               onClick={() => handleFilterClick(status.value)}
-              className={`hover:text-violet-600 text-sm w-full duration-300 px-2 py-3 rounded-lg text-zinc-600 ${
+              className={`hover:text-violet-600 lg:px-2  lg:py-3 px-1.5 py-2 text-xs whitespace-nowrap border-none${
                 activeFilter === status.value
-                  ? 'text-violet-600 bg-zinc-200'
+                  ? ' text-violet-600 bg-zinc-200'
                   : ''
               }`}
             >
@@ -107,19 +108,48 @@ export function Tasks({ tasks, projectId }: TasksProps) {
           ))}
 
           <Button
-            variant="highlight"
+            className="hidden lg:flex"
+            effects="scale"
+            variant="primary"
             isLoading={isLoading}
             onClick={handleSaveChanges}
-            className="ml-4"
           >
-            {isLoading ? 'Salvando...' : 'Salvar Alterações'}
+            {isLoading ? (
+              'Salvando...'
+            ) : (
+              <span className="flex items-center justify-center gap-1 w-[98px] h-10 rounded-2xl px-2 py-4">
+                <MdSaveAlt size={16} />
+                Salvar
+              </span>
+            )}
           </Button>
+          {/* Botão flutuante mobile */}
+          <div className="lg:hidden fixed bottom-4 right-4 z-50">
+            <Button
+              className="w-[50px] h-[50px] rounded-full bg-violet-600 text-white shadow-lg flex items-center justify-center"
+              effects="scale"
+              variant="primary"
+              isLoading={isLoading}
+              onClick={handleSaveChanges}
+            >
+              {isLoading ? '...' : <MdSaveAlt size={28} />}
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-2 px-2">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-2 px-2">
         {['A_FAZER', 'EM_ANDAMENTO', 'CONCLUIDO'].map((status, index) => (
-          <div key={index} className="col-span-4">
+          <div
+            key={index}
+            className={`col-span-1 ${
+              activeFilter === 'all'
+                ? 'md:col-span-4'
+                : activeFilter === status
+                  ? 'md:col-span-12'
+                  : 'hidden'
+            }`}
+          >
             <TaskByStatus
               status={status as TaskStatus}
               tasks={taskGroups[status as TaskStatus] || []}

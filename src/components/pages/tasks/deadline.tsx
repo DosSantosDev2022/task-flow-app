@@ -15,7 +15,10 @@ interface DeadilineRootProps {
 export function DeadilineRoot({ children, className }: DeadilineRootProps) {
   return (
     <div
-      className={twMerge('flex gap-1 items-center justify-center', className)}
+      className={twMerge(
+        'flex flex-row xs:flex-col gap-1 items-start sm:items-center justify-center ',
+        className,
+      )}
     >
       {children}
     </div>

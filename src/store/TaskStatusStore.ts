@@ -7,7 +7,7 @@ export type TaskStatus = 'A_FAZER' | 'EM_ANDAMENTO' | 'CONCLUIDO'
 interface TaskStatusStore {
   taskStatuses: Record<string, TaskStatus>
   updateTaskStatus: (taskId: string, status: TaskStatus) => void
-  saveAllChanges: () => Promise<void>
+  saveAllChanges: (projectId: string) => Promise<void>
 }
 
 // Função para carregar o estado inicial do localStorage
@@ -36,7 +36,7 @@ export const useTaskStatusStore = create<TaskStatusStore>((set) => ({
       return { taskStatuses: updatedStatuses }
     })
   },
-  saveAllChanges: async () => {
+  saveAllChanges: async (projectId) => {
     const state = useTaskStatusStore.getState()
     const tasksToUpdate = Object.entries(state.taskStatuses).map(
       ([taskId, status]) => ({
@@ -47,7 +47,7 @@ export const useTaskStatusStore = create<TaskStatusStore>((set) => ({
 
     try {
       await saveTaskStatuses(tasksToUpdate)
-      revalidatePath('/tasks')
+      revalidatePath(`/tasks?projectId=${projectId}`)
       // Limpa o localStorage e o estado local após salvar
       localStorage.removeItem('taskStatuses')
       set({ taskStatuses: {} })
