@@ -57,7 +57,7 @@ export function Tasks({ tasks, projectId }: TasksProps) {
     }
     // Return tasks filtered by specific status
     return {
-      [filter]: tasks.filter((task) => task.status === filter),
+      [filter]: tasks.filter((task) => taskStatuses[task.id] === filter),
     }
   }
   const taskGroups = filteredTasks(filterTasks)
