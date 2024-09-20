@@ -56,3 +56,11 @@ export const useTaskStatusStore = create<TaskStatusStore>((set) => ({
     }
   },
 }))
+
+// Carregar o estado do localStorage após a inicialização do Zustand
+if (typeof window !== 'undefined') {
+  const savedStatuses = localStorage.getItem('taskStatuses')
+  if (savedStatuses) {
+    useTaskStatusStore.setState({ taskStatuses: JSON.parse(savedStatuses) })
+  }
+}

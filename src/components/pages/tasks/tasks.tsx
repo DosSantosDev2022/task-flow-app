@@ -88,7 +88,7 @@ export function Tasks({ tasks, projectId }: TasksProps) {
       {/* Loading overlay */}
       {isLoading && <LoadingOverlay label="Salvando..." />}
 
-      <div className="flex flex-col gap-2 px-2 py-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 px-2 py-4">
         <TaskAddForm projectId={projectId} onAddTask={handleAddTask} />
         <div className="rounded-xl w-full overflow-x-auto bg-zinc-50 shadow-sm flex justify-start lg:px-4 py-2 px-2 items-center gap-2 lg:gap-4">
           {statusOptions.map((status) => (
