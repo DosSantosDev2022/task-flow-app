@@ -1,7 +1,7 @@
 'use client'
 import { Task } from '@prisma/client'
 import { TaskCard } from './taskCard'
-import { TaskStatus, useTaskStatusStore } from '@/store/TaskStatusStore'
+import { TaskStatus, useTaskStore } from '@/store/TaskStore'
 import { DropTargetMonitor, useDrop } from 'react-dnd'
 import React, { useState } from 'react'
 
@@ -30,12 +30,12 @@ export function TaskByStatus({ status, tasks }: TypeTaskProps) {
         return 'border-t-zinc-600'
     }
   }
-  const { updateTaskStatus } = useTaskStatusStore()
+  const { updateTask } = useTaskStore()
   const [, drop] = useDrop({
     accept: 'TASK',
     drop: (item: { id: string }, monitor: DropTargetMonitor) => {
       if (monitor.canDrop()) {
-        updateTaskStatus(item.id, status)
+        updateTask(item.id, { status })
       }
     },
   })
@@ -66,15 +66,9 @@ export function TaskByStatus({ status, tasks }: TypeTaskProps) {
       </div>
       {open ? (
         <div className="flex flex-col gap-2">
-          {tasks.map((task, index) => (
-            <div key={index}>
-              <TaskCard
-                id={task.id}
-                status={status}
-                title={task.title}
-                description={task.description || ''}
-                index={index}
-              />
+          {tasks.map((task) => (
+            <div key={task.id}>
+              <TaskCard task={task} />
             </div>
           ))}
         </div>

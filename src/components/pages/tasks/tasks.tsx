@@ -1,15 +1,16 @@
 'use client'
+
 import { useState, useCallback, useEffect } from 'react'
 import { TaskByStatus } from './TaskByStatus'
 import { Task, TaskStatus } from '@prisma/client'
-import { TaskAddForm } from './TaskAddForm'
 import { Button } from '@/components/global/button'
-import { useTaskStatusStore } from '@/store/TaskStatusStore'
+import { useTaskStore } from '@/store/TaskStore'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useNotification } from '@/contexts/NotificationContext'
 import { LoadingOverlay } from '../../global/loading/LoadingOverlaySaveTasks'
 import { MdSaveAlt } from 'react-icons/md'
+import { TaskAddForm } from './modal/TaskAddForm'
 
 interface TasksProps {
   tasks: Task[]
@@ -24,38 +25,42 @@ const statusOptions: { label: string; value: FilterType }[] = [
   { label: 'Concluído', value: 'CONCLUIDO' },
 ]
 
-export function Tasks({ tasks, projectId }: TasksProps) {
+export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
   const [filterTasks, setFilterTasks] = useState<FilterType>('all')
   const [activeFilter, setActiveFilter] = useState<FilterType>('all')
   const [isLoading, setIsLoading] = useState(false)
   const { showNotification } = useNotification()
-  const { taskStatuses, updateTaskStatus, saveAllChanges } =
-    useTaskStatusStore()
+  const { tasks, updateTask, saveAllChanges } = useTaskStore() // Mudança para tasks e updateTask do Zustand
 
+  // Sincroniza as tasks com o Zustand, caso elas não estejam no store
   useEffect(() => {
-    tasks.forEach((task) => {
-      if (!taskStatuses[task.id]) {
-        updateTaskStatus(task.id, task.status)
+    initialTasks.forEach((task) => {
+      if (!tasks[task.id]) {
+        updateTask(task.id, task) // Atualiza o Zustand com a task completa
       }
     })
-  }, [tasks, taskStatuses, updateTaskStatus])
+  }, [initialTasks, tasks, updateTask])
 
+  // Função de filtragem atualizada para tasks completas
   const filteredTasks = (filter: FilterType) => {
     if (filter === 'all') {
       return {
-        A_FAZER: tasks.filter((task) => taskStatuses[task.id] === 'A_FAZER'),
-        EM_ANDAMENTO: tasks.filter(
-          (task) => taskStatuses[task.id] === 'EM_ANDAMENTO',
+        A_FAZER: Object.values(tasks).filter(
+          (task) => task.status === 'A_FAZER',
         ),
-        CONCLUIDO: tasks.filter(
-          (task) => taskStatuses[task.id] === 'CONCLUIDO',
+        EM_ANDAMENTO: Object.values(tasks).filter(
+          (task) => task.status === 'EM_ANDAMENTO',
+        ),
+        CONCLUIDO: Object.values(tasks).filter(
+          (task) => task.status === 'CONCLUIDO',
         ),
       }
     }
     return {
-      [filter]: tasks.filter((task) => taskStatuses[task.id] === filter),
+      [filter]: Object.values(tasks).filter((task) => task.status === filter),
     }
   }
+
   const taskGroups = filteredTasks(filterTasks)
 
   const handleFilterClick = (status: FilterType) => {
@@ -66,7 +71,7 @@ export function Tasks({ tasks, projectId }: TasksProps) {
   const handleSaveChanges = async () => {
     try {
       setIsLoading(true)
-      await saveAllChanges(projectId)
+      await saveAllChanges(projectId) // Salva todas as alterações via Zustand
       showNotification('Informações atualizadas', 'success')
     } catch (error) {
       console.error('Error saving changes:', error)
@@ -78,9 +83,9 @@ export function Tasks({ tasks, projectId }: TasksProps) {
 
   const handleAddTask = useCallback(
     (newTask: Task) => {
-      updateTaskStatus(newTask.id, newTask.status)
+      updateTask(newTask.id, newTask) // Adiciona a nova task ao Zustand
     },
-    [updateTaskStatus],
+    [updateTask],
   )
 
   return (

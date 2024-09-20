@@ -1,19 +1,22 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { TaskStatus } from '@prisma/client'
+import { Task } from '@prisma/client'
 
-interface TaskToUpdate {
-  id: string
-  status: TaskStatus
-}
-
-export async function saveTaskStatuses(tasksToUpdate: TaskToUpdate[]) {
+export async function updateTasksAction(tasksToUpdate: Task[]) {
   try {
     const updatePromises = tasksToUpdate.map((task) =>
       prisma.task.update({
         where: { id: task.id },
-        data: { status: task.status },
+        data: {
+          title: task.title,
+          description: task.description,
+          status: task.status,
+          startDate: task.startDate,
+          endDate: task.endDate,
+          projectId: task.projectId,
+          userId: task.userId,
+        },
       }),
     )
     await Promise.all(updatePromises)

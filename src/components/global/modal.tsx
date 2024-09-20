@@ -5,14 +5,24 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 /* import { LuX } from 'react-icons/lu' */
 
 import { twMerge } from 'tailwind-merge'
+import { ButtonProps, Button } from './button'
 
 const Dialog = DialogPrimitive.Root
-
-const DialogTrigger = DialogPrimitive.Trigger
 
 const DialogPortal = DialogPrimitive.Portal
 
 const DialogClose = DialogPrimitive.Close
+
+// Estendendo o DialogTrigger
+const DialogTrigger = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps & React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Trigger asChild>
+    <Button ref={ref} className={twMerge('', className)} {...props} />
+  </DialogPrimitive.Trigger>
+))
+DialogTrigger.displayName = 'DialogTrigger'
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,

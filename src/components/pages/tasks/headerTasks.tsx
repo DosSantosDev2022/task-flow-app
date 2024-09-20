@@ -5,10 +5,11 @@ import { ProgressBar } from '@/components/global/progressBar'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Deadiline } from './deadline'
-import { useTaskStatusStore } from '@/store/TaskStatusStore'
+import { useTaskStore } from '@/store/TaskStore'
 import { calculateProgress } from '@/utils/calculateProgress'
 import { useEffect, useState } from 'react'
 import { Record } from '@prisma/client/runtime/library'
+import { TaskStatus } from '@prisma/client'
 
 // Tipagem do selectedProject e das tasks
 interface Task {
@@ -23,25 +24,25 @@ interface Project {
 }
 
 export function HeaderTasks({ selectedProject }: { selectedProject: Project }) {
-  const { taskStatuses } = useTaskStatusStore() // Usando o estado global das tarefas
+  const { tasks } = useTaskStore() // Usando o estado global das tarefas
   const [progressPercentage, setProgressPercentage] = useState(0)
 
   useEffect(() => {
     if (selectedProject) {
+      // Mapeia as tasks do projeto para um Record de status
       const projectTasks = selectedProject.tasks.reduce<
-        Record<string, 'A_FAZER' | 'EM_ANDAMENTO' | 'CONCLUIDO'>
+        Record<string, TaskStatus>
       >((acc, task) => {
-        acc[task.id] =
-          taskStatuses[task.id] !== undefined
-            ? taskStatuses[task.id]
-            : task.status
+        // Prioriza o status dos dados no Zustand
+        acc[task.id] = tasks[task.id] ? tasks[task.id].status : task.status
         return acc
       }, {})
 
+      // Calcula o progresso com base no status das tasks
       const progress = calculateProgress(projectTasks)
       setProgressPercentage(progress)
     }
-  }, [taskStatuses, selectedProject])
+  }, [tasks, selectedProject])
 
   return (
     <>

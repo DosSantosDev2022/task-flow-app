@@ -1,22 +1,18 @@
-import { TaskStatus } from '@/store/TaskStatusStore'
 import { Deadiline } from './deadline'
 import { TbArrowBadgeRightFilled } from 'react-icons/tb'
 import { useDrag, DragSourceMonitor } from 'react-dnd'
 import { Badge } from '@/components/global/badge'
-import { ModalTasksDetails } from './modal/tasksDetails'
+import { ModalTasksForm } from './modal/EditTasksForm'
+import { Task, TaskStatus } from '@prisma/client'
 
 interface TaskCardProps {
-  id: string
-  title: string
-  status: TaskStatus
-  description: string
-  index: number
+  task: Task
 }
 
-export function TaskCard({ title, status, description, id }: TaskCardProps) {
+export function TaskCard({ task }: TaskCardProps) {
   const [{ isDragging }, drag] = useDrag({
     type: 'TASK',
-    item: { id },
+    item: { id: task.id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -44,22 +40,22 @@ export function TaskCard({ title, status, description, id }: TaskCardProps) {
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center justify-center gap-2">
           <TbArrowBadgeRightFilled
-            className={getStatusColor(status)}
+            className={getStatusColor(task.status)}
             size={24}
           />
-          <h4 className="text-base font-normal text-zinc-600">{title}</h4>
+          <h4 className="text-base font-normal text-zinc-600">{task.title}</h4>
         </div>
-        <Badge status={status} className="px-1.5 py-1 w-[96px] " />
+        <Badge status={task.status} className="px-1.5 py-1 w-[96px] " />
       </div>
       <Deadiline.Root className="justify-start">
         <Deadiline.Icon />
-        <Deadiline.Date date="20/05/2024" />
+        <Deadiline.Date date={new Date(task.endDate).toLocaleDateString()} />
       </Deadiline.Root>
       <div className="px-1 py-1.5 w-full">
-        <p className="truncate text-xs text-zinc-500">{description}</p>
+        <p className="truncate text-xs text-zinc-500">{task.description}</p>
       </div>
       <div className="w-full flex items-center justify-between">
-        <ModalTasksDetails />
+        <ModalTasksForm task={task} />
       </div>
     </div>
   )
