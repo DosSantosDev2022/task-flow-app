@@ -128,7 +128,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                     {new Date(project.endDate).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <ProgressBar value={50} />
+                    <ProgressBar value={project.progress} />
                   </TableCell>
                   <TableCell className="w-[30px] ">
                     <Badge status={project.status}>{project.status}</Badge>

@@ -1,4 +1,5 @@
 'use client'
+
 import { usePagination } from '@/hooks/usePagination'
 import { ItemsPerPageSelector } from './ItemsPerPageSelector'
 import { PaginationControls } from './PaginationControls'
@@ -28,29 +29,13 @@ export function Pagination({
   const isFirstPage = page === 1
   const isLastPage = page === Math.ceil(total / limit)
 
-  const buildUrl = (pageNumber: string | number) => {
-    try {
-      if (!baseUrl) {
-        throw new Error('baseUrl deve ser uma string válida')
-      }
-
-      // Converta pageNumber para number, se necessário
-      const pageAsNumber =
-        typeof pageNumber === 'string' ? parseInt(pageNumber, 10) : pageNumber
-
-      const url = new URL(baseUrl, window.location.origin)
-      url.searchParams.set('page', pageAsNumber.toString())
-
-      // Adicione parâmetros de consulta adicionais, se existirem
-      Object.entries(queryParams).forEach(([key, value]) => {
-        url.searchParams.set(key, value.toString())
-      })
-
-      return url.toString()
-    } catch (error) {
-      console.error('Erro ao construir URL', error)
-      return ''
-    }
+  const buildUrl = (pageNumber: number | string) => {
+    const url = new URL(baseUrl, window.location.origin)
+    url.searchParams.set('page', pageNumber.toString())
+    Object.entries(queryParams).forEach(([key, value]) => {
+      url.searchParams.set(key, value.toString())
+    })
+    return url.toString()
   }
 
   return (
@@ -59,20 +44,17 @@ export function Pagination({
       <span className="flex-1 w-full font-medium text-sm">
         Total de {total} itens
       </span>
-      {/* Botão de ação para alterar total por página */}
+
+      {/* Controles de Paginação */}
       <div className="flex items-center space-x-2">
         <ItemsPerPageSelector />
-        {/*  total por pagina */}
         <PaginationItemCount limit={limit} page={page} total={total} />
-
-        {/* Links para paginação */}
         <PaginationControls
-          buildUrl={buildUrl}
+          pages={pages as number[]}
+          page={page}
           isFirstPage={isFirstPage}
           isLastPage={isLastPage}
-          limit={limit}
-          page={page}
-          total={total}
+          buildUrl={buildUrl}
         />
       </div>
     </div>
