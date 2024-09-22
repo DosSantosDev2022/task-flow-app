@@ -10,20 +10,13 @@ import { calculateProgress } from '@/utils/calculateProgress'
 import { useEffect, useState } from 'react'
 import { Record } from '@prisma/client/runtime/library'
 import { TaskStatus } from '@prisma/client'
+import { ProjectData } from '@/utils/getProjects'
 
-// Tipagem do selectedProject e das tasks
-interface Task {
-  id: string
-  status: 'A_FAZER' | 'EM_ANDAMENTO' | 'CONCLUIDO'
-}
-
-interface Project {
-  title: string
-  endDate: Date
-  tasks: Task[]
-}
-
-export function HeaderTasks({ selectedProject }: { selectedProject: Project }) {
+export function HeaderTasks({
+  selectedProject,
+}: {
+  selectedProject: ProjectData
+}) {
   const { tasks } = useTaskStore() // Usando o estado global das tarefas
   const [progressPercentage, setProgressPercentage] = useState(0)
 

@@ -42,26 +42,25 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
   }, [initialTasks, tasks, updateTask])
 
   // Função de filtragem atualizada para tasks completas
-  const filteredTasks = (filter: FilterType) => {
+  const filteredTasks = (filter: FilterType, projectId: string) => {
+    const projectTasks = Object.values(tasks).filter(
+      (task) => task.projectId === projectId,
+    )
     if (filter === 'all') {
       return {
-        A_FAZER: Object.values(tasks).filter(
-          (task) => task.status === 'A_FAZER',
-        ),
-        EM_ANDAMENTO: Object.values(tasks).filter(
+        A_FAZER: projectTasks.filter((task) => task.status === 'A_FAZER'),
+        EM_ANDAMENTO: projectTasks.filter(
           (task) => task.status === 'EM_ANDAMENTO',
         ),
-        CONCLUIDO: Object.values(tasks).filter(
-          (task) => task.status === 'CONCLUIDO',
-        ),
+        CONCLUIDO: projectTasks.filter((task) => task.status === 'CONCLUIDO'),
       }
     }
     return {
-      [filter]: Object.values(tasks).filter((task) => task.status === filter),
+      [filter]: projectTasks.filter((task) => task.status === filter),
     }
   }
 
-  const taskGroups = filteredTasks(filterTasks)
+  const taskGroups = filteredTasks(filterTasks, projectId)
 
   const handleFilterClick = (status: FilterType) => {
     setActiveFilter(status)

@@ -2,34 +2,34 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { HeaderTasks } from '@/components/pages/tasks/headerTasks'
 import { ProjectList } from '@/components/pages/tasks/ProjectList'
 import { Tasks } from '@/components/pages/tasks/tasks'
-import { prisma } from '@/lib/prisma'
+import { getProjects } from '@/utils/getProjects'
 import { getServerSession } from 'next-auth'
 import { notFound } from 'next/navigation'
 
 export default async function TasksPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string }
+  searchParams: { projectId: string }
 }) {
   const session = await getServerSession(authOptions)
   const projectId = searchParams.projectId
+  console.log('seção pagina task', session)
 
   if (!session) {
     return <p>Usuário não autenticado</p>
   }
 
-  const projects = await prisma.project.findMany({
-    where: {
-      userId: session.user.id,
-    },
+  const { projects } = await getProjects({
+    page: 1,
+    limit: 1000, // limite de resultados
+    session, // a sessão do usuário
+    sortBy: 'createdAt',
   })
+  console.log(projects)
 
   let selectedProject = null
   if (projectId) {
-    selectedProject = await prisma.project.findUnique({
-      where: { id: projectId },
-      include: { tasks: true },
-    })
+    selectedProject = projects.find((project) => project.id === projectId)
     if (!selectedProject) {
       notFound()
     }

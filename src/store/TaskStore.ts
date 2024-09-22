@@ -1,6 +1,5 @@
 import { updateTasksAction } from '@/app/actions/tasks/updateTasks'
 import { Task } from '@prisma/client'
-import { revalidatePath } from 'next/cache'
 import { create } from 'zustand'
 
 export type TaskStatus = 'A_FAZER' | 'EM_ANDAMENTO' | 'CONCLUIDO'
@@ -23,6 +22,7 @@ interface TaskStore {
 
 // Função para carregar o estado inicial do localStorage
 const loadTasksFromLocalStorage = (): Record<string, Task> => {
+  /* if (typeof window === 'undefined') return {} // Verifica se está no servidor */
   const savedTasks = localStorage.getItem('tasks')
   return savedTasks ? JSON.parse(savedTasks) : {}
 }
@@ -48,14 +48,14 @@ export const useTaskStore = create<TaskStore>((set) => ({
       return { tasks: updatedTasks }
     })
   },
-  saveAllChanges: async (projectId) => {
+  saveAllChanges: async () => {
     const state = useTaskStore.getState()
     const tasksToUpdate = Object.values(state.tasks)
 
     try {
       // Envia as tasks atualizadas para o backend
       await updateTasksAction(tasksToUpdate)
-      revalidatePath(`/tasks?projectId=${projectId}`)
+      /* revalidatePath(`/tasks?projectId=${projectId}`) */
 
       // Limpa o localStorage e o estado local após salvar
       localStorage.removeItem('tasks')
@@ -66,10 +66,11 @@ export const useTaskStore = create<TaskStore>((set) => ({
   },
 }))
 
-// Carregar o estado do localStorage após a inicialização do Zustand
+/* // Carregar o estado do localStorage após a inicialização do Zustand
 if (typeof window !== 'undefined') {
-  const savedTasks = localStorage.getItem('tasks')
-  if (savedTasks) {
-    useTaskStore.setState({ tasks: JSON.parse(savedTasks) })
+  const savedTasks = loadTasksFromLocalStorage()
+  if (Object.keys(savedTasks).length > 0) {
+    useTaskStore.setState({ tasks: savedTasks })
   }
 }
+ */

@@ -36,8 +36,7 @@ export async function getProjects({
   sortBy = '',
 }: getProjectsParams): Promise<ProjectsResponse> {
   try {
-    const baseUrl =
-      typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : ''
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL
 
     // Construa a URL de consulta dinamicamente
     const queryParams = new URLSearchParams({
