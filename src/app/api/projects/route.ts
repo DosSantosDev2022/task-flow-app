@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     // Verificar autenticação e obter sessão
     const token = req.headers.get('Authorization')?.replace('Bearer ', '')
-    console.log(token)
+
     /* Verifica se SessionUserId existe, se não existir retorna erro */
     if (!token) {
       return NextResponse.json(

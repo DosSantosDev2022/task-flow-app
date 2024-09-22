@@ -6,7 +6,7 @@ import {
   TableRow,
   Table,
 } from '@/components/global/table'
-import { FilterProjects } from '@/components/pages/projects/filters/'
+import { FilterProjects } from '@/components/pages/projects/filters'
 import { ProjectCreationModal } from '@/components/pages/projects/createdProject/ProjectModal'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { getServerSession } from 'next-auth'

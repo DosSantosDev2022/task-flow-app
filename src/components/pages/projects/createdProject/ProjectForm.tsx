@@ -47,7 +47,7 @@ const priorities = [
   },
 ]
 const clientsFakes = [
-  { label: 'Juliano Santos', value: 'ce01a50c-3235-4212-ba8f-0c6e12296455' },
+  { label: 'Juliano Santos', value: 'a277a43e-95c5-4e6a-95d4-499b32e484b3' },
   /* { label: 'Amanda Oliveira', value: 'f46bfc07-0c1b-4676-8100-8d8b79f24ab6' }, */
 ]
 

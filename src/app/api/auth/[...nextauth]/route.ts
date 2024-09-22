@@ -27,8 +27,8 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       // Adicionar o ID do usuário à sessão para acesso em frontend
       session.user.id = token.id as string
-      console.log('token', token)
-      console.log('session', session)
+      /* console.log('token', token)
+      console.log('session', session) */
       return session
     },
   },

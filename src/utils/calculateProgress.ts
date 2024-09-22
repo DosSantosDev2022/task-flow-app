@@ -6,6 +6,9 @@ export const calculateProgress = (tasks: Record<string, TaskStatus>) => {
     (status) => status === 'CONCLUIDO',
   ).length
 
+  /* console.log('Total tasks:', totalTasks)
+  console.log('Completed tasks:', completedTasks) */
+
   const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0
 
   return parseFloat(progress.toFixed(2))

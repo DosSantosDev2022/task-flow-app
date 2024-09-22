@@ -6,7 +6,7 @@ import {
   TableRow,
   Table,
 } from '@/components/global/table'
-import { FilterProjects } from '@/components/pages/clients/filters'
+import { FilterProjects } from '@/components/pages/clients/filters/FilterProject'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth'
 import { ClientModal } from '@/components/pages/clients/createdClients/clientModal'

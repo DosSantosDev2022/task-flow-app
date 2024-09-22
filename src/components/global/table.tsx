@@ -60,10 +60,7 @@ TableFooter.displayName = 'TableFooter'
 const TableRow = React.forwardRef<HTMLTableRowElement, ComponentProps<'tr'>>(
   ({ className, ...props }, ref) => (
     <tr
-      className={twMerge(
-        'border-b  transition-all  hover:opacity-40 duration-300',
-        className,
-      )}
+      className={twMerge('border-b  transition-all  duration-300', className)}
       {...props}
       ref={ref}
     />
@@ -91,7 +88,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, ComponentProps<'td'>>(
   ({ className, ...props }, ref) => (
     <td
       className={twMerge(
-        'px-2 py-1.5 max-w-[320px]  truncate text-zinc-400 font-normal text-[13.5] hover:bg-opacity-40',
+        'px-2 py-1.5 max-w-[320px]  truncate text-zinc-400 font-normal text-[13.5]',
         className,
       )}
       {...props}

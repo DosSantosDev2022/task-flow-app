@@ -19,7 +19,11 @@ const DialogTrigger = React.forwardRef<
   ButtonProps & React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Trigger asChild>
-    <Button ref={ref} className={twMerge('', className)} {...props} />
+    <Button
+      ref={ref}
+      className={twMerge('w-full flex items-center gap-1', className)}
+      {...props}
+    />
   </DialogPrimitive.Trigger>
 ))
 DialogTrigger.displayName = 'DialogTrigger'
