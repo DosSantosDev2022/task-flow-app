@@ -73,7 +73,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, ComponentProps<'th'>>(
   ({ className, ...props }, ref) => (
     <th
       className={twMerge(
-        'h-10 px-2 whitespace-nowrap text-left align-middle font-medium text-zinc-700',
+        'h-10 px-2 whitespace-nowrap text-left align-middle font-medium',
         className,
       )}
       {...props}
@@ -105,7 +105,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={twMerge('mt-4 text-sm text-muted-foreground', className)}
+    className={twMerge('mt-4 text-sm', className)}
     {...props}
   />
 ))
