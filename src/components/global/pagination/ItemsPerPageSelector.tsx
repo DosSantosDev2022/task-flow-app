@@ -4,7 +4,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/global/popover'
-import { CgArrowsExchangeAltV } from 'react-icons/cg'
 import { Button } from '../button'
 import { useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -25,7 +24,8 @@ const perPage = [
 ]
 
 export function ItemsPerPageSelector() {
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [itemsPerPage, setItemsPerPage] = useState(10) // Estado para controlar os itens por página
+  const [popoverOpen, setPopoverOpen] = useState(false)
   const searchParams = useSearchParams()
   const pathaname = usePathname()
   const { replace } = useRouter()
@@ -33,28 +33,30 @@ export function ItemsPerPageSelector() {
   const handleItemsPerPageSelector = (newItemsPerPage: string) => {
     const params = new URLSearchParams(searchParams)
 
-    setItemsPerPage(Number(newItemsPerPage))
+    setItemsPerPage(Number(newItemsPerPage)) // Atualiza o estado local com o novo valor de itemsPerPage
 
-    if (itemsPerPage) {
+    if (newItemsPerPage) {
       params.set('limit', newItemsPerPage)
     } else {
       params.delete('limit')
     }
 
-    replace(`${pathaname}?${params.toString()}`)
+    replace(`${pathaname}?${params.toString()}`) // Atualiza a URL com o novo parâmetro 'limit'
+    setPopoverOpen(false)
   }
+
   return (
     <div className="flex items-center space-x-6 lg:space-x-8">
       <div className="flex items-center space-x-2">
-        <p className="text-sm font-medium">Itens por página</p>
-        <Popover>
-          <PopoverTrigger className="w-16 border flex space-x-1 active:scale-75">
-            <span>10</span>
-            <CgArrowsExchangeAltV size={18} className="font-bold" />
+        <p className="text-sm font-light">Itens por página</p>
+        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+          <PopoverTrigger className="w-12 border flex space-x-[2px] active:scale-95">
+            {/* Exibe o valor atual de 'limit' ou o valor padrão (10) */}
+            <span>{searchParams.get('limit') || itemsPerPage}</span>
           </PopoverTrigger>
           <PopoverContent
-            className="w-16 flex flex-col items-center justify-center
-         space-y-1 px-1 py-1.5"
+            className="w-12 flex flex-col gap-1 items-center justify-center
+         space-x-[2px] p-1"
             sideOffset={4}
             align="end"
             side="top"

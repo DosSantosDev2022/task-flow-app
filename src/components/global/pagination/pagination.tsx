@@ -41,7 +41,7 @@ export function Pagination({
   return (
     <div className="flex w-full items-center justify-between text-zinc-800">
       {/* Total de itens */}
-      <span className="flex-1 w-full font-medium text-sm">
+      <span className="flex-1 w-full font-light text-sm">
         Total de {total} itens
       </span>
 

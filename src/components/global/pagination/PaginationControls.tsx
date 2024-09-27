@@ -21,7 +21,7 @@ export const PaginationControls = ({
     <div className="flex items-center space-x-2">
       {/* Botão para a primeira página */}
       <Button
-        className={`w-10 h-10 flex items-center justify-center ${
+        className={`w-12 flex items-center justify-center ${
           isFirstPage ? 'pointer-events-none opacity-50' : ''
         }`}
         variant="outline"
@@ -38,7 +38,7 @@ export const PaginationControls = ({
           key={pageNumber}
           variant="outline"
           asChild
-          className={`w-10 h-10 flex items-center justify-center font-normal ${
+          className={`w-12 flex items-center justify-center font-normal ${
             page === pageNumber ? 'pointer-events-none border bg-zinc-200' : ''
           }`}
         >
@@ -51,7 +51,7 @@ export const PaginationControls = ({
       {/* Botão para a próxima página */}
       <Button
         variant="outline"
-        className={`w-10 h-10 flex items-center justify-center ${
+        className={`w-12 flex items-center justify-center ${
           isLastPage ? 'pointer-events-none opacity-50' : ''
         }`}
         asChild
