@@ -16,7 +16,7 @@ function InputRoot({ children, className }: InputRootProps) {
   return (
     <div
       className={twMerge(
-        'flex h-10 w-full items-center gap-3 rounded-2xl  bg-zinc-200 px-3 py-4 focus-within:ring-2 focus-within:ring-zinc-400',
+        'flex h-10 w-full items-center gap-3 rounded-2xl  bg-zinc-50 border px-3 py-4 focus-within:ring-2 focus-within:ring-zinc-400',
         className,
       )}
     >
