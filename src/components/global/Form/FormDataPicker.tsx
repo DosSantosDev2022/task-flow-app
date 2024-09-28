@@ -67,7 +67,7 @@ export function FormDatePicker<T extends FieldValues>({
                 <PopoverContent
                   side="bottom"
                   align="start"
-                  className="bg-zinc-50 shadow-md rounded-md flex items-center justify-center"
+                  className="bg-zinc-50 z-50 shadow-md rounded-md flex items-center justify-center"
                 >
                   <DatePicker
                     value={parsedDate || null} // Valor formatado corretamente
