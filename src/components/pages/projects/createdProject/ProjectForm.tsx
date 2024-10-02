@@ -93,7 +93,7 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmitAction)} className="space-y-3">
+    <form onSubmit={handleSubmit(onSubmitAction)} className="space-y-4">
       <FormField
         label="Nome do projeto"
         type="text"

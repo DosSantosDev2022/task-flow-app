@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { ForwardedRef } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { FaSpinner } from 'react-icons/fa6'
+import { ImSpinner9 } from 'react-icons/im'
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -80,9 +80,9 @@ export function Button({
       disabled={isLoading || variant === 'disabled'}
     >
       {isLoading ? (
-        <span className="flex items-center w-full gap-1">
+        <span className="flex items-center justify-center w-full gap-3">
           {props.children}
-          <FaSpinner size={20} className="animate-spin text-zinc-50" />
+          <ImSpinner9 size={16} className="animate-spin-slow text-zinc-50" />
         </span>
       ) : (
         props.children

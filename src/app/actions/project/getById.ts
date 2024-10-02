@@ -6,6 +6,14 @@ export async function GetProjectById(id: string) {
   try {
     const project = await prisma.project.findUnique({
       where: { id },
+      include: {
+        client: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     })
 
     if (!project) {

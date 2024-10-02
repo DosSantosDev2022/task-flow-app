@@ -8,34 +8,20 @@ import { Button } from '@/components/global/button'
 import { FormField } from '@/components/global/Form/FormField'
 import { SelectField } from '@/components/global/Form/SelectField'
 import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
-import { GetProjectById } from '@/app/actions/project/getById'
 import { FormDataProject, FormSchema } from '@/@types/schemas/FormSchemaProject'
 import { updateProjectAction } from '@/app/actions/project/update'
-import { Typograph } from '@/components/global/typograph'
 import { LuCalendarDays } from 'react-icons/lu'
 import { format } from 'date-fns'
-import { FaSpinner } from 'react-icons/fa'
+import { ImSpinner9 } from 'react-icons/im'
 import { useNotification } from '@/contexts/NotificationContext'
+import { getFixedData } from '@/utils/getFixedDataProjects'
+import { useSession } from 'next-auth/react'
+import { Typograph } from '@/components/global/typograph '
+import { UseFetchProjects } from '@/hooks/useFetchProjects/useFetchProjects'
+import { UseFetchClient } from '@/hooks/useFetchClient/useFetchClient'
 
 // Lazy load do React Quill para evitar problemas de SSR (Server Side Rendering)
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
-
-// Dados fixos (pode ser substituído por dados dinâmicos)
-const payments = [
-  { value: 'DINHEIRO', label: 'Dinheiro' },
-  { value: 'CREDITO', label: 'Crédito' },
-  { value: 'DEBITO', label: 'Débito' },
-  { value: 'PIX', label: 'Pix' },
-]
-const priorities = [
-  { value: 'ALTA', label: 'Alta' },
-  { value: 'MEDIA', label: 'Média' },
-  { value: 'BAIXA', label: 'Baixa' },
-]
-const clients = [
-  { label: 'Juliano Santos', value: '740ea0fe-5db2-4e43-b4c5-d5a878a3fe66' },
-  { label: 'Amanda Oliveira', value: 'f46bfc07-0c1b-4676-8100-8d8b79f24ab6' },
-]
 
 interface ProjectEditModalProps {
   projectId: string
@@ -46,24 +32,19 @@ export function FormEditProject({
   projectId,
   closeModal,
 }: ProjectEditModalProps) {
+  const { data: session } = useSession()
+  const { payments, priorities } = getFixedData()
   const { showNotification } = useNotification()
   const [isLoading, setIsLoading] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [initialData, setInitialData] = useState<FormDataProject>({
-    id: '',
-    title: '',
-    description: '',
-    startDate: new Date().toISOString().slice(0, 10),
-    endDate: new Date().toISOString().slice(0, 10),
-    price: '0',
-    payment: 'DINHEIRO',
-    clientId: '',
-    priority: 'MEDIA',
-    status: 'TODOS',
-    userId: '',
-  })
+  const { memoizedClients } = UseFetchClient(session)
+  const { initialData, isLoading: isLoadingProjectsData } = UseFetchProjects(
+    projectId,
+    session,
+  )
 
   const {
+    reset,
     control,
     register,
     handleSubmit,
@@ -71,55 +52,19 @@ export function FormEditProject({
     formState: { errors },
   } = useForm<FormDataProject>({
     resolver: zodResolver(FormSchema),
-    defaultValues: initialData,
+    defaultValues: initialData || {},
   })
-
+  // O useEffect reseta os valores do formulário sempre que initialData mudar
   useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        setIsLoading(true)
-        const data = await GetProjectById(projectId)
-        if (data) {
-          const formattedData: FormDataProject = {
-            id: data.id,
-            title: data.title || '',
-            description: data.description || '',
-            startDate: data.startDate
-              ? format(new Date(data.startDate), 'yyyy/MM/dd')
-              : '',
-            endDate: data.endDate
-              ? format(new Date(data.endDate), 'yyyy/MM/dd')
-              : '',
-            price: data.price?.toString() || '',
-            payment: data.payment || 'DINHEIRO',
-            status: data.status || 'PENDENTES',
-            userId: data.userId || '',
-            clientId: data.clientId || '',
-            priority: data.priority || 'BAIXA',
-          }
-          setInitialData(formattedData)
-          for (const key in formattedData) {
-            setValue(
-              key as keyof FormDataProject,
-              formattedData[key as keyof FormDataProject],
-            )
-          }
-        }
-      } catch (error) {
-        console.error('Erro ao buscar os dados do projeto:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchProjectData()
-  }, [projectId, setValue])
+    reset(initialData)
+  }, [initialData, reset])
 
   const onSubmit: SubmitHandler<FormDataProject> = async (formData) => {
     try {
       setIsLoading(true)
 
       await updateProjectAction(formData)
+
       closeModal()
       showNotification('Projeto alterado com sucesso !', 'success')
     } catch (error) {
@@ -142,25 +87,24 @@ export function FormEditProject({
 
   return (
     <div>
-      {isLoading ? (
+      {isLoadingProjectsData ? (
         <div className="w-full flex items-center justify-center">
-          <FaSpinner size={32} className="animate-spin text-violet-700" />
+          <ImSpinner9
+            size={42}
+            className="animate-spin-slow duration-700 text-violet-700"
+          />
         </div>
       ) : (
         <>
-          <Typograph as={'h4'} className="mb-4">
+          <h4 className="mb-4 text-xl font-semibold text-zinc-900">
             Detalhes do Projeto
-          </Typograph>
+          </h4>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="px-1 py-2 border rounded-md">
               {!isEditing ? (
                 <>
-                  <Typograph as={'span'} className="font-bold text-lg">
-                    Nome do Projeto
-                  </Typograph>
-                  <Typograph className="mt-1" as={'p'}>
-                    {initialData.title}
-                  </Typograph>
+                  <span className="font-bold text-lg">Nome do Projeto</span>
+                  <p className="mt-1">{initialData.title}</p>
                 </>
               ) : (
                 <FormField
@@ -178,22 +122,24 @@ export function FormEditProject({
               {!isEditing ? (
                 <>
                   <div>
-                    <Typograph as={'span'} className="font-bold text-lg">
-                      Data início
-                    </Typograph>
-                    <Typograph className="mt-1 flex gap-1 items-center justify-start">
+                    <span className="font-bold text-lg">Data início</span>
+                    <p className="mt-1 flex gap-1 items-center justify-start">
                       <LuCalendarDays />
-                      {format(new Date(initialData.startDate), 'dd/MM/yyyy')}
-                    </Typograph>
+                      {format(
+                        new Date(initialData.startDate || ''),
+                        'dd/MM/yyyy',
+                      )}
+                    </p>
                   </div>
                   <div>
-                    <Typograph as={'span'} className="font-bold text-lg">
-                      Data entrega
-                    </Typograph>
-                    <Typograph className="mt-1 flex gap-1 items-center justify-start">
+                    <span className="font-bold text-lg">Data entrega</span>
+                    <p className="mt-1 flex gap-1 items-center justify-start">
                       <LuCalendarDays />
-                      {format(new Date(initialData.endDate), 'dd/MM/yyyy')}
-                    </Typograph>
+                      {format(
+                        new Date(initialData.endDate || ''),
+                        'dd/MM/yyyy',
+                      )}
+                    </p>
                   </div>
                 </>
               ) : (
@@ -219,19 +165,17 @@ export function FormEditProject({
             <div className="space-y-3 max-h-[220px] overflow-auto px-1 py-2 border rounded-md scrollbar-thin">
               {!isEditing ? (
                 <>
-                  <Typograph as={'span'} className="font-bold text-lg">
-                    Descrição
-                  </Typograph>
+                  <span className="font-bold text-lg">Descrição</span>
                   <div
                     className="text-sm"
                     dangerouslySetInnerHTML={{
-                      __html: initialData.description,
+                      __html: initialData.description || '',
                     }}
                   />
                 </>
               ) : (
                 <ReactQuill
-                  value={initialData.description}
+                  value={initialData?.description}
                   onChange={(value) => setValue('description', value)}
                   readOnly={!isEditing}
                 />
@@ -247,15 +191,13 @@ export function FormEditProject({
               <div>
                 {!isEditing ? (
                   <>
-                    <Typograph as={'span'} className="font-bold text-lg">
-                      Preço
-                    </Typograph>
-                    <Typograph className="mt-1">
+                    <span className="font-bold text-lg">Preço</span>
+                    <p className="mt-1">
                       {new Intl.NumberFormat('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
                       }).format(Number(initialData.price))}
-                    </Typograph>
+                    </p>
                   </>
                 ) : (
                   <FormField
@@ -272,11 +214,9 @@ export function FormEditProject({
               <div className="px-1 py-2 border rounded-md">
                 {!isEditing ? (
                   <>
-                    <Typograph as={'span'} className="font-bold text-lg">
-                      Pagamento
-                    </Typograph>
+                    <span className="font-bold text-lg">Pagamento</span>
                     <Typograph className="mt-1">
-                      {initialData.payment}
+                      {initialData?.payment}
                     </Typograph>
                   </>
                 ) : (
@@ -295,15 +235,13 @@ export function FormEditProject({
             <div className="px-1 py-2 border rounded-md">
               {!isEditing ? (
                 <>
-                  <Typograph as={'span'} className="font-bold text-lg">
-                    Cliente
-                  </Typograph>
-                  <p>{}</p>
+                  <span className="font-bold text-lg">Cliente</span>
+                  <p>{initialData.client?.name}</p>
                 </>
               ) : (
                 <SelectField
                   label="Cliente"
-                  options={clients}
+                  options={memoizedClients}
                   name="clientId"
                   control={control}
                   error={errors.clientId}
@@ -315,10 +253,8 @@ export function FormEditProject({
             <div className="px-1 py-2 border rounded-md">
               {!isEditing ? (
                 <>
-                  <Typograph as={'span'} className="font-bold text-lg">
-                    Prioridade
-                  </Typograph>
-                  <Typograph className="mt-1">{initialData.priority}</Typograph>
+                  <span className="font-bold text-lg">Prioridade</span>
+                  <p className="mt-1">{initialData.priority}</p>
                 </>
               ) : (
                 <SelectField
@@ -355,6 +291,7 @@ export function FormEditProject({
               ) : (
                 <>
                   <Button
+                    disabled={isLoading}
                     type="submit"
                     isLoading={isLoading}
                     variant="highlight"

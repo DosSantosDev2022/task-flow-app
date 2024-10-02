@@ -9,6 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {},
+      animation: {
+        'spin-fast': 'spin 0.5s linear infinite', // Mais rápido
+        'spin-slow': 'spin 1s linear infinite', // Mais devagar
+      },
     },
   },
   plugins: [require('tailwind-scrollbar'), require('tailwindcss-animated')],

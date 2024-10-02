@@ -24,6 +24,8 @@ import {
 import { RiProgress1Line } from 'react-icons/ri'
 import { getProjects, ProjectData } from '@/utils/getProjects'
 import { Badge } from '@/components/global/badge'
+import { stripHtmlTags } from '@/utils/stripHtml.ts'
+import { format } from 'date-fns'
 
 const headers = [
   { title: 'Título', icon: <MdOutlineTitle /> },
@@ -73,7 +75,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
     sort,
     sortBy,
   })
-
+  console.log(projects)
   return (
     <>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
@@ -116,16 +118,16 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                     {project.title}
                   </TableCell>
                   <TableCell className="max-w-[210px] ">
-                    {project.description}
+                    {stripHtmlTags(project.description || '', 100)}
                   </TableCell>
                   <TableCell>
                     {project.client?.name || 'Cliente não especificado'}
                   </TableCell>
                   <TableCell>
-                    {new Date(project.startDate).toLocaleDateString()}
+                    {format(new Date(project.startDate), 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell>
-                    {new Date(project.endDate).toLocaleDateString()}
+                    {format(new Date(project.endDate), 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell>
                     <ProgressBar value={project.progress} />

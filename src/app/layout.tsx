@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={` w-full h-screen ${poppins.className}`}>
+      <body className={` w-full h-screen antialiased ${poppins.className}`}>
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>

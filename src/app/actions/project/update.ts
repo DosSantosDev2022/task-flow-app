@@ -17,6 +17,7 @@ export async function updateProjectAction(formData: FormDataProject) {
         status: formData.status,
         userId: formData.userId,
         priority: formData.priority,
+        clientId: formData.clientId,
       },
     })
     revalidatePath('/projects')

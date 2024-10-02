@@ -25,7 +25,7 @@ export function ProjectCreationModal() {
         <span className="text-sm font-semibold">Novo Projeto</span>
         <BiPlus size={20} className="font-bold" />
       </DialogTrigger>
-      <DialogContent className="max-w-[720px] h-[620px] overflow-auto scrollbar-thin">
+      <DialogContent className="max-w-[720px] h-[620px] flex flex-col justify-center space-y-3 overflow-auto scrollbar-thin">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>Aqui você pode registrar um novo projeto</DialogTitle>

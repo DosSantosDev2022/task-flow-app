@@ -26,16 +26,18 @@ export function ModalEdit({ projectId }: { projectId: string }) {
         <FaEdit size={16} />
         Editar
       </DialogTrigger>
-      <DialogContent className="max-w-[720px] h-[620px] overflow-auto scrollbar-thin">
-        <DialogHeader>
+      <DialogContent className="max-w-[720px] h-[620px]  overflow-auto scrollbar-thin">
+        <DialogHeader className="h-16">
           <div className="flex items-center justify-between">
-            <DialogTitle>Aqui você pode registrar um novo projeto</DialogTitle>
+            <DialogTitle>
+              Aqui você pode editar e visualizar o seu projeto
+            </DialogTitle>
             <DialogClose className="rounded-md bg-zinc-200 border hover:opacity-80 active:scale-75 duration-300">
               <BiX size={25} />
             </DialogClose>
           </div>
           <DialogDescription>
-            Adicione as informações do seu projeto detalhadamente.
+            Veja as informações do seu projeto detalhadamente.
           </DialogDescription>
         </DialogHeader>
 
