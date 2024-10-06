@@ -9,47 +9,14 @@ import { Button } from '@/components/global/button'
 import { FormField } from '@/components/global/Form/FormField'
 import { SelectField } from '@/components/global/Form/SelectField'
 import { createProjectAction } from '@/app/actions/project/create'
-import { FormDataProject, FormSchema } from '@/@types/schemas/FormSchemaProject'
+import {
+  FormDataProject,
+  FormSchema,
+} from '@/@types/FormSchemas/FormSchemaProject'
 import { TextAreaField } from '@/components/global/Form/TextAreaField'
 import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
-
-// Dados fixos
-const payments = [
-  {
-    value: 'DINHEIRO',
-    label: 'Dinheiro',
-  },
-  {
-    value: 'CREDITO',
-    label: 'Crédito',
-  },
-  {
-    value: 'DEBITO',
-    label: 'Débito',
-  },
-  {
-    value: 'PIX',
-    label: 'Pix',
-  },
-]
-const priorities = [
-  {
-    value: 'ALTA',
-    label: 'Alta ',
-  },
-  {
-    value: 'MEDIA',
-    label: 'Média',
-  },
-  {
-    value: 'BAIXA',
-    label: 'Baixa',
-  },
-]
-const clientsFakes = [
-  { label: 'Juliano Santos', value: 'a277a43e-95c5-4e6a-95d4-499b32e484b3' },
-  /* { label: 'Amanda Oliveira', value: 'f46bfc07-0c1b-4676-8100-8d8b79f24ab6' }, */
-]
+import { useFetchClient } from '@/hooks/useFetchClient/useFetchClient'
+import { getFixedData } from '@/utils/getFixedDataProjects'
 
 interface ProjectCreationFormProps {
   closeModal: () => void
@@ -65,11 +32,12 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   } = useForm<FormDataProject>({
     resolver: zodResolver(FormSchema),
   })
-
-  const [isLoading, setIsLoading] = useState(false)
-  const { showNotification } = useNotification()
   const { data } = useSession()
   const session = data
+  const [isLoading, setIsLoading] = useState(false)
+  const { memoizedClients } = useFetchClient(session)
+  const { payments, priorities } = getFixedData()
+  const { showNotification } = useNotification()
 
   useEffect(() => {
     if (session) {
@@ -146,7 +114,7 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
 
       <SelectField
         label="Cliente"
-        options={clientsFakes}
+        options={memoizedClients}
         control={control}
         name="clientId"
         error={errors.clientId}

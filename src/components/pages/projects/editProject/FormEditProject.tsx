@@ -8,7 +8,10 @@ import { Button } from '@/components/global/button'
 import { FormField } from '@/components/global/Form/FormField'
 import { SelectField } from '@/components/global/Form/SelectField'
 import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
-import { FormDataProject, FormSchema } from '@/@types/schemas/FormSchemaProject'
+import {
+  FormDataProject,
+  FormSchema,
+} from '@/@types/FormSchemas/FormSchemaProject'
 import { updateProjectAction } from '@/app/actions/project/update'
 import { LuCalendarDays } from 'react-icons/lu'
 import { format } from 'date-fns'
@@ -18,7 +21,7 @@ import { getFixedData } from '@/utils/getFixedDataProjects'
 import { useSession } from 'next-auth/react'
 import { Typograph } from '@/components/global/typograph '
 import { UseFetchProjects } from '@/hooks/useFetchProjects/useFetchProjects'
-import { UseFetchClient } from '@/hooks/useFetchClient/useFetchClient'
+import { useFetchClient } from '@/hooks/useFetchClient/useFetchClient'
 
 // Lazy load do React Quill para evitar problemas de SSR (Server Side Rendering)
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
@@ -37,7 +40,7 @@ export function FormEditProject({
   const { showNotification } = useNotification()
   const [isLoading, setIsLoading] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const { memoizedClients } = UseFetchClient(session)
+  const { memoizedClients } = useFetchClient(session)
   const { initialData, isLoading: isLoadingProjectsData } = UseFetchProjects(
     projectId,
     session,

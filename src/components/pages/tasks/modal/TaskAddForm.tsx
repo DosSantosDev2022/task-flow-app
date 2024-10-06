@@ -9,7 +9,10 @@ import {
 import { Button } from '@/components/global/button'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormTaskSchema, TaskFormData } from '@/@types/schemas/FormSchemaTasks'
+import {
+  FormTaskSchema,
+  TaskFormData,
+} from '@/@types/FormSchemas/FormSchemaTasks'
 import { addNewTaskAction } from '@/app/actions/tasks/addNewTask'
 import { useNotification } from '@/contexts/NotificationContext'
 import { useSession } from 'next-auth/react'

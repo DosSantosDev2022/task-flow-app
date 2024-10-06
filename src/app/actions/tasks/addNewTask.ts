@@ -1,5 +1,8 @@
 'use server'
-import { FormTaskSchema, TaskFormData } from '@/@types/schemas/FormSchemaTasks'
+import {
+  FormTaskSchema,
+  TaskFormData,
+} from '@/@types/FormSchemas/FormSchemaTasks'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 

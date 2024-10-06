@@ -1,28 +1,26 @@
 'use server'
 import { prisma } from '@/lib/prisma'
-import { FormDataProject, FormSchema } from '@/@types/schemas/FormSchemaProject'
+import { FormDataProject } from '@/@types/FormSchemas/FormSchemaProject'
 import { revalidatePath } from 'next/cache'
 
-export async function createProjectAction(dataProject: FormDataProject) {
+export async function createProjectAction(formData: FormDataProject) {
   try {
-    // Convertendo FormData para um objeto com o formato correto
-    console.log('Dados recebidos do formulário:', dataProject)
-
-    // Validação do esquema (opcional, mas recomendável)
-    const validatedData = FormSchema.parse(dataProject)
-    console.log('validatedData:', validatedData)
-
     // Gera um slug com base no titulo do projeto
-    const slug = dataProject.title.toLowerCase().replace(/\s+/g, '-')
+    const slug = formData.title.toLowerCase().replace(/\s+/g, '-')
     // Criar o projeto no banco de dados
     const project = await prisma.project.create({
       data: {
-        ...validatedData,
         slug,
-        // Convertendo strings para os tipos corretos antes de salvar no banco de dados
-        startDate: new Date(validatedData.startDate),
-        endDate: new Date(validatedData.endDate),
-        price: parseFloat(validatedData.price),
+        title: formData.title,
+        description: formData.description,
+        startDate: new Date(formData.startDate),
+        endDate: new Date(formData.endDate),
+        price: parseFloat(formData.price),
+        payment: formData.payment,
+        status: formData.status,
+        userId: formData.userId,
+        priority: formData.priority,
+        clientId: formData.clientId,
       },
     })
 

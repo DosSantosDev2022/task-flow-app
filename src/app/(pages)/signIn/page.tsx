@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   FormDataLogin,
   FormSchemaLogin,
-} from '@/@types/schemas/FormSchemaLogin'
+} from '@/@types/FormSchemas/FormSchemaLogin'
 
 export default function SignInPage() {
   const {

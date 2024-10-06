@@ -1,4 +1,4 @@
-import { FormDataProject } from '@/@types/schemas/FormSchemaProject'
+import { FormDataProject } from '@/@types/FormSchemas/FormSchemaProject'
 import { Session } from 'next-auth'
 
 export async function getProjectById(

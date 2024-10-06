@@ -1,6 +1,9 @@
 'use server'
 import { prisma } from '@/lib/prisma'
-import { FormDataClient, FormSchema } from '@/@types/schemas/FormSchemaClients'
+import {
+  FormDataClient,
+  FormSchema,
+} from '@/@types/FormSchemas/FormSchemaClients'
 import { revalidatePath } from 'next/cache'
 
 export async function createClientAction(dataClient: FormDataClient) {

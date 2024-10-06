@@ -3,7 +3,10 @@
 import { Button } from '@/components/global/button'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormDataClient, FormSchema } from '@/@types/schemas/FormSchemaClients'
+import {
+  FormDataClient,
+  FormSchema,
+} from '@/@types/FormSchemas/FormSchemaClients'
 import { createClientAction } from '@/app/actions/client/create'
 import { useNotification } from '@/contexts/NotificationContext'
 import { useEffect } from 'react'
