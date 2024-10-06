@@ -3,7 +3,7 @@ import { ClientData, getClients } from '@/utils/getClients'
 import { Session } from 'next-auth'
 import { useEffect, useMemo, useState } from 'react'
 
-export const UseFetchClient = (session: Session | null) => {
+export const useFetchClient = (session: Session | null) => {
   const [clients, setClients] = useState<SelectOption[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
