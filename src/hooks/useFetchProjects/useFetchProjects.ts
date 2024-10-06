@@ -1,4 +1,4 @@
-import { FormDataProject } from '@/@types/schemas/FormSchemaProject'
+import { FormDataProject } from '@/@types/FormSchemas/FormSchemaProject'
 import { getProjectById } from '@/utils/getProjectById'
 import { format } from 'date-fns'
 import { Session } from 'next-auth'
