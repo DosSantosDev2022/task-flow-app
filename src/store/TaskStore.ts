@@ -1,5 +1,6 @@
 import { updateTasksAction } from '@/app/actions/tasks/updateTasks'
 import { Task } from '@prisma/client'
+import { revalidatePath } from 'next/cache'
 import { create } from 'zustand'
 
 export type TaskStatus = 'A_FAZER' | 'EM_ANDAMENTO' | 'CONCLUIDO'
@@ -48,14 +49,14 @@ export const useTaskStore = create<TaskStore>((set) => ({
       return { tasks: updatedTasks }
     })
   },
-  saveAllChanges: async () => {
+  saveAllChanges: async (projectId) => {
     const state = useTaskStore.getState()
     const tasksToUpdate = Object.values(state.tasks)
 
     try {
       // Envia as tasks atualizadas para o backend
       await updateTasksAction(tasksToUpdate)
-      /* revalidatePath(`/tasks?projectId=${projectId}`) */
+      revalidatePath(`/tasks?projectId=${projectId}`)
 
       // Limpa o localStorage e o estado local após salvar
       localStorage.removeItem('tasks')
@@ -66,11 +67,10 @@ export const useTaskStore = create<TaskStore>((set) => ({
   },
 }))
 
-/* // Carregar o estado do localStorage após a inicialização do Zustand
+// Carregar o estado do localStorage após a inicialização do Zustand
 if (typeof window !== 'undefined') {
   const savedTasks = loadTasksFromLocalStorage()
   if (Object.keys(savedTasks).length > 0) {
     useTaskStore.setState({ tasks: savedTasks })
   }
 }
- */
