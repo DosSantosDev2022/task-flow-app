@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   FormTaskSchema,
   TaskFormData,
-} from '@/@types/FormSchemas/FormSchemaTasks'
+} from '@/@types/ZodSchemas/FormSchemaTasks'
 import { useNotification } from '@/contexts/NotificationContext'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'

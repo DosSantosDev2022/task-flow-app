@@ -13,7 +13,6 @@ export default async function TasksPage({
 }) {
   const session = await getServerSession(authOptions)
   const projectId = searchParams.projectId
-  console.log('seção pagina task', session)
 
   if (!session) {
     return <p>Usuário não autenticado</p>
@@ -25,7 +24,6 @@ export default async function TasksPage({
     session, // a sessão do usuário
     sortBy: 'createdAt',
   })
-  console.log(projects)
 
   let selectedProject = null
   if (projectId) {

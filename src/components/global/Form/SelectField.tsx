@@ -13,11 +13,6 @@ export interface SelectOption {
   value: string
 }
 
-export interface ClientData {
-  id: string // Supondo que 'id' seja o valor único do cliente
-  name: string // Supondo que 'name' seja o nome do cliente
-}
-
 interface SelectFieldProps {
   label: string
   options: SelectOption[] // Lista de opções com label e value

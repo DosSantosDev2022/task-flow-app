@@ -7,12 +7,12 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from '@/components/global/popover'
-import { ModalFormEdit } from '@/components/pages/projects/editProject/ModalFormEdit'
+import { ModalFormEdit } from '@/components/pages/clients/editClient/ModalFormEdit'
+import { ClientData } from '@/utils/getClients'
 import { ArchiveAction } from './ArchiveAction'
 import { DeleteAction } from './DeleteAction'
-import { ProjectData } from '@/@types/project'
 
-export const Actions = ({ project }: { project: ProjectData }) => {
+export const Actions = ({ client }: { client: ClientData }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -21,12 +21,12 @@ export const Actions = ({ project }: { project: ProjectData }) => {
         <LuMoreVertical />
       </PopoverTrigger>
       <PopoverContent className="z-50 w-[130px] overflow-hidden rounded-md border px-1.5 py-2 space-y-1.5">
-        <ArchiveAction projectId={project.id || ''} />
-        <ModalFormEdit project={project} />
+        <ArchiveAction clientId={client.id} />
+        <ModalFormEdit client={client} />
         <DeleteAction
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          projectId={project.id || ''}
+          clientId={client.id}
         />
       </PopoverContent>
     </Popover>

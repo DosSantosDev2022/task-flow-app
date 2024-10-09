@@ -1,5 +1,5 @@
 'use server'
-import { FormDataProject } from '@/@types/FormSchemas/FormSchemaProject'
+import { FormDataProject } from '@/@types/ZodSchemas/FormSchemaProject'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 

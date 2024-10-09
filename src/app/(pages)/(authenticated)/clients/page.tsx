@@ -6,16 +6,18 @@ import {
   TableRow,
   Table,
 } from '@/components/global/table'
-import { FilterProjects } from '@/components/pages/clients/filters/FilterProject'
+import { FiltersClient } from '@/components/pages/clients/filters/FilterClient'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth'
 import { ClientModal } from '@/components/pages/clients/createdClients/clientModal'
 import { ClientData, getClients } from '@/utils/getClients'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { BsCalendar2DateFill } from 'react-icons/bs'
-import { MdAttachEmail, MdMyLocation, MdOutlineTitle } from 'react-icons/md'
-import { FaCity, FaMap, FaPhone } from 'react-icons/fa'
+import { MdAttachEmail, MdMyLocation } from 'react-icons/md'
+import { FaCity, FaMap, FaPhone, FaUser } from 'react-icons/fa'
 import { FaLocationDot, FaMapLocation } from 'react-icons/fa6'
+import { Actions } from '@/components/pages/clients/tableActions/Actions'
+import { LuRedoDot } from 'react-icons/lu'
 
 interface ClientsSearchParams {
   searchParams: {
@@ -30,15 +32,24 @@ interface ClientsSearchParams {
 }
 
 const headers = [
-  { label: 'name', icon: <MdOutlineTitle /> },
-  { label: 'email', icon: <MdAttachEmail /> },
-  { label: 'phone', icon: <FaPhone /> },
-  { label: 'address', icon: <FaLocationDot /> },
-  { label: 'city', icon: <FaCity /> },
-  { label: 'state', icon: <FaMapLocation /> },
-  { label: 'postalCode', icon: <MdMyLocation /> },
-  { label: 'country', icon: <FaMap /> },
-  { label: 'createdAt', icon: <BsCalendar2DateFill />, className: 'w-[30px]' },
+  { label: 'Nome', icon: <FaUser size={12} /> },
+  { label: 'E-mail', icon: <MdAttachEmail size={12} /> },
+  { label: 'Contato', icon: <FaPhone size={12} /> },
+  { label: 'Endereço', icon: <FaLocationDot size={12} /> },
+  { label: 'Cidade', icon: <FaCity size={12} /> },
+  { label: 'Estado', icon: <FaMapLocation size={12} /> },
+  { label: 'CEP', icon: <MdMyLocation size={12} /> },
+  { label: 'País', icon: <FaMap size={12} /> },
+  {
+    label: 'Criado',
+    icon: <BsCalendar2DateFill size={12} />,
+    className: 'w-[30px]',
+  },
+  {
+    title: '',
+    icon: <LuRedoDot />,
+    className: 'w-full flex items-center justify-center',
+  },
 ]
 
 export default async function ClientsPage({
@@ -70,7 +81,7 @@ export default async function ClientsPage({
       <div className="px-3 py-4 w-full border flex items-center justify-between">
         <div className="flex items-center w-full justify-between gap-2 px-2 py-3">
           <ClientModal />
-          <FilterProjects />
+          <FiltersClient />
         </div>
       </div>
 
@@ -90,7 +101,7 @@ export default async function ClientsPage({
                     key={header.label}
                     className={header.className || 'whitespace-nowrap'}
                   >
-                    <div className="flex items-center gap-2 justify-start">
+                    <div className="flex items-center gap-1.5 justify-start">
                       <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
                         {header.icon}
                       </span>
@@ -121,9 +132,9 @@ export default async function ClientsPage({
                   <TableCell>
                     {new Date(client.createdAt).toLocaleDateString()}
                   </TableCell>
-                  {/*  <TableCell className="flex items-center justify-center gap-1">
-                    <TableActions project={project} />
-                  </TableCell> */}
+                  <TableCell className="flex items-center justify-center gap-1">
+                    <Actions client={client} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

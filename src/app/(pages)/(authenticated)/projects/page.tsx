@@ -11,7 +11,7 @@ import { ProjectCreationModal } from '@/components/pages/projects/createdProject
 import { Pagination } from '@/components/global/pagination/pagination'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { TableActions } from '@/components/pages/projects/tableActions/actions'
+import { Actions } from '@/components/pages/projects/tableActions/Actions'
 import { ProgressBar } from '@/components/global/progressBar'
 import { MdOutlineTitle, MdPriorityHigh } from 'react-icons/md'
 import {
@@ -22,20 +22,25 @@ import {
   LuUser,
 } from 'react-icons/lu'
 import { RiProgress1Line } from 'react-icons/ri'
-import { getProjects, ProjectData } from '@/utils/getProjects'
+import { getProjects } from '@/utils/getProjects'
 import { Badge } from '@/components/global/badge'
 import { stripHtmlTags } from '@/utils/stripHtml.ts'
 import { format } from 'date-fns'
+import { ProjectData } from '@/@types/project'
 
 const headers = [
-  { title: 'Título', icon: <MdOutlineTitle /> },
-  { title: 'Descrição', icon: <LuList /> },
-  { title: 'Cliente', icon: <LuUser /> },
-  { title: 'Data de início', icon: <LuCalendarDays /> },
-  { title: 'Data de entrega', icon: <LuCalendarDays /> },
-  { title: 'Progresso', icon: <RiProgress1Line /> },
-  { title: 'Status', icon: <LuLoader2 />, className: 'w-[30px] ' },
-  { title: 'Prioridade', icon: <MdPriorityHigh />, className: 'w-[30px] ' },
+  { title: 'Título', icon: <MdOutlineTitle size={12} /> },
+  { title: 'Descrição', icon: <LuList size={12} /> },
+  { title: 'Cliente', icon: <LuUser size={12} /> },
+  { title: 'Data de início', icon: <LuCalendarDays size={12} /> },
+  { title: 'Data de entrega', icon: <LuCalendarDays size={12} /> },
+  { title: 'Progresso', icon: <RiProgress1Line size={12} /> },
+  { title: 'Status', icon: <LuLoader2 size={12} />, className: 'w-[30px] ' },
+  {
+    title: 'Prioridade',
+    icon: <MdPriorityHigh size={12} />,
+    className: 'w-[30px] ',
+  },
   {
     title: '',
     icon: <LuRedoDot />,
@@ -75,7 +80,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
     sort,
     sortBy,
   })
-  console.log(projects)
+
   return (
     <>
       <div className="px-3 py-4 w-full border flex items-center justify-between">
@@ -98,11 +103,11 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                     key={header.title}
                     className={header.className || ''}
                   >
-                    <div className="flex items-center gap-2 justify-start">
+                    <div className="flex items-center gap-1.5 justify-start">
                       <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
                         {header.icon}
                       </span>
-                      <span className="font-medium text-zinc-50">
+                      <span className="font-medium text-[12.5px] text-zinc-50">
                         {header.title}
                       </span>
                     </div>
@@ -139,7 +144,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                     <Badge status={project.priority}>{project.priority}</Badge>
                   </TableCell>
                   <TableCell className="flex items-center justify-center">
-                    <TableActions project={project} />
+                    <Actions project={project} />
                   </TableCell>
                 </TableRow>
               ))}

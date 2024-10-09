@@ -1,29 +1,11 @@
-import { Project, Client, Task, TaskStatus } from '@prisma/client'
-import { Session } from 'next-auth'
+import { TaskStatus } from '@prisma/client'
 import { calculateProgress } from '@/utils/calculateProgress' // Certifique-se de importar a função corretamente
 import { prisma } from '@/lib/prisma'
-
-interface getProjectsParams {
-  page?: number
-  limit?: number
-  session?: Session | null
-  search?: string
-  priority?: string
-  status?: string
-  sort?: string
-  sortBy?: string
-}
-
-export interface ProjectData extends Project {
-  client: Client
-  tasks: Task[]
-  progress: number // Adiciona o campo de progresso
-}
-
-interface ProjectsResponse {
-  projects: ProjectData[]
-  totalProjects: number
-}
+import {
+  getProjectsParams,
+  ProjectData,
+  ProjectsResponse,
+} from '@/@types/project'
 
 export async function getProjects({
   page = 1,
@@ -56,6 +38,7 @@ export async function getProjects({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session?.user.id ?? ''}`,
       },
+      cache: 'force-cache',
     })
 
     if (!res.ok) {

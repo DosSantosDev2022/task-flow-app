@@ -1,25 +1,4 @@
-import { Project, Client } from '@prisma/client'
-import { Session } from 'next-auth'
-
-interface getClientParams {
-  page?: number
-  limit?: number
-  session?: Session | null
-  search?: string
-  sort?: string
-  sortBy?: string
-  state?: string
-  city?: string
-}
-
-export interface ClientData extends Client {
-  Project: Project
-}
-
-export interface ClientsResponse {
-  clients: ClientData[]
-  totalClients: number
-}
+import { ClientsResponse, getClientParams } from '@/@types/client'
 
 export async function getClients({
   page = 1,
@@ -52,12 +31,15 @@ export async function getClients({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session?.user.id ?? ''}`,
       },
+      next: {
+        revalidate: 60 * 60,
+      },
     })
 
     if (!res.ok) {
       const errorDetails = await res.json()
       throw new Error(
-        `Erro ao buscar projetos: ${res.status} ${res.statusText} - ${errorDetails.message}`,
+        `Erro ao buscar clientes: ${res.status} ${res.statusText} - ${errorDetails.message}`,
       )
     }
 
@@ -65,7 +47,7 @@ export async function getClients({
 
     return { clients, totalClients }
   } catch (error) {
-    console.error('Erro ao buscar projetos:', error)
+    console.error('Erro ao buscar clientes:', error)
     return { clients: [], totalClients: 0 }
   }
 }

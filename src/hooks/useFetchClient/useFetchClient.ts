@@ -1,35 +1,71 @@
+import { ClientData } from '@/@types/client'
 import { SelectOption } from '@/components/global/Form/SelectField'
-import { ClientData, getClients } from '@/utils/getClients'
+import { getClientById } from '@/utils/getClientById'
+import { getClients } from '@/utils/getClients'
 import { Session } from 'next-auth'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export const useFetchClient = (session: Session | null) => {
-  const [clients, setClients] = useState<SelectOption[]>([])
+interface UseFetchClientProps {
+  session: Session | null
+  clientId?: string
+}
+
+export const useFetchClient = ({ clientId, session }: UseFetchClientProps) => {
+  const [clientOptions, setClientOptions] = useState<SelectOption[]>([])
+  const [selectedClient, setSelectedClient] = useState<ClientData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!session) return
+    if (!session) return // Apenas verificar a session
+
+    const controller = new AbortController()
+    const { signal } = controller
+
     const fetchClientsData = async () => {
       try {
         setIsLoading(true)
+        setError(null)
+
+        // Buscando os clientes
         const { clients: clientData }: { clients: ClientData[] } =
           await getClients({ session })
 
-        const formattedClients = clientData.map((client) => ({
+        const formattedClientsOptions = clientData.map((client) => ({
           label: client.name,
           value: client.id,
         }))
-        setClients(formattedClients)
-      } catch (error) {
-        console.error('Erro ao buscar clientes', error)
+
+        console.log('Formatted Client Options:', formattedClientsOptions) // Adicione este log
+
+        // Atualizando o estado com as opções formatadas
+        if (!signal.aborted) {
+          setClientOptions(formattedClientsOptions)
+        }
+
+        // Se clientId estiver presente, busque o cliente
+        if (clientId) {
+          const clientById = await getClientById(clientId, session)
+          if (!signal.aborted) {
+            setSelectedClient(clientById)
+          }
+        }
+      } catch (err) {
+        if (!signal.aborted) {
+          setError('Erro ao buscar clientes.')
+          console.error('Erro ao buscar clientes:', err)
+        }
       } finally {
-        setIsLoading(false)
+        if (!signal.aborted) {
+          setIsLoading(false)
+        }
       }
     }
+
     fetchClientsData()
-  }, [session])
 
-  const memoizedClients = useMemo(() => clients, [clients])
+    return () => controller.abort() // Limpa a requisição quando o componente desmonta
+  }, [session, clientId]) // O useEffect será executado sempre que a session ou clientId mudarem
 
-  return { memoizedClients, isLoading }
+  return { clientOptions, selectedClient, isLoading, error }
 }

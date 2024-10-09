@@ -1,6 +1,6 @@
 'use server'
 import { prisma } from '@/lib/prisma'
-import { FormDataProject } from '@/@types/FormSchemas/FormSchemaProject'
+import { FormDataProject } from '@/@types/ZodSchemas/FormSchemaProject'
 import { revalidatePath } from 'next/cache'
 
 export async function createProjectAction(formData: FormDataProject) {

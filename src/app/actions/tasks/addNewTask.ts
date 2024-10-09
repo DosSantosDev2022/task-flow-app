@@ -2,7 +2,7 @@
 import {
   FormTaskSchema,
   TaskFormData,
-} from '@/@types/FormSchemas/FormSchemaTasks'
+} from '@/@types/ZodSchemas/FormSchemaTasks'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 

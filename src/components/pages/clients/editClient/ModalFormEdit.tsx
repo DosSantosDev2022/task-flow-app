@@ -11,10 +11,11 @@ import {
   DialogTrigger,
 } from '@/components/global/modal'
 import { BiX } from 'react-icons/bi'
-import { FormEditProject } from './FormEditProject'
+import { FormClient } from './FormClient'
 import { FaEdit } from 'react-icons/fa'
+import { ClientData } from '@/utils/getClients'
 
-export function ModalEdit({ projectId }: { projectId: string }) {
+export function ModalFormEdit({ client }: { client: ClientData }) {
   const [isOpenModal, setIsOpenModal] = useState(false)
 
   return (
@@ -30,21 +31,18 @@ export function ModalEdit({ projectId }: { projectId: string }) {
         <DialogHeader className="h-16">
           <div className="flex items-center justify-between">
             <DialogTitle>
-              Aqui você pode editar e visualizar o seu projeto
+              Aqui você pode editar e visualizar o seu cliente
             </DialogTitle>
             <DialogClose className="rounded-md bg-zinc-200 border hover:opacity-80 active:scale-75 duration-300">
               <BiX size={25} />
             </DialogClose>
           </div>
           <DialogDescription>
-            Veja as informações do seu projeto detalhadamente.
+            Veja as informações do seu cliente detalhadamente.
           </DialogDescription>
         </DialogHeader>
 
-        <FormEditProject
-          projectId={projectId}
-          closeModal={() => setIsOpenModal(false)}
-        />
+        <FormClient client={client} closeModal={() => setIsOpenModal(false)} />
       </DialogContent>
     </Dialog>
   )

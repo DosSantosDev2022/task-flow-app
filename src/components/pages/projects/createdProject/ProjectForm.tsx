@@ -12,7 +12,7 @@ import { createProjectAction } from '@/app/actions/project/create'
 import {
   FormDataProject,
   FormSchema,
-} from '@/@types/FormSchemas/FormSchemaProject'
+} from '@/@types/ZodSchemas/FormSchemaProject'
 import { TextAreaField } from '@/components/global/Form/TextAreaField'
 import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
 import { useFetchClient } from '@/hooks/useFetchClient/useFetchClient'
@@ -35,10 +35,10 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   const { data } = useSession()
   const session = data
   const [isLoading, setIsLoading] = useState(false)
-  const { memoizedClients } = useFetchClient(session)
+  const { clientOptions } = useFetchClient({ session })
   const { payments, priorities } = getFixedData()
   const { showNotification } = useNotification()
-
+  console.log('clientes', clientOptions)
   useEffect(() => {
     if (session) {
       setValue('userId', session.user.id)
@@ -114,7 +114,7 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
 
       <SelectField
         label="Cliente"
-        options={memoizedClients}
+        options={clientOptions}
         control={control}
         name="clientId"
         error={errors.clientId}

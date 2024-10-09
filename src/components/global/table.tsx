@@ -88,7 +88,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, ComponentProps<'td'>>(
   ({ className, ...props }, ref) => (
     <td
       className={twMerge(
-        'px-2 py-1.5 max-w-[320px]  truncate text-zinc-400 font-normal text-[13.5]',
+        'px-2 py-1.5 max-w-[320px]  truncate text-zinc-500 font-normal text-xs',
         className,
       )}
       {...props}

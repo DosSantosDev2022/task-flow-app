@@ -1,4 +1,4 @@
-import { FormDataProject } from '@/@types/FormSchemas/FormSchemaProject'
+import { FormDataProject } from '@/@types/ZodSchemas/FormSchemaProject'
 import { Session } from 'next-auth'
 
 export async function getProjectById(
@@ -14,6 +14,7 @@ export async function getProjectById(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session?.user.id ?? ''}`,
       },
+      cache: 'force-cache',
     })
 
     if (!res.ok) {

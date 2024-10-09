@@ -3,17 +3,13 @@ import { prisma } from '@/lib/prisma'
 import {
   FormDataClient,
   FormSchema,
-} from '@/@types/FormSchemas/FormSchemaClients'
+} from '@/@types/ZodSchemas/FormSchemaClients'
 import { revalidatePath } from 'next/cache'
 
 export async function createClientAction(dataClient: FormDataClient) {
   try {
-    // Convertendo FormData para um objeto com o formato correto
-    console.log('Dados recebidos do formulário:', dataClient)
-
-    // Validação do esquema (opcional, mas recomendável)
+    // Validação do esquema
     const validatedData = FormSchema.parse(dataClient)
-    console.log('validatedData:', validatedData)
 
     // Criar o projeto no banco de dados
     const client = await prisma.client.create({

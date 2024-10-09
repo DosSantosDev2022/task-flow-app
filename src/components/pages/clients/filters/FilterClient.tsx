@@ -7,7 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { FilterByDate } from './FilterByDate'
 import { FilterByState } from './FilterByState'
 
-export function FilterProjects() {
+export function FiltersClient() {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const { replace } = useRouter()

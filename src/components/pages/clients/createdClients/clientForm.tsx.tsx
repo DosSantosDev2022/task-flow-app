@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   FormDataClient,
   FormSchema,
-} from '@/@types/FormSchemas/FormSchemaClients'
+} from '@/@types/ZodSchemas/FormSchemaClients'
 import { createClientAction } from '@/app/actions/client/create'
 import { useNotification } from '@/contexts/NotificationContext'
 import { useEffect } from 'react'
@@ -87,7 +87,7 @@ export function ClientForm({ closeModal }: ClientFormProps) {
   const onSubmit: SubmitHandler<FormDataClient> = async (formData) => {
     try {
       await createClientAction(formData)
-      console.log('dados enviados', formData)
+
       closeModal()
       showNotification('Cliente cadastrado com sucesso', 'success')
     } catch (error) {
