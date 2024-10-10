@@ -21,7 +21,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={twMerge('[&_tr]:border-b bg-zinc-800 rounded-t-md ', className)}
+    className={twMerge('[&_tr]:border-b bg-primary rounded-t-md ', className)}
     {...props}
   />
 ))
@@ -47,7 +47,7 @@ const TableFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     className={twMerge(
-      'border-t bg-zinc-100 font-medium [&>tr]:last:border-b-0 w-full flex items-center',
+      'border-t bg-neutral font-medium [&>tr]:last:border-b-0 w-full flex items-center',
       className,
     )}
     {...props}
@@ -88,7 +88,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, ComponentProps<'td'>>(
   ({ className, ...props }, ref) => (
     <td
       className={twMerge(
-        'px-2 py-1.5 max-w-[320px]  truncate text-zinc-500 font-normal text-xs',
+        'px-2 py-1.5 max-w-[320px]  truncate text-secondary font-normal text-xs',
         className,
       )}
       {...props}

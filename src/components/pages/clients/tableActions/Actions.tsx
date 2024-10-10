@@ -8,9 +8,9 @@ import {
   PopoverContent,
 } from '@/components/global/popover'
 import { ModalFormEdit } from '@/components/pages/clients/editClient/ModalFormEdit'
-import { ClientData } from '@/utils/getClients'
 import { ArchiveAction } from './ArchiveAction'
 import { DeleteAction } from './DeleteAction'
+import { ClientData } from '@/@types/client'
 
 export const Actions = ({ client }: { client: ClientData }) => {
   const [isOpen, setIsOpen] = useState(false)

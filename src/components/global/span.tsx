@@ -6,7 +6,7 @@ export const Span = React.forwardRef<
   ComponentProps<'span'>
 >(({ className, ...props }, ref) => (
   <span
-    className={twMerge('text-xs, text-zinc-400', className)}
+    className={twMerge('text-xs, text-primary/50', className)}
     ref={ref}
     {...props}
   />

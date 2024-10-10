@@ -20,12 +20,12 @@ export function Avatar({ Alt, Url, name }: AvatarProps) {
   return (
     <div className="relative inline-flex h-10 w-10 items-center justify-center">
       {imageError ? (
-        <div className="flex h-full w-full items-center justify-center border-2 border-zinc-400 rounded-full p-2 bg-gray-300 text-xl text-zinc-800">
+        <div className="flex h-full w-full items-center justify-center border-2 border-neutral rounded-full p-2 bg-light text-xl text-primary">
           {getInitial(name)}
         </div>
       ) : (
         <Image
-          className="h-10 w-10 rounded-full border-2 border-white"
+          className="h-10 w-10 rounded-full border-2 border-light"
           alt={Alt}
           src={Url}
           width={40}

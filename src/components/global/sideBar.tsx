@@ -59,7 +59,7 @@ export function SideBar() {
         className={`sm:hidden  top-4 left-4 z-50 ${isOpen ? 'hidden' : 'fixed'}`}
       >
         <Button
-          className="w-12 h-12 bg-zinc-50 rounded-lg flex items-center justify-center shadow-lg"
+          className="w-12 h-12 bg-light rounded-lg flex items-center justify-center shadow-lg"
           onClick={() => setIsOpen(true)}
           variant="outline"
         >
@@ -71,7 +71,7 @@ export function SideBar() {
       <aside
         aria-label="SideBar"
         className={`fixed sm:relative sm:translate-x-0 top-0 left-0  h-screen z-40 sm:z-0 flex flex-col
-           bg-zinc-50 shadow-lg border border-zinc-200
+           bg-light shadow-lg border border-neutral
         transition-transform duration-500 ease-in-out ${
           isOpen
             ? 'translate-x-0 w-64 px-4 py-6'
@@ -80,13 +80,13 @@ export function SideBar() {
       >
         {/* Header com logo e botão de abrir/fechar */}
         <div
-          className={`flex items-center justify-between w-full px-2 py-2.5 gap-2 border-b border-zinc-200 ${
+          className={`flex items-center justify-between w-full px-2 py-2.5 gap-2 border-b border-neutral ${
             isOpen ? 'justify-center' : ''
           }`}
         >
           <Logo className={isOpen ? 'transition-all' : 'hidden'} />
           <Button
-            className="w-[40] h-[40] bg-zinc-50 rounded-lg flex items-center justify-center"
+            className="w-[40] h-[40] bg-light rounded-lg flex items-center justify-center"
             onClick={() => setIsOpen(!isOpen)}
             variant="outline"
           >

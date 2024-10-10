@@ -8,7 +8,7 @@ const TextArea = forwardRef<
     <textarea
       {...props}
       ref={ref}
-      className="w-full placeholder:text-sm rounded border bg-zinc-50 px-3 py-4 focus-within:ring-2 focus-within:ring-zinc-400 outline-none"
+      className="w-full placeholder:text-sm rounded border bg-light px-3 py-4 focus-within:ring-2 focus-within:ring-neutral outline-none"
     />
   )
 })

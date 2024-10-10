@@ -6,7 +6,7 @@ export const Strong = React.forwardRef<
   ComponentProps<'strong'>
 >(({ className, ...props }, ref) => (
   <strong
-    className={twMerge('text-lg, text-zinc-600', className)}
+    className={twMerge('text-lg, text-primary/80', className)}
     ref={ref}
     {...props}
   />

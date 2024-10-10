@@ -13,7 +13,7 @@ import {
 import { BiX } from 'react-icons/bi'
 import { FormClient } from './FormClient'
 import { FaEdit } from 'react-icons/fa'
-import { ClientData } from '@/utils/getClients'
+import { ClientData } from '@/@types/client'
 
 export function ModalFormEdit({ client }: { client: ClientData }) {
   const [isOpenModal, setIsOpenModal] = useState(false)
@@ -21,7 +21,8 @@ export function ModalFormEdit({ client }: { client: ClientData }) {
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <DialogTrigger
-        className="w-full px-3.5 py-2 h-8 flex items-center justify-start gap-1 rounded-md bg-transparent border border-zinc-200 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800 transition-all duration-500 
+        variant="outline"
+        className="w-full px-3.5 py-2 h-8 flex items-center justify-start gap-1 rounded-md 
        active:scale-95"
       >
         <FaEdit size={16} />
@@ -33,7 +34,7 @@ export function ModalFormEdit({ client }: { client: ClientData }) {
             <DialogTitle>
               Aqui você pode editar e visualizar o seu cliente
             </DialogTitle>
-            <DialogClose className="rounded-md bg-zinc-200 border hover:opacity-80 active:scale-75 duration-300">
+            <DialogClose className="rounded-md bg-light border hover:bg-neutral_hover active:scale-75 duration-300">
               <BiX size={25} />
             </DialogClose>
           </div>

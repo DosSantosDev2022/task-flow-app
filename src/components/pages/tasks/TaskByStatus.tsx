@@ -49,17 +49,17 @@ export function TaskByStatus({ status, tasks }: TypeTaskProps) {
   return (
     <div
       ref={drop as unknown as React.LegacyRef<HTMLDivElement>}
-      className="col-span-1 lg:col-span-4 border p-2 rounded-md  overflow-y-auto max-h-[468px] scrollbar-thin scrollbar-track-zinc-50 scrollbar-thumb-zinc-600 "
+      className="col-span-1 lg:col-span-4 border p-2 rounded-md  overflow-y-auto max-h-[468px] scrollbar-thin scrollbar-track-light scrollbar-thumb-accent "
     >
       <div className={`border-t-2 p-4 ${borderTopClass} `}>
         <div
           onClick={handleOpenColumnTasks}
           className="flex items-center justify-between gap-1 rounded-lg cursor-pointer"
         >
-          <span className="text-sm font-normal text-zinc-600">
+          <span className="text-sm font-normal text-primary">
             {statusLabel}
           </span>
-          <div className="w-6 h-6 text-xs rounded-full flex items-center justify-center text-zinc-800 bg-zinc-300">
+          <div className="w-6 h-6 text-xs rounded-full flex items-center justify-center text-primary bg-neutral">
             {tasks.length}
           </div>
         </div>

@@ -11,7 +11,7 @@ import { ProjectCreationModal } from '@/components/pages/projects/createdProject
 import { Pagination } from '@/components/global/pagination/pagination'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { Actions } from '@/components/pages/projects/tableActions/Actions'
+import { Actions } from '@/components/pages/projects/tableActions/actions'
 import { ProgressBar } from '@/components/global/progressBar'
 import { MdOutlineTitle, MdPriorityHigh } from 'react-icons/md'
 import {
@@ -104,10 +104,10 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
                     className={header.className || ''}
                   >
                     <div className="flex items-center gap-1.5 justify-start">
-                      <span className="text-sm font-bold bg-zinc-700 text-zinc-50 rounded-md p-1">
+                      <span className="text-sm font-bold bg-secondary text-neutral rounded-md p-1">
                         {header.icon}
                       </span>
-                      <span className="font-medium text-[12.5px] text-zinc-50">
+                      <span className="font-medium text-[12.5px] text-light">
                         {header.title}
                       </span>
                     </div>
@@ -152,7 +152,7 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
           </Table>
         )}
 
-        <div className="bg-zinc-100 border-t px-3 py-2.5 ">
+        <div className="bg-light border-t border-b rounded-lg px-3 py-2.5 ">
           <Pagination
             limit={limit}
             page={page}

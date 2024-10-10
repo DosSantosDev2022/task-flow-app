@@ -90,8 +90,8 @@ export function FilterByState() {
 
         <PopoverContent side="bottom" align="end">
           <div className="flex items-center justify-between w-full">
-            <h3 className="text-base font-medium ">Filtros</h3>
-            <PopoverClose className="active:scale-95 p-1 border rounded-md hover:bg-zinc-200 duration-200">
+            <p className="text-base font-medium ">Filtros</p>
+            <PopoverClose className="active:scale-95 p-1 border rounded-md hover:bg-neutral duration-200">
               <LuX size={16} />
             </PopoverClose>
           </div>
@@ -99,7 +99,7 @@ export function FilterByState() {
             <Input.Root className="h-4">
               <Input.Input
                 {...register('search')}
-                className="placeholder:text-xs"
+                className="placeholder:text-sm"
                 placeholder="Buscar estados..."
               />
             </Input.Root>
@@ -113,23 +113,23 @@ export function FilterByState() {
                 >
                   <input
                     type="checkbox"
-                    className="peer relative h-5 w-5 shrink-0 appearance-none border cursor-pointer border-gray-300
-                     rounded-md duration-300  bg-white checked:bg-violet-500 
-                     hover:ring-1 hover:ring-violet-300 focus:outline-none"
+                    className="peer relative h-5 w-5 shrink-0 appearance-none border cursor-pointer border-secondary/30
+                     rounded-md duration-300  bg-light checked:bg-accent 
+                     hover:ring-1 hover:ring-accent/50 focus:outline-none"
                     id={status.id}
                     value={status.label}
                     onChange={handleStatusChange}
                     checked={filterStatus.includes(status.label)}
                   />
                   <span
-                    className="absolute left-[2px] top-[2px] text-white opacity-0 
+                    className="absolute left-[2px] top-[2px] text-neutral opacity-0 
                     peer-checked:opacity-100 pointer-events-none"
                   >
                     <IoCheckmarkSharp size={16} />
                   </span>
                   <label
                     htmlFor={status.id}
-                    className="text-sm text-gray-500 ms-3 dark:text-neutral-400"
+                    className="text-sm text-secondary/50 ms-3 "
                   >
                     {status.label}
                   </label>

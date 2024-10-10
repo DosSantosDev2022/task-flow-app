@@ -20,7 +20,7 @@ const TooltipContent = React.forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={twMerge(
-      'z-[9999] overflow-hidden rounded-md bg-zinc-50 px-3 py-1.5 text-[14.5] shadow text-violet-700 animate-in',
+      'z-[9999] overflow-hidden rounded-md bg-light px-3 py-1.5 text-[14.5] shadow text-accent animate-in',
       className,
     )}
     {...props}

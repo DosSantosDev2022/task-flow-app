@@ -28,7 +28,7 @@ export function FormDatePicker<T extends FieldValues>({
 }: FormDatePickerProps<T>) {
   return (
     <div className="flex flex-col gap-1 w-full">
-      <Label className="text-gray-700">{label}</Label>
+      <Label className="text-primary/70">{label}</Label>
       <Popover>
         <Controller
           name={name}
@@ -47,12 +47,12 @@ export function FormDatePicker<T extends FieldValues>({
                 <PopoverTrigger
                   className={`w-full p-1 h-10 border rounded-md active:scale-95 duration-300 ${
                     disabled
-                      ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
-                      : 'border-gray-300'
+                      ? 'bg-neutral border-neutral_hover cursor-not-allowed'
+                      : 'border-neutral'
                   }`}
                   disabled={disabled}
                 >
-                  <div className="flex gap-2 items-center justify-center text-zinc-400">
+                  <div className="flex gap-2 items-center justify-center text-primary/60">
                     <LuCalendarDays size={18} />
                     {field.value && isValid(parsedDate) ? (
                       <span className="text-sm font-light">
@@ -67,7 +67,7 @@ export function FormDatePicker<T extends FieldValues>({
                 <PopoverContent
                   side="bottom"
                   align="start"
-                  className="bg-zinc-50 z-50 shadow-md rounded-md flex items-center justify-center"
+                  className="bg-light z-50 shadow-md rounded-md flex items-center justify-center"
                 >
                   <DatePicker
                     value={parsedDate || null} // Valor formatado corretamente

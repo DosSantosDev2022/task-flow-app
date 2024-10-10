@@ -104,7 +104,7 @@ export function ModalTasksForm({ task }: TaskAddFormProps) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-zinc-600">
+          <DialogTitle className="text-lg font-semibold text-primary">
             {task ? 'Editar tarefa' : 'Adicione uma nova tarefa'}
           </DialogTitle>
         </DialogHeader>

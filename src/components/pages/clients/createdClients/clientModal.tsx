@@ -18,7 +18,7 @@ export function ClientModal() {
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <DialogTrigger
-        className="w-[130px] flex items-center justify-center gap-1 rounded-md bg-violet-700 hover:bg-violet-500 duration-500 text-zinc-50 px-1 py-2
+        className="w-[130px] flex items-center justify-center gap-1 rounded-md bg-accent hover:bg-accent/90 duration-500 text-neutral px-1 py-2
        active:scale-95"
       >
         <span className="text-sm font-semibold">Novo Cliente</span>

@@ -10,7 +10,7 @@ import { calculateProgress } from '@/utils/calculateProgress'
 import { useEffect, useState } from 'react'
 import { Record } from '@prisma/client/runtime/library'
 import { TaskStatus } from '@prisma/client'
-import { ProjectData } from '@/utils/getProjects'
+import { ProjectData } from '@/@types/project'
 
 export function HeaderTasks({
   selectedProject,
@@ -39,20 +39,20 @@ export function HeaderTasks({
 
   return (
     <>
-      <div className="bg-zinc-50 sm:h-20 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-x-4 justify-between w-full p-2">
+      <div className="bg-light sm:h-20 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-x-4 justify-between w-full p-2">
         <div className="flex items-center justify-start w-full gap-2">
           <Avatar
             Alt={`Icone referente ao projeto: ${selectedProject.title}`}
             Url=""
             name={selectedProject.title}
           />
-          <div className="flex items-start gap-1 flex-col w-full text-zinc-600">
+          <div className="flex items-start gap-1 flex-col w-full text-primary">
             <div className=" font-normal text-md space-y-2 flex flex-col items-start justify-between w-full">
               <div className="flex items-center justify-center gap-2">
                 <h1 className="lg:text-xl text-sm font-bold ">
                   {selectedProject.title}
                 </h1>
-                <div className="text-xs bg-zinc-200 rounded-md px-1.5 py-1">
+                <div className="text-xs bg-neutral rounded-md px-1.5 py-1">
                   {selectedProject.tasks.length} tarefas
                 </div>
               </div>

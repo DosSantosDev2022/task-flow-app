@@ -13,7 +13,7 @@ const PopoverTrigger = React.forwardRef<
   <PopoverPrimitive.Trigger
     ref={ref}
     className={twMerge(
-      'rounded-lg bg-transparent hover:bg-zinc-300  hover:text-zinc-950 duration-300 shadow-sm border px-2 py-1.5 text-zinc-500 gap-2 flex items-center justify-center',
+      'rounded-lg bg-transparent hover:bg-neutral hover:text-primary duration-300 shadow-sm border px-2 py-1.5 text-secondary gap-2 flex items-center justify-center',
       className,
     )}
     {...props}
@@ -33,7 +33,7 @@ const PopoverContent = React.forwardRef<
       side="bottom"
       sideOffset={4}
       className={twMerge(
-        'w-[235px] p-4 bg-white rounded-lg shadow-lg border',
+        'w-[235px] p-4 bg-light rounded-lg shadow-lg border',
         className,
       )}
       {...props}

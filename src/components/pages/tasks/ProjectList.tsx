@@ -39,7 +39,7 @@ export function ProjectList({ projects }: ProjectListProps) {
       <div className=" px-2 py-3">
         <Input.Root className="rounded-xl">
           <Input.Icon>
-            <CiSearch size={24} className="text-zinc-400" />
+            <CiSearch size={24} className="text-secondary/50" />
           </Input.Icon>
           <Input.Input
             {...register('search')}
@@ -49,16 +49,16 @@ export function ProjectList({ projects }: ProjectListProps) {
         </Input.Root>
       </div>
 
-      <div className="flex flex-col gap-1 mt-2 overflow-y-auto max-h-80vh scrollbar-thin scrollbar-track-zinc-50 scrollbar-thumb-zinc-600 p-2">
+      <div className="flex flex-col gap-1 mt-2 overflow-y-auto max-h-80vh scrollbar-thin scrollbar-track-neutral scrollbar-thumb-accent p-2">
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
             <div
               onClick={() => handleProjectClick(project.id)}
               key={project.id}
-              className="flex items-center justify-center gap-5 w-full border rounded-md shadow-sm hover:scale-105 duration-500 hover:opacity-60 p-2 cursor-pointer"
+              className="flex items-center justify-center gap-5 w-full border rounded-md shadow-sm hover:scale-105 duration-300 p-2 cursor-pointer"
             >
               <Avatar Alt="Icone do projeto" name={project.title} Url="" />
-              <span className="text-zinc-600 font-medium text-sm w-full">
+              <span className="text-primary font-medium text-sm w-full">
                 {project.title}
               </span>
             </div>

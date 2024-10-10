@@ -43,7 +43,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     return (
       <span
         className={twMerge(
-          `w-[65px] h-[22px] px-1.5 py-[2px] rounded-2xl text-zinc-100 
+          `w-[65px] h-[22px] px-1.5 py-[2px] rounded-2xl text-neutral
           text-[10px] font-normal leading-7 flex items-center justify-center`,
           statusClasses[status], // Aplica a classe de acordo com o status
           className,

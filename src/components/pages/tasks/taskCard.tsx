@@ -35,7 +35,7 @@ export function TaskCard({ task }: TaskCardProps) {
     <div
       ref={drag as unknown as React.LegacyRef<HTMLDivElement>}
       className="border rounded-md p-4 flex flex-col items-start gap-2 justify-between w-full"
-      style={{ background: isDragging ? 'bg-zinc-200' : '' }}
+      style={{ background: isDragging ? 'bg-neutral' : '' }}
     >
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center justify-center gap-2">
@@ -43,7 +43,7 @@ export function TaskCard({ task }: TaskCardProps) {
             className={getStatusColor(task.status)}
             size={24}
           />
-          <h4 className="text-base font-normal text-zinc-600">{task.title}</h4>
+          <h4 className="text-base font-normal text-primary">{task.title}</h4>
         </div>
         <Badge status={task.status} className="px-1.5 py-1 w-[96px] " />
       </div>
@@ -52,7 +52,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <Deadiline.Date date={new Date(task.endDate).toLocaleDateString()} />
       </Deadiline.Root>
       <div className="px-1 py-1.5 w-full">
-        <p className="truncate text-xs text-zinc-500">{task.description}</p>
+        <p className="truncate text-xs text-secondary/50">{task.description}</p>
       </div>
       <div className="w-full flex items-center justify-between">
         <ModalTasksForm task={task} />

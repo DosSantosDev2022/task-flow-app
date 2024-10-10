@@ -30,7 +30,7 @@ export function FiltersClient() {
       {/* Filtro por pesquisa textual */}
       <Input.Root className="h-9">
         <Input.Icon>
-          <CiSearch size={24} className="text-zinc-400" />
+          <CiSearch size={24} className="text-secondary/50" />
         </Input.Icon>
         <Input.Input onChange={handleChange} placeholder="Buscar Clientes..." />
       </Input.Root>

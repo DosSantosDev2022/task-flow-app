@@ -28,10 +28,10 @@ export function User() {
         </button>
 
         {menuOpen && (
-          <div className="absolute top-8 right-2 w-20 bg-white animate-duration-500 animate-jump shadow-md rounded-md mt-2">
+          <div className="absolute top-8 right-2 w-20 bg-light animate-duration-500 animate-jump shadow-md rounded-md mt-2">
             <button
               onClick={handlesignOut}
-              className="block w-full py-2 px-4 text-center text-zinc-900 hover:bg-zinc-100"
+              className="block w-full py-2 px-4 text-center text-primary hover:bg-light"
             >
               Sair
             </button>
@@ -40,10 +40,10 @@ export function User() {
       </div>
 
       <div className="flex-col hidden lg:flex">
-        <span className="text-base font-bold text-zinc-950">
+        <span className="text-base font-bold text-primary">
           {data?.user?.name}
         </span>
-        <span className="text-zinc-600 font-normal text-xs leading-[14.52px] ">
+        <span className="text-secondary/50 font-normal text-xs leading-[14.52px] ">
           {data?.user?.email}
         </span>
       </div>

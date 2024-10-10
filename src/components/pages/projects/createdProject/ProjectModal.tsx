@@ -19,8 +19,9 @@ export function ProjectCreationModal() {
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <DialogTrigger
-        className="w-[130px] flex items-center justify-center gap-1 rounded-md bg-violet-700 hover:bg-violet-500 duration-500 text-zinc-50 px-1 py-2
-       active:scale-95"
+        variant="highlight"
+        effects="scale"
+        className="w-[130px] flex items-center justify-center gap-1 rounded-md  px-1 py-2"
       >
         <span className="text-sm font-semibold">Novo Projeto</span>
         <BiPlus size={20} className="font-bold" />
@@ -29,7 +30,7 @@ export function ProjectCreationModal() {
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>Aqui você pode registrar um novo projeto</DialogTitle>
-            <DialogClose className="rounded-md bg-zinc-200 border hover:opacity-80 active:scale-75 duration-300">
+            <DialogClose className="rounded-md bg-neutral border hover:bg-neutral_hover active:scale-75 duration-300">
               <BiX size={25} />
             </DialogClose>
           </div>

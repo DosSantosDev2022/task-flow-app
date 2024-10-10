@@ -83,7 +83,7 @@ export function FilterByCity() {
         <PopoverContent sideOffset={5} side="bottom" align="end">
           <div className="flex items-center justify-between w-full">
             <h3 className="text-base font-medium">Filtros</h3>
-            <PopoverClose className="active:scale-95 p-1 border rounded-md hover:bg-zinc-200 duration-200">
+            <PopoverClose className="active:scale-95 p-1 border rounded-md hover:bg-neutral duration-200">
               <LuX size={16} />
             </PopoverClose>
           </div>
@@ -91,7 +91,7 @@ export function FilterByCity() {
             <Input.Root className="h-4">
               <Input.Input
                 {...register('search')}
-                className="placeholder:text-xs"
+                className="placeholder:text-sm"
                 placeholder="Buscar cidades..."
               />
             </Input.Root>
@@ -106,7 +106,7 @@ export function FilterByCity() {
                   <input
                     onChange={handleChange}
                     type="checkbox"
-                    className="peer relative h-5 w-5 cursor-pointer shrink-0 appearance-none border border-gray-300 rounded-md duration-300  bg-white checked:bg-violet-500 hover:ring-1 hover:ring-violet-300 focus:outline-none"
+                    className="peer relative h-5 w-5 cursor-pointer shrink-0 appearance-none border border-secondary/30 rounded-md duration-300  bg-light checked:bg-accent hover:ring-1 hover:ring-accent/50 focus:outline-none"
                     id={city.id}
                     value={city.label}
                     checked={selectedPriorities.includes(city.label)}
@@ -116,7 +116,7 @@ export function FilterByCity() {
                   </span>
                   <label
                     htmlFor={city.id}
-                    className="text-sm text-gray-500 ms-3 dark:text-neutral-400"
+                    className="text-sm text-secondary/50 ms-3"
                   >
                     {city.label}
                   </label>

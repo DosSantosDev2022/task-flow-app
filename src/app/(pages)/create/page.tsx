@@ -21,12 +21,12 @@ export default function CreateAccountPage() {
   } */
 
   return (
-    <div className="h-screen md:flex text-zinc-50 ">
-      <div className="flex md:w-1/2 justify-center py-10 items-center bg-zinc-50">
-        <form action="" className="bg-zinc-50  p-16 w-[468px]">
+    <div className="h-screen md:flex text-light">
+      <div className="flex md:w-1/2 justify-center py-10 items-center bg-light">
+        <form action="" className="bg-light  p-16 w-[468px]">
           <h1 className="text-zinc-800 font-bold text-4xl mb-7">
-            <span className="text-violet-800 ml-1 font-extrabold">
-              Task <span className="text-zinc-800 font-bold">Flow</span>
+            <span className="text-accent ml-1 font-extrabold">
+              Task <span className="text-primary font-bold">Flow</span>
             </span>
           </h1>
 
@@ -34,7 +34,7 @@ export default function CreateAccountPage() {
             <form action="" className="space-y-3">
               <Input.Root>
                 <Input.Icon>
-                  <FaUser className="text-zinc-400" />
+                  <FaUser className="text-secondary/50" />
                 </Input.Icon>
 
                 <Input.Input placeholder="Nome completo" type="text" />
@@ -42,7 +42,7 @@ export default function CreateAccountPage() {
 
               <Input.Root>
                 <Input.Icon>
-                  <MdAttachEmail className="text-zinc-400" />
+                  <MdAttachEmail className="text-secondary/50" />
                 </Input.Icon>
 
                 <Input.Input placeholder="E-mail" type="email" />
@@ -50,14 +50,14 @@ export default function CreateAccountPage() {
 
               <Input.Root>
                 <Input.Icon>
-                  <RiLockPasswordFill className="text-zinc-400" />
+                  <RiLockPasswordFill className="text-secondary/50" />
                 </Input.Icon>
                 <Input.Input placeholder="Senha" type="password" />
               </Input.Root>
 
               <Input.Root>
                 <Input.Icon>
-                  <RiLockPasswordFill className="text-zinc-400" />
+                  <RiLockPasswordFill className="text-secondary/50" />
                 </Input.Icon>
                 <Input.Input placeholder="Confirme a senha" type="password" />
               </Input.Root>
@@ -68,15 +68,15 @@ export default function CreateAccountPage() {
                 onClick={handleLoginCredentials}
                 variant="outline"
                 effects="scale"
-                className="w-full text-zinc-700 font-semibold "
+                className="w-full text-primary font-semibold "
               >
                 Criar conta
               </Button>
               <Button
                 onClick={handleLoginGoogle}
                 effects="scale"
-                className="w-full text-sm font-semibold flex items-center text-zinc-50
-                 bg-violet-800 hover:bg-violet-700 transition-all duration-300 justify-center gap-2"
+                className="w-full text-sm font-semibold flex items-center text-light
+                 bg-accent hover:bg-accent_hover transition-all duration-300 justify-center gap-2"
               >
                 <FaGoogle size={18} />
                 Crie com o google
@@ -85,7 +85,7 @@ export default function CreateAccountPage() {
 
             <div className="w-full text-end px-1">
               <Link
-                className="text-zinc-500 hover:text-zinc-400 duration-300"
+                className="text-secondary hover:text-secondary_hover duration-300"
                 href={'/signIn'}
               >
                 Já possuí conta ?
@@ -94,7 +94,7 @@ export default function CreateAccountPage() {
           </div>
         </form>
       </div>
-      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-violet-500 to-violet-900  i justify-around items-center  hidden ">
+      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-accent to-accent_hover  i justify-around items-center  hidden ">
         <div className="space-y-3">
           <h1 className="font-bold text-5xl ">Seja Bem vindo</h1>
           <p className="font-normal">Gerencie suas tarefas com nosso app.</p>

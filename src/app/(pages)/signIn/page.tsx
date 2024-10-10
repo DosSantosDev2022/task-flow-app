@@ -39,8 +39,8 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="h-screen md:flex text-zinc-50 ">
-      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-violet-500 to-violet-900  i justify-around items-center  hidden ">
+    <div className="h-screen md:flex text-light">
+      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-accent to-accent_hover i justify-around items-center  hidden ">
         <div className="space-y-3">
           <h1 className="font-bold text-5xl ">Seja Bem vindo</h1>
           <p className="font-normal">Gerencie suas tarefas com nosso app.</p>
@@ -60,18 +60,18 @@ export default function SignInPage() {
         <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
       </div>
 
-      <div className="flex md:w-1/2 justify-center py-10 items-center bg-zinc-50">
-        <form className="bg-zinc-50  p-16 w-[468px]">
-          <h1 className="text-zinc-800 font-bold text-4xl mb-7">
-            <span className="text-violet-800 ml-1 font-extrabold">
-              Task <span className="text-zinc-800 font-bold">Flow</span>
+      <div className="flex md:w-1/2 justify-center py-10 items-center bg-light">
+        <form className="bg-light  p-16 w-[468px]">
+          <h1 className="text-primary font-bold text-4xl mb-7">
+            <span className="text-accent ml-1 font-extrabold">
+              Task <span className="text-primary font-bold">Flow</span>
             </span>
           </h1>
 
           <div className="flex flex-col gap-3">
             <Input.Root>
               <Input.Icon>
-                <MdAttachEmail className="text-zinc-400" />
+                <MdAttachEmail className="text-secondary/50" />
               </Input.Icon>
 
               <Input.Input
@@ -83,7 +83,7 @@ export default function SignInPage() {
 
             <Input.Root>
               <Input.Icon>
-                <RiLockPasswordFill className="text-zinc-400" />
+                <RiLockPasswordFill className="text-secondary/50" />
               </Input.Icon>
               <Input.Input
                 {...register('password')}
@@ -97,15 +97,15 @@ export default function SignInPage() {
                 onClick={handleSubmit(handleLoginCredention)}
                 variant="outline"
                 effects="scale"
-                className="w-full text-zinc-700 font-semibold "
+                className="w-full text-primary font-semibold "
               >
                 Login
               </Button>
               <Button
                 onClick={handleLoginGoogle}
                 effects="scale"
-                className="w-full text-sm font-semibold flex items-center text-zinc-50
-                 bg-violet-800 hover:bg-violet-700 transition-all duration-300 justify-center gap-2"
+                className="w-full text-sm font-semibold flex items-center text-light
+                 bg-accent hover:bg-accent_hover transition-all duration-300 justify-center gap-2"
               >
                 <FaGoogle size={18} />
                 Logar com o google

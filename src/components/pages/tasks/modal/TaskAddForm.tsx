@@ -82,13 +82,17 @@ export function TaskAddForm({
 
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
-      <DialogTrigger className="bg-violet-600 w-[72px] lg:w-[98px] h-10 rounded-2xl px-2 py-4 active:scale-95 duration-300 text-zinc-50 justify-center  flex gap-1 items-center">
+      <DialogTrigger
+        effects="scale"
+        variant="highlight"
+        className=" w-[72px] lg:w-[98px] h-10 rounded-2xl px-2 py-4  duration-300 justify-center  flex gap-1 items-center"
+      >
         <FaCirclePlus size={16} />
         <span className="text-base">Nova</span>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-zinc-600">
+          <DialogTitle className="text-lg font-semibold text-primary">
             Adicione uma nova tarefa
           </DialogTitle>
         </DialogHeader>

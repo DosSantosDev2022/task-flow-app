@@ -62,18 +62,18 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   }
 
   return (
-    <div className="w-full max-w-[300px] flex flex-col items-center justify-center p-4 border border-zinc-300 rounded-2xl">
+    <div className="w-full max-w-[300px] flex flex-col items-center justify-center p-4 border border-neutral rounded-2xl">
       <div className="flex items-center gap-2 mb-2">
-        <div className="flex items-center gap-8 border text-zinc-900 border-zinc-300 w-full justify-between rounded-xl py-0.5 px-0.5 text-sm font-medium ">
+        <div className="flex items-center gap-8 border text-primary border-zinc-300 w-full justify-between rounded-xl py-0.5 px-0.5 text-sm font-medium ">
           <button
-            className="p-2 rounded-lg transition-all duration-500 hover:bg-violet-100 hover:text-violet-800"
+            className="p-2 rounded-lg transition-all duration-500 hover:bg-accent_hover hover:text-accent"
             onClick={prevMonth}
           >
             <LuChevronLeft />
           </button>
           {format(currentDate, 'MMMM yyyy')}
           <button
-            className=" p-2 rounded-lg transition-all duration-500 hover:bg-violet-100 hover:text-violet-800"
+            className=" p-2 rounded-lg transition-all duration-500 hover:bg-accent_hover hover:text-neutral"
             onClick={nextMonth}
           >
             <LuChevronRight />
@@ -90,7 +90,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
                   key={dayName}
                   className="flex items-center justify-center w-10 h-10"
                 >
-                  <p className="text-sm font-medium text-gray-900 rounded-full flex items-center justify-center w-full h-full">
+                  <p className="text-sm font-medium text-primary rounded-full flex items-center justify-center w-full h-full">
                     {dayName}
                   </p>
                 </td>
@@ -119,13 +119,13 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
                         <p
                           onClick={() => handleSelectDate(date)}
                           className={`text-sm font-medium cursor-pointer ${
-                            isCurrentMonth ? 'text-zinc-900' : 'text-zinc-300'
+                            isCurrentMonth ? 'text-primary' : 'text-neutral'
                           } rounded-full flex items-center justify-center w-full h-full transition-all duration-300 ${
                             isSelected
-                              ? 'bg-violet-600 text-zinc-50'
+                              ? 'bg-accent text-light'
                               : isToday
-                                ? 'bg-violet-400 text-zinc-50'
-                                : 'hover:bg-violet-100'
+                                ? 'bg-accent text-light'
+                                : 'hover:bg-neutral_hover'
                           }`}
                         >
                           {date.getDate()}

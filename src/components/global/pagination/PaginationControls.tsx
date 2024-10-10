@@ -39,7 +39,7 @@ export const PaginationControls = ({
           variant="outline"
           asChild
           className={`w-12 flex items-center justify-center font-normal ${
-            page === pageNumber ? 'pointer-events-none border bg-zinc-200' : ''
+            page === pageNumber ? 'pointer-events-none border bg-neutral' : ''
           }`}
         >
           <Link href={page !== pageNumber ? buildUrl(pageNumber) : '#'}>

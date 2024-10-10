@@ -6,7 +6,7 @@ export function Logo({ className }: { className: string }) {
       className={twMerge('flex items-center justify-center w-full', className)}
     >
       <h1 className="text-2xl font-extrabold whitespace-nowrap">
-        Task <span className="text-violet-700">Flow</span>
+        Task <span className="text-accent">Flow</span>
       </h1>
     </div>
   )

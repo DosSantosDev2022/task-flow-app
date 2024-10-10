@@ -6,7 +6,7 @@ export function Label({ ...props }: LabelProps) {
   return (
     <label
       {...props}
-      className="text-sm font-normal leading-[25.6px] text-zinc-600
+      className="text-sm font-normal leading-[25.6px] text-secondary/60
     "
     />
   )

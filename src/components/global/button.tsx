@@ -37,13 +37,13 @@ export function Button({
   ...props
 }: ButtonProps) {
   const variantClasses = {
-    primary: 'bg-violet-700 text-zinc-50 hover:bg-violet-800',
-    secundary: 'bg-zinc-50 text-violet-900 hover:bg-zinc-100',
+    primary: 'bg-primary text-neutral hover:bg-primary_hover',
+    secundary: 'bg-secondary text-neutral hover:bg-secondary_hover',
     outline:
-      'bg-transparent border border-zinc-200 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800',
-    highlight: 'text-zinc-50 hover:bg-violet-800 duration-300 bg-violet-900',
+      'bg-transparent border border-neutral text-primary hover:bg-neutral_hover hover:text-primary_hover',
+    highlight: 'text-neutral hover:bg-accent_hover duration-300 bg-accent',
     disabled:
-      'bg-opacity-80 bg-primary-950 border border-primary-800 text-secondary-950',
+      'bg-opacity-80 bg-primary-950 border border-primary text-secondary',
     link: 'bg-transparent border-none underline-offset-4 hover:underline',
     danger: 'bg-red-700 hover:bg-red-600 text-zinc-50',
     warning: 'bg-yellow-400 text-zinc-900 hover:bg-yellow-300',

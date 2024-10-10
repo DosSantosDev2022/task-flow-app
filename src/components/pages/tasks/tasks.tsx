@@ -94,17 +94,15 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 px-2 py-4">
         <TaskAddForm projectId={projectId} onAddTask={handleAddTask} />
-        <div className="rounded-xl w-full overflow-x-auto bg-zinc-50 shadow-sm flex justify-start lg:px-4 py-2 px-2 items-center gap-2 lg:gap-4">
+        <div className="rounded-xl w-full overflow-x-auto bg-light shadow-sm flex justify-start lg:px-4 py-2 px-2 items-center gap-2 lg:gap-4">
           {statusOptions.map((status) => (
             <Button
               variant="outline"
               sizes="full"
               key={status.value}
               onClick={() => handleFilterClick(status.value)}
-              className={`hover:text-violet-600 lg:px-2  lg:py-3 px-1.5 py-2 text-xs whitespace-nowrap border-none${
-                activeFilter === status.value
-                  ? ' text-violet-600 bg-zinc-200'
-                  : ''
+              className={`hover:text-accent lg:px-2  lg:py-3 px-1.5 py-2 text-xs font-semibold whitespace-nowrap border-none${
+                activeFilter === status.value ? ' text-accent bg-neutral' : ''
               }`}
             >
               {status.label}
@@ -114,7 +112,7 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
           <Button
             className="hidden lg:flex"
             effects="scale"
-            variant="primary"
+            variant="highlight"
             isLoading={isLoading}
             onClick={handleSaveChanges}
           >
@@ -130,9 +128,9 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
           {/* Botão flutuante mobile */}
           <div className="lg:hidden fixed bottom-4 right-4 z-50">
             <Button
-              className="w-[50px] h-[50px] rounded-full bg-violet-600 text-white shadow-lg flex items-center justify-center"
+              className="w-[50px] h-[50px] rounded-full shadow-lg flex items-center justify-center"
               effects="scale"
-              variant="primary"
+              variant="highlight"
               isLoading={isLoading}
               onClick={handleSaveChanges}
             >

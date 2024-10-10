@@ -10,7 +10,7 @@ import { FiltersClient } from '@/components/pages/clients/filters/FilterClient'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth'
 import { ClientModal } from '@/components/pages/clients/createdClients/clientModal'
-import { ClientData, getClients } from '@/utils/getClients'
+import { getClients } from '@/utils/getClients'
 import { Pagination } from '@/components/global/pagination/pagination'
 import { BsCalendar2DateFill } from 'react-icons/bs'
 import { MdAttachEmail, MdMyLocation } from 'react-icons/md'
@@ -18,6 +18,7 @@ import { FaCity, FaMap, FaPhone, FaUser } from 'react-icons/fa'
 import { FaLocationDot, FaMapLocation } from 'react-icons/fa6'
 import { Actions } from '@/components/pages/clients/tableActions/Actions'
 import { LuRedoDot } from 'react-icons/lu'
+import { ClientData } from '@/@types/client'
 
 interface ClientsSearchParams {
   searchParams: {
@@ -141,7 +142,7 @@ export default async function ClientsPage({
           </Table>
         )}
 
-        <div className="bg-zinc-100 border-t px-3 py-2.5 ">
+        <div className="bg-light border-t border-b rounded-lg px-3 py-2.5 ">
           <Pagination
             limit={limit}
             page={page}
