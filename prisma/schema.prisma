@@ -87,6 +87,7 @@ model Project {
   description String?
   startDate   DateTime
   endDate     DateTime
+  prazo       Prazo           @default(DENTRO_DO_PRAZO)
   price       Decimal         @db.Decimal(10, 2)
   payment     Payment
   status      ProjectStatus   @default(PENDENTES)
@@ -109,19 +110,26 @@ enum Payment {
   PIX
 }
 
+enum Prazo {
+  DENTRO_DO_PRAZO
+  FORA_DO_PRAZO
+}
+
 model Task {
-  id          String     @id @default(uuid())
-  title       String
-  description String?
-  status      TaskStatus @default(A_FAZER)
-  startDate   DateTime
-  endDate     DateTime
-  project     Project    @relation(fields: [projectId], references: [id])
-  projectId   String
-  user        User       @relation(fields: [userId], references: [id])
-  userId      String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id            String     @id @default(uuid())
+  title         String
+  description   String?
+  status        TaskStatus @default(A_FAZER)
+  startDate     DateTime
+  endDate       DateTime
+  completedDate DateTime?
+  prazo         Prazo      @default(DENTRO_DO_PRAZO)
+  project       Project    @relation(fields: [projectId], references: [id])
+  projectId     String
+  user          User       @relation(fields: [userId], references: [id])
+  userId        String
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
   @@map("tasks")
 }

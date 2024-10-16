@@ -2,6 +2,9 @@
 CREATE TYPE "Payment" AS ENUM ('CREDITO', 'DEBITO', 'DINHEIRO', 'PIX');
 
 -- CreateEnum
+CREATE TYPE "Prazo" AS ENUM ('DENTRO_DO_PRAZO', 'FORA_DO_PRAZO');
+
+-- CreateEnum
 CREATE TYPE "TaskStatus" AS ENUM ('A_FAZER', 'EM_ANDAMENTO', 'CONCLUIDO');
 
 -- CreateEnum
@@ -82,12 +85,15 @@ CREATE TABLE "projects" (
     "description" TEXT,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
+    "prazo" "Prazo" NOT NULL DEFAULT 'DENTRO_DO_PRAZO',
     "price" DECIMAL(10,2) NOT NULL,
     "payment" "Payment" NOT NULL,
     "status" "ProjectStatus" NOT NULL DEFAULT 'PENDENTES',
     "priority" "ProjectPriority" NOT NULL,
     "userId" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "projects_pkey" PRIMARY KEY ("id")
 );
@@ -100,8 +106,12 @@ CREATE TABLE "tasks" (
     "status" "TaskStatus" NOT NULL DEFAULT 'A_FAZER',
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
+    "completedDate" TIMESTAMP(3),
+    "prazo" "Prazo" NOT NULL DEFAULT 'DENTRO_DO_PRAZO',
     "projectId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "tasks_pkey" PRIMARY KEY ("id")
 );
