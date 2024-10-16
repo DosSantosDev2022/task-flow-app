@@ -7,6 +7,7 @@ export const FormTaskSchema = z.object({
   title: z.string().min(1, 'O nome da tarefa é obrigatório'),
   startDate: z.string().min(1, 'Selecione uma data inicial'),
   endDate: z.string().min(1, 'Selecione uma data de entrega'),
+  /* completedDate: z.string().optional(), */
   description: z.string().min(1, 'A descrição da tarefa é obrigatória'),
   userId: z.string(),
   projectId: z.string(),

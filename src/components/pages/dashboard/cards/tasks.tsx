@@ -7,40 +7,50 @@ import {
   CardHeader,
 } from '@/components/global/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/global/tabs'
+import { calculateSummaryData } from '@/utils/calculateSummaryData'
+import { Task } from '@prisma/client'
+
 import { TabsContent } from '@radix-ui/react-tabs'
 import { useState } from 'react'
+
 import { BiTaskX } from 'react-icons/bi'
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
 import { MdTaskAlt } from 'react-icons/md'
 import { RiTaskFill } from 'react-icons/ri'
 
-const tabs = [
-  {
-    id: 'all-tasks',
-    icon: <MdTaskAlt className="text-accent" size={18} />,
-    title: 'Todas as Tarefas',
-    total: '50',
-  },
-  {
-    id: 'pending-tasks',
-    icon: <BiTaskX className="text-accent" size={18} />,
-    title: 'Tarefas Pendentes',
-    total: '70',
-    Out_of_time: '30',
-    within_the_deadline: '15',
-  },
-  {
-    id: 'completed-tasks',
-    icon: <RiTaskFill className="text-accent" size={18} />,
-    title: 'Tarefas Concluídas',
-    total: '20',
-    Out_of_time: '5',
-    within_the_deadline: '2',
-  },
-]
+interface TasksCardProps {
+  tasks: Task[]
+}
 
-export function TasksCard() {
+export function TasksCard({ tasks }: TasksCardProps) {
   const [activeTab, setActiveTab] = useState('all-tasks')
+
+  const summaryData = calculateSummaryData(tasks)
+
+  const tabs = [
+    {
+      id: 'all-tasks',
+      icon: <MdTaskAlt className="text-accent" size={18} />,
+      title: 'Todas as Tarefas',
+      total: summaryData.total,
+    },
+    {
+      id: 'pending-tasks',
+      icon: <BiTaskX className="text-accent" size={18} />,
+      title: 'Tarefas Pendentes',
+      total: summaryData.pending,
+      Out_of_time: summaryData.overdue, // tasks atrasadas status a fazer ou em andamento
+      within_the_deadline: summaryData.withinTheDeadline, // tasks dentro do prazo status a fazer ou em andamento
+    },
+    {
+      id: 'completed-tasks',
+      icon: <RiTaskFill className="text-accent" size={18} />,
+      title: 'Tarefas Concluídas',
+      total: summaryData.completed,
+      Out_of_time: summaryData.completedOutOfTime, // tasks completadas fora do prazo
+      within_the_deadline: summaryData.completedWithinDeadline, // tasks completadas dentro do prazo
+    },
+  ]
 
   const currentIndex = tabs.findIndex((tab) => tab.id === activeTab)
 
@@ -107,11 +117,15 @@ export function TasksCard() {
                           {tab.within_the_deadline}
                         </span>
                         <span className="font-normal text-sm text-secondary/50">
-                          {(
-                            (parseInt(tab.within_the_deadline || '') /
-                              parseInt(tab.total)) *
-                            100
-                          ).toFixed(2)}
+                          {tab.total > 0
+                            ? (
+                                (parseInt(
+                                  (tab.within_the_deadline || 0).toString(),
+                                ) /
+                                  tab.total) *
+                                100
+                              ).toFixed(2)
+                            : '0'}
                           %
                         </span>
                       </div>
@@ -123,11 +137,13 @@ export function TasksCard() {
                           {tab.Out_of_time}
                         </span>
                         <span className="font-normal text-sm text-secondary/50">
-                          {(
-                            (parseInt(tab.Out_of_time || '') /
-                              parseInt(tab.total)) *
-                            100
-                          ).toFixed(2)}
+                          {tab.total > 0
+                            ? (
+                                (parseInt((tab.Out_of_time || 0).toString()) /
+                                  tab.total) *
+                                100
+                              ).toFixed(2)
+                            : '0'}
                           %
                         </span>
                       </div>

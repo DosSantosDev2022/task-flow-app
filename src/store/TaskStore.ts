@@ -12,6 +12,7 @@ export interface TaskData {
   description: string
   startDate: string
   endDate: string
+  completedDate?: Date | null // Adicione a propriedade para data de conclusão
   status: TaskStatus
 }
 
@@ -23,7 +24,6 @@ interface TaskStore {
 
 // Função para carregar o estado inicial do localStorage
 const loadTasksFromLocalStorage = (): Record<string, Task> => {
-  /* if (typeof window === 'undefined') return {} // Verifica se está no servidor */
   const savedTasks = localStorage.getItem('tasks')
   return savedTasks ? JSON.parse(savedTasks) : {}
 }
@@ -38,13 +38,21 @@ export const useTaskStore = create<TaskStore>((set) => ({
   tasks: loadTasksFromLocalStorage(),
   updateTask: (taskId, taskData) => {
     set((state) => {
+      const updatedTask = {
+        ...state.tasks[taskId],
+        ...taskData, // Atualiza apenas os campos passados
+      }
+
+      // Verifica se o status foi alterado para CONCLUIDO
+      if (taskData.status === 'CONCLUIDO') {
+        updatedTask.completedDate = new Date() // Define a data de conclusão
+      }
+
       const updatedTasks = {
         ...state.tasks,
-        [taskId]: {
-          ...state.tasks[taskId],
-          ...taskData, // Atualiza apenas os campos passados
-        },
+        [taskId]: updatedTask,
       }
+
       saveTasksToLocalStorage(updatedTasks) // Atualiza o localStorage
       return { tasks: updatedTasks }
     })

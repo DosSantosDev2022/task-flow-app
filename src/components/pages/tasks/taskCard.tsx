@@ -48,7 +48,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <Badge status={task.status} className="px-1.5 py-1 w-[96px] " />
       </div>
       <Deadiline.Root className="justify-start">
-        <Deadiline.Icon />
+        <Deadiline.Icon prazo="" />
         <Deadiline.Date date={new Date(task.endDate).toLocaleDateString()} />
       </Deadiline.Root>
       <div className="px-1 py-1.5 w-full">

@@ -2,7 +2,7 @@
 
 import { Avatar } from '@/components/global/avatar'
 import { ProgressBar } from '@/components/global/progressBar'
-import { format } from 'date-fns'
+import { format, isAfter } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Deadiline } from './deadline'
 import { useTaskStore } from '@/store/TaskStore'
@@ -37,6 +37,14 @@ export function HeaderTasks({
     }
   }, [tasks, selectedProject])
 
+  // Função para verificar se está dentro do prazo
+
+  const isWithinDeadline = () => {
+    if (!selectedProject.endDate) return false
+    const endDate = new Date(selectedProject.endDate)
+    return isAfter(endDate, new Date())
+  }
+
   return (
     <>
       <div className="bg-light sm:h-20 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-x-4 justify-between w-full p-2">
@@ -64,7 +72,10 @@ export function HeaderTasks({
           </div>
         </div>
         <Deadiline.Root className="ml-10 sm:ml-0">
-          <Deadiline.Icon />
+          <Deadiline.Icon
+            className={isWithinDeadline() ? 'bg-green-500' : 'bg-red-500'}
+            prazo={isWithinDeadline() ? 'No prazo' : 'Fora do prazo'}
+          />
           <Deadiline.Date
             date={
               selectedProject.endDate
