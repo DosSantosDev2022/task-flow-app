@@ -87,7 +87,7 @@ model Project {
   description String?
   startDate   DateTime
   endDate     DateTime
-  prazo       Prazo           @default(DENTRO_DO_PRAZO)
+  deadlines   Deadlines       @default(DENTRO_DO_PRAZO)
   price       Decimal         @db.Decimal(10, 2)
   payment     Payment
   status      ProjectStatus   @default(PENDENTES)
@@ -110,7 +110,7 @@ enum Payment {
   PIX
 }
 
-enum Prazo {
+enum Deadlines {
   DENTRO_DO_PRAZO
   FORA_DO_PRAZO
 }
@@ -123,7 +123,7 @@ model Task {
   startDate     DateTime
   endDate       DateTime
   completedDate DateTime?
-  prazo         Prazo      @default(DENTRO_DO_PRAZO)
+  deadlines     Deadlines  @default(DENTRO_DO_PRAZO)
   project       Project    @relation(fields: [projectId], references: [id])
   projectId     String
   user          User       @relation(fields: [userId], references: [id])
