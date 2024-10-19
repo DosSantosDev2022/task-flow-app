@@ -17,6 +17,7 @@ export async function updateTasksAction(tasksToUpdate: Task[]) {
           projectId: task.projectId,
           userId: task.userId,
           ...(task.status === 'CONCLUIDO' ? { completedDate: new Date() } : {}),
+          deadlines: task.deadlines,
         },
       }),
     )

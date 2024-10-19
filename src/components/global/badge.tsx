@@ -18,14 +18,14 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, status, ...props }, ref) => {
     const statusClasses = {
       TODOS: '',
-      PENDENTES: 'bg-red-400', // Define as cores para cada status
-      FINALIZADOS: 'bg-green-400',
-      ALTA: 'bg-red-400',
-      MEDIA: 'bg-blue-400',
-      BAIXA: 'bg-green-400',
-      A_FAZER: 'bg-red-400',
-      EM_ANDAMENTO: 'bg-yellow-400',
-      CONCLUIDO: 'bg-green-400',
+      PENDENTES: 'bg-red-500', // Define as cores para cada status
+      FINALIZADOS: 'bg-green-500',
+      ALTA: 'bg-red-500',
+      MEDIA: 'bg-blue-500',
+      BAIXA: 'bg-green-500',
+      A_FAZER: 'bg-red-500',
+      EM_ANDAMENTO: 'bg-yellow-500',
+      CONCLUIDO: 'bg-green-500',
     }
 
     const statusText = {

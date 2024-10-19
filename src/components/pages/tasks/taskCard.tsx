@@ -4,6 +4,7 @@ import { useDrag, DragSourceMonitor } from 'react-dnd'
 import { Badge } from '@/components/global/badge'
 import { ModalTasksForm } from './modal/EditTasksForm'
 import { Task, TaskStatus } from '@prisma/client'
+import { isAfter } from 'date-fns'
 
 interface TaskCardProps {
   task: Task
@@ -21,14 +22,27 @@ export function TaskCard({ task }: TaskCardProps) {
   const getStatusColor = (status: TaskStatus) => {
     switch (status) {
       case 'A_FAZER':
-        return 'text-red-600'
+        return 'text-red-500'
       case 'EM_ANDAMENTO':
-        return 'text-yellow-400'
+        return 'text-yellow-500'
       case 'CONCLUIDO':
-        return 'text-green-600'
+        return 'text-green-500'
       default:
         return 'text-gray-500'
     }
+  }
+
+  const isWithinDeadlineTask = () => {
+    if (!task.endDate) return false
+
+    const endDate = new Date(task.endDate)
+
+    if (!task.completedDate) {
+      return isAfter(endDate, new Date())
+    }
+
+    const completedTasks = new Date(task.completedDate)
+    return isAfter(endDate, completedTasks)
   }
 
   return (
@@ -48,7 +62,10 @@ export function TaskCard({ task }: TaskCardProps) {
         <Badge status={task.status} className="px-1.5 py-1 w-[96px] " />
       </div>
       <Deadiline.Root className="justify-start">
-        <Deadiline.Icon prazo="" />
+        <Deadiline.Icon
+          className={isWithinDeadlineTask() ? 'bg-green-500' : 'bg-red-500'}
+          prazo={isWithinDeadlineTask() ? 'No prazo' : 'Fora do prazo'}
+        />
         <Deadiline.Date date={new Date(task.endDate).toLocaleDateString()} />
       </Deadiline.Root>
       <div className="px-1 py-1.5 w-full">

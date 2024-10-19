@@ -1,5 +1,6 @@
 import { updateTasksAction } from '@/app/actions/tasks/updateTasks'
-import { Task } from '@prisma/client'
+import { Deadlines, Task } from '@prisma/client'
+import { isAfter } from 'date-fns'
 import { revalidatePath } from 'next/cache'
 import { create } from 'zustand'
 
@@ -14,6 +15,7 @@ export interface TaskData {
   endDate: string
   completedDate?: Date | null // Adicione a propriedade para data de conclusão
   status: TaskStatus
+  deadlines: Deadlines
 }
 
 interface TaskStore {
@@ -46,6 +48,18 @@ export const useTaskStore = create<TaskStore>((set) => ({
       // Verifica se o status foi alterado para CONCLUIDO
       if (taskData.status === 'CONCLUIDO') {
         updatedTask.completedDate = new Date() // Define a data de conclusão
+      }
+
+      if (updatedTask.endDate) {
+        const endDate = new Date(updatedTask.endDate)
+        const isWithinDeadline = isAfter(
+          endDate,
+          updatedTask.completedDate || new Date(),
+        )
+
+        updatedTask.deadlines = isWithinDeadline
+          ? Deadlines.DENTRO_DO_PRAZO
+          : Deadlines.FORA_DO_PRAZO
       }
 
       const updatedTasks = {
