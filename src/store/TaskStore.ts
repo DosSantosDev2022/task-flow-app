@@ -20,24 +20,17 @@ export interface TaskData {
 
 interface TaskStore {
   tasks: Record<string, Task>
+  pendingChangesCount: number
   updateTask: (taskId: string, taskData: Partial<Task>) => void
   saveAllChanges: (projectId: string) => Promise<void>
-}
-
-// Função para carregar o estado inicial do localStorage
-const loadTasksFromLocalStorage = (): Record<string, Task> => {
-  const savedTasks = localStorage.getItem('tasks')
-  return savedTasks ? JSON.parse(savedTasks) : {}
-}
-
-// Função para salvar o estado no localStorage
-const saveTasksToLocalStorage = (tasks: Record<string, Task>) => {
-  localStorage.setItem('tasks', JSON.stringify(tasks))
+  clearPendingChanges: () => void // Limpa o contador após salvar
 }
 
 // Cria o Zustand store
 export const useTaskStore = create<TaskStore>((set) => ({
-  tasks: loadTasksFromLocalStorage(),
+  tasks: {},
+  pendingChangesCount: 0,
+
   updateTask: (taskId, taskData) => {
     set((state) => {
       const updatedTask = {
@@ -67,10 +60,13 @@ export const useTaskStore = create<TaskStore>((set) => ({
         [taskId]: updatedTask,
       }
 
-      saveTasksToLocalStorage(updatedTasks) // Atualiza o localStorage
-      return { tasks: updatedTasks }
+      return {
+        tasks: updatedTasks,
+        pendingChangesCount: state.pendingChangesCount + 1,
+      }
     })
   },
+
   saveAllChanges: async (projectId) => {
     const state = useTaskStore.getState()
     const tasksToUpdate = Object.values(state.tasks)
@@ -78,21 +74,15 @@ export const useTaskStore = create<TaskStore>((set) => ({
     try {
       // Envia as tasks atualizadas para o backend
       await updateTasksAction(tasksToUpdate)
+      // Revalida o caminho e atualiza a interface
       revalidatePath(`/tasks?projectId=${projectId}`)
+      // Atualiza o estado após o salvamento bem-sucedido
 
-      // Limpa o localStorage e o estado local após salvar
-      localStorage.removeItem('tasks')
-      set({ tasks: {} })
+      set({ pendingChangesCount: 0 }) // limpa o contador após salvar
     } catch (error) {
       console.error('Failed to save task updates:', error)
     }
   },
-}))
 
-// Carregar o estado do localStorage após a inicialização do Zustand
-if (typeof window !== 'undefined') {
-  const savedTasks = loadTasksFromLocalStorage()
-  if (Object.keys(savedTasks).length > 0) {
-    useTaskStore.setState({ tasks: savedTasks })
-  }
-}
+  clearPendingChanges: () => set({ pendingChangesCount: 0 }),
+}))

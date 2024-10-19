@@ -4,7 +4,7 @@ import { ProjectList } from '@/components/pages/tasks/ProjectList'
 import { Tasks } from '@/components/pages/tasks/tasks'
 import { getProjects } from '@/utils/getProjects'
 import { getServerSession } from 'next-auth'
-import { notFound } from 'next/navigation'
+import Loading from './loading'
 
 export default async function TasksPage({
   searchParams,
@@ -25,11 +25,15 @@ export default async function TasksPage({
     sortBy: 'createdAt',
   })
 
+  if (!projects) {
+    return <Loading />
+  }
+
   let selectedProject = null
   if (projectId) {
     selectedProject = projects.find((project) => project.id === projectId)
     if (!selectedProject) {
-      notFound()
+      return <Loading />
     }
   }
 

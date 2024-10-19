@@ -30,9 +30,16 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all')
   const [isLoading, setIsLoading] = useState(false)
   const { showNotification } = useNotification()
-  const { tasks, updateTask, saveAllChanges } = useTaskStore() // Mudança para tasks e updateTask do Zustand
+  const {
+    tasks,
+    updateTask,
+    saveAllChanges,
+    pendingChangesCount,
+    clearPendingChanges,
+  } = useTaskStore()
+  console.log('alterações pendentes:', pendingChangesCount)
 
-  // Sincroniza as tasks com o Zustand, caso elas não estejam no store
+  // Sincroniza as tasks com o Zustand, adicionando tarefas iniciais
   useEffect(() => {
     initialTasks.forEach((task) => {
       if (!tasks[task.id]) {
@@ -72,6 +79,7 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
       setIsLoading(true)
       await saveAllChanges(projectId) // Salva todas as alterações via Zustand
       showNotification('Informações atualizadas', 'success')
+      clearPendingChanges()
     } catch (error) {
       console.error('Error saving changes:', error)
       showNotification('Erro ao salvar alterações', 'error')
@@ -101,7 +109,7 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
               sizes="full"
               key={status.value}
               onClick={() => handleFilterClick(status.value)}
-              className={`hover:text-accent lg:px-2  lg:py-3 px-1.5 py-2 text-xs font-semibold whitespace-nowrap border-none${
+              className={`hover:text-accent lg:px-2 lg:py-3 px-1.5 py-2 text-xs font-semibold whitespace-nowrap border-none ${
                 activeFilter === status.value ? ' text-accent bg-neutral' : ''
               }`}
             >
@@ -110,7 +118,7 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
           ))}
 
           <Button
-            className="hidden lg:flex"
+            className="hidden lg:flex relative"
             effects="scale"
             variant="highlight"
             isLoading={isLoading}
@@ -123,6 +131,11 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
                 <MdSaveAlt size={16} />
                 Salvar
               </span>
+            )}
+            {pendingChangesCount > 0 && (
+              <div className="absolute -top-2 animate-pulse -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+                {pendingChangesCount}
+              </div>
             )}
           </Button>
           {/* Botão flutuante mobile */}
