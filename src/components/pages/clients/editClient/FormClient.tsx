@@ -11,26 +11,10 @@ import {
 } from '@/@types/ZodSchemas/FormSchemaClients'
 import { useNotification } from '@/contexts/NotificationContext'
 import { updateClientAction } from '@/app/actions/client/update'
-import { ClientData } from '@/utils/getClients'
+import { useGetCities } from '@/hooks/useGetCities/useGetCities'
+import { useGetStates } from '@/hooks/useGetStates/useGetStates'
+import { ClientData } from '@/@types/client'
 
-const cities = [
-  {
-    label: 'São Paulo',
-    value: 'SÃO PAULO',
-  },
-  {
-    label: 'Jundiaí',
-    value: 'JUNDIAÍ',
-  },
-  {
-    label: 'Itupeva',
-    value: 'ITUPEVA',
-  },
-  {
-    label: 'Sorocaba',
-    value: 'SOROCABA',
-  },
-]
 const countrys = [
   {
     label: 'Brasil',
@@ -45,20 +29,6 @@ const countrys = [
     value: 'ARGENTINA',
   },
 ]
-const states = [
-  {
-    label: 'SP',
-    value: 'SP',
-  },
-  {
-    label: 'MG',
-    value: 'MG',
-  },
-  {
-    label: 'TO',
-    value: 'TO',
-  },
-]
 
 interface ClientEditModalProps {
   client: ClientData
@@ -67,6 +37,11 @@ interface ClientEditModalProps {
 
 export function FormClient({ client, closeModal }: ClientEditModalProps) {
   const { showNotification } = useNotification()
+  const { states } = useGetStates()
+  const [selectedState, setSelectedState] = useState('')
+  const { cities, isLoading: isLoadingCities } = useGetCities({
+    uf: selectedState,
+  })
   const [isLoading, setIsLoading] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const {
@@ -79,7 +54,6 @@ export function FormClient({ client, closeModal }: ClientEditModalProps) {
     defaultValues: {
       name: client.name || '',
       email: client.email || '',
-      userId: client.userId || '',
       id: client.id,
       phone: client.phone || '',
       address: client.address || '',
@@ -115,6 +89,10 @@ export function FormClient({ client, closeModal }: ClientEditModalProps) {
   const handleCancelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault() // Impede o comportamento de submit
     setIsEditing(false)
+  }
+
+  const handleStateChange = (value: string) => {
+    setSelectedState(value)
   }
 
   return (
@@ -225,20 +203,21 @@ export function FormClient({ client, closeModal }: ClientEditModalProps) {
                 control={control}
                 error={errors.country}
               />
-
-              <SelectField
-                label="Cidade"
-                options={cities}
-                control={control}
-                name="city"
-                error={errors.city}
-              />
               <SelectField
                 label="Estados"
                 options={states}
                 control={control}
                 name="state"
                 error={errors.state}
+                onValueChange={handleStateChange}
+              />
+              <SelectField
+                label="Cidade"
+                options={cities}
+                control={control}
+                name="city"
+                error={errors.city}
+                disabled={!selectedState || isLoadingCities}
               />
             </div>
           )}

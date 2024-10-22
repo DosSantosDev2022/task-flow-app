@@ -12,6 +12,8 @@ export function FiltersClient() {
   const pathname = usePathname()
   const { replace } = useRouter()
 
+  const stateParams = searchParams.get('state') || ''
+
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const params = new URLSearchParams(searchParams)
     const searchString = event.currentTarget.value
@@ -39,7 +41,7 @@ export function FiltersClient() {
       {/* Filtro por status */}
       <FilterByState />
       {/* Filtro por prioridades  */}
-      <FilterByCity />
+      <FilterByCity stateParams={stateParams} />
     </div>
   )
 }

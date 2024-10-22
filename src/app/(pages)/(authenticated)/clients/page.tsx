@@ -17,6 +17,8 @@ import { FaLocationDot, FaMapLocation } from 'react-icons/fa6'
 import { Actions } from '@/components/pages/clients/tableActions/Actions'
 import { LuRedoDot } from 'react-icons/lu'
 import { ClientData } from '@/@types/client'
+import { ptBR } from 'date-fns/locale'
+import { format } from 'date-fns'
 
 interface ClientsSearchParams {
   searchParams: {
@@ -35,10 +37,11 @@ const headers = [
   { label: 'E-mail', icon: <MdAttachEmail size={12} /> },
   { label: 'Contato', icon: <FaPhone size={12} /> },
   { label: 'Endereço', icon: <FaLocationDot size={12} /> },
-  { label: 'Cidade', icon: <FaCity size={12} /> },
-  { label: 'Estado', icon: <FaMapLocation size={12} /> },
-  { label: 'CEP', icon: <MdMyLocation size={12} /> },
   { label: 'País', icon: <FaMap size={12} /> },
+  { label: 'Estado', icon: <FaMapLocation size={12} /> },
+  { label: 'Cidade', icon: <FaCity size={12} /> },
+  { label: 'CEP', icon: <MdMyLocation size={12} /> },
+
   {
     label: 'Criado',
     icon: <BsCalendar2DateFill size={12} />,
@@ -122,12 +125,15 @@ export default async function ClientsPage({
                   <TableCell className="max-w-[210px] ">
                     {client.address}
                   </TableCell>
-                  <TableCell>{client.city}</TableCell>
-                  <TableCell>{client.state}</TableCell>
-                  <TableCell>{client.postalCode}</TableCell>
                   <TableCell>{client.country}</TableCell>
+                  <TableCell>{client.state}</TableCell>
+                  <TableCell>{client.city}</TableCell>
+                  <TableCell>{client.postalCode}</TableCell>
+
                   <TableCell>
-                    {new Date(client.createdAt).toLocaleDateString()}
+                    {format(new Date(client.createdAt), 'dd/MM/yyyy', {
+                      locale: ptBR,
+                    })}
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-1">
                     <Actions client={client} />

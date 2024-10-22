@@ -6,32 +6,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/global/popover'
+import { useGetStates } from '@/hooks/useGetStates/useGetStates'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { IoCheckmarkSharp, IoFilterCircle } from 'react-icons/io5'
 import { LuX } from 'react-icons/lu'
 
-const status = [
-  {
-    id: 'check01',
-    label: 'TODOS',
-  },
-  {
-    id: 'check02',
-    label: 'SP',
-  },
-  {
-    id: 'check03',
-    label: 'TO',
-  },
-]
-
 interface InputSearchParams {
   search: string
 }
 
 export function FilterByState() {
+  const { states } = useGetStates()
   const { register, watch } = useForm<InputSearchParams>()
   const searchTerm = watch('search', '')
   const [filterStatus, setFilterStatus] = useState<string[]>([])
@@ -40,14 +27,14 @@ export function FilterByState() {
   const { replace } = useRouter()
 
   const filteredState = useMemo(() => {
-    if (status.length > 0) {
-      return status.filter((status) =>
-        status.label.toLowerCase().includes(searchTerm),
+    if (states.length > 0) {
+      return states.filter((state) =>
+        state.label.toLowerCase().includes(searchTerm),
       )
     }
 
     return []
-  }, [searchTerm])
+  }, [searchTerm, states])
 
   useEffect(() => {
     // Obtendo o status selecionado dos parâmetros da URL
@@ -104,7 +91,7 @@ export function FilterByState() {
               />
             </Input.Root>
           </div>
-          <div className="flex flex-col gap-2 mt-4">
+          <div className="flex flex-col gap-2 mt-4 max-h-[350px] overflow-y-auto custom-scrollbar">
             <ul className="space-y-3">
               {filteredState.map((status, index) => (
                 <li
@@ -116,10 +103,10 @@ export function FilterByState() {
                     className="peer relative h-5 w-5 shrink-0 appearance-none border cursor-pointer border-secondary/30
                      rounded-md duration-300  bg-light checked:bg-accent 
                      hover:ring-1 hover:ring-accent/50 focus:outline-none"
-                    id={status.id}
-                    value={status.label}
+                    id={status.value}
+                    value={status.value}
                     onChange={handleStatusChange}
-                    checked={filterStatus.includes(status.label)}
+                    checked={filterStatus.includes(status.value)}
                   />
                   <span
                     className="absolute left-[2px] top-[2px] text-neutral opacity-0 
@@ -128,7 +115,7 @@ export function FilterByState() {
                     <IoCheckmarkSharp size={16} />
                   </span>
                   <label
-                    htmlFor={status.id}
+                    htmlFor={status.value}
                     className="text-sm text-secondary/50 ms-3 "
                   >
                     {status.label}

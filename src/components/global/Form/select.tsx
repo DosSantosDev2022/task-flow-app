@@ -10,19 +10,25 @@ const SelectValue = SelectPrimitive.Value
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+    isOpen?: boolean
+  }
+>(({ className, children, isOpen, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={twMerge(
-      'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-zinc-200 bg-transparent px-3 py-2 text-sm shadow-sm  placeholder:text-zinc-600 focus:outline-none focus:ring-2 ring-zinc-400 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+      'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-secondary/20 bg-transparent px-3 py-2 text-sm shadow-sm  placeholder:text-neutral focus:outline-none focus:ring-2 ring-accent focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
       className,
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <LuChevronDown className="h-4 w-4 opacity-50" />
+      <LuChevronDown
+        className={`h-4 w-4 opacity-50 transition-transform duration-300 ${
+          isOpen ? 'rotate-180' : 'rotate-0'
+        }`}
+      />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ))
@@ -36,7 +42,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={twMerge(
-        'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-zinc-50   text-zinc-600 shadow-md',
+        'relative z-50 max-h-96 w-full overflow-hidden rounded-md border bg-zinc-50   text-zinc-600 shadow-md',
         position === 'popper' &&
           'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
         className,
@@ -48,7 +54,7 @@ const SelectContent = React.forwardRef<
         className={twMerge(
           'p-1',
           position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
+            'h-[var(--radix-select-trigger-height)] w-full',
         )}
       >
         {children}

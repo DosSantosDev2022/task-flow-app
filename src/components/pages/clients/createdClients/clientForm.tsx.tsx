@@ -11,29 +11,14 @@ import { createClientAction } from '@/app/actions/client/create'
 import { useNotification } from '@/contexts/NotificationContext'
 import { FormField } from '@/components/global/Form/FormField'
 import { SelectField } from '@/components/global/Form/SelectField'
+import { useGetStates } from '@/hooks/useGetStates/useGetStates'
+import { useGetCities } from '@/hooks/useGetCities/useGetCities'
+import { useState } from 'react'
 
 interface ClientFormProps {
   closeModal: () => void
 }
 
-const cities = [
-  {
-    label: 'São Paulo',
-    value: 'SÃO PAULO',
-  },
-  {
-    label: 'Jundiaí',
-    value: 'JUNDIAÍ',
-  },
-  {
-    label: 'Itupeva',
-    value: 'ITUPEVA',
-  },
-  {
-    label: 'Sorocaba',
-    value: 'SOROCABA',
-  },
-]
 const countrys = [
   {
     label: 'Brasil',
@@ -48,24 +33,14 @@ const countrys = [
     value: 'ARGENTINA',
   },
 ]
-const states = [
-  {
-    label: 'SP',
-    value: 'SP',
-  },
-  {
-    label: 'MG',
-    value: 'MG',
-  },
-  {
-    label: 'TO',
-    value: 'TO',
-  },
-]
 
 export function ClientForm({ closeModal }: ClientFormProps) {
   const { showNotification } = useNotification()
-
+  const { states, isLoading: isLoadingStates } = useGetStates()
+  const [selectedState, setSelectedState] = useState('')
+  const { cities, isLoading: isLoadingCities } = useGetCities({
+    uf: selectedState,
+  })
   const {
     control,
     register,
@@ -85,6 +60,10 @@ export function ClientForm({ closeModal }: ClientFormProps) {
       console.error('Erro ao cadastrar cliente, verifique:', error)
       showNotification('Erro ao cadastrar cliente', 'error')
     }
+  }
+
+  const handleStateChange = (value: string) => {
+    setSelectedState(value)
   }
 
   return (
@@ -140,18 +119,26 @@ export function ClientForm({ closeModal }: ClientFormProps) {
           />
 
           <SelectField
-            label="Cidade"
-            options={cities}
-            control={control}
-            name="city"
-            error={errors.city}
-          />
-          <SelectField
             label="Estados"
-            options={states}
+            options={
+              isLoadingStates
+                ? [{ label: 'Carregando...', value: 'Carregando...' }]
+                : states
+            }
             control={control}
             name="state"
             error={errors.state}
+            onValueChange={handleStateChange}
+          />
+
+          <SelectField
+            label="Cidade"
+            options={cities}
+            placeholder={isLoadingCities ? 'Carregando...' : 'Selecione'}
+            control={control}
+            name="city"
+            error={errors.city}
+            disabled={!selectedState || isLoadingCities}
           />
         </div>
 
