@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSession } from 'next-auth/react'
 import { useNotification } from '@/contexts/NotificationContext'
 import { Button } from '@/components/global/button'
 import { FormField } from '@/components/global/Form/FormField'
@@ -15,8 +14,8 @@ import {
 } from '@/@types/ZodSchemas/FormSchemaProject'
 import { TextAreaField } from '@/components/global/Form/TextAreaField'
 import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
-import { useFetchClient } from '@/hooks/useFetchClient/useFetchClient'
 import { getFixedData } from '@/utils/getFixedDataProjects'
+import { useGetClients } from '@/hooks/fetchClient/useGetClients'
 
 interface ProjectCreationFormProps {
   closeModal: () => void
@@ -24,7 +23,6 @@ interface ProjectCreationFormProps {
 
 export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   const {
-    setValue,
     control,
     register,
     handleSubmit,
@@ -32,19 +30,11 @@ export function ProjectCreationForm({ closeModal }: ProjectCreationFormProps) {
   } = useForm<FormDataProject>({
     resolver: zodResolver(FormSchema),
   })
-  const { data } = useSession()
-  const session = data
+
   const [isLoading, setIsLoading] = useState(false)
-  const { clientOptions } = useFetchClient({ session })
+  const { clientOptions } = useGetClients()
   const { payments, priorities } = getFixedData()
   const { showNotification } = useNotification()
-  console.log('clientes', clientOptions)
-  useEffect(() => {
-    if (session) {
-      setValue('userId', session.user.id)
-      setValue('status', 'PENDENTES')
-    }
-  }, [session, setValue])
 
   const onSubmitAction: SubmitHandler<FormDataProject> = async (formData) => {
     try {

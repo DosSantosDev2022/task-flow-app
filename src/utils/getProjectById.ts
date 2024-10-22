@@ -1,11 +1,11 @@
 import { FormDataProject } from '@/@types/ZodSchemas/FormSchemaProject'
-import { Session } from 'next-auth'
+import { getSession } from 'next-auth/react'
 
 export async function getProjectById(
   id: string,
-  session: Session | null,
 ): Promise<FormDataProject | null> {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL
+  const session = await getSession()
 
   try {
     const res = await fetch(`${baseUrl}/api/projects/${id}`, {

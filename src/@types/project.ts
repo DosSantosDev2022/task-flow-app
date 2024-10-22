@@ -1,10 +1,8 @@
 import { Project, Client, Task } from '@prisma/client'
-import { Session } from 'next-auth'
 
 export interface getProjectsParams {
   page?: number
   limit?: number
-  session?: Session | null
   search?: string
   priority?: string
   status?: string

@@ -7,8 +7,6 @@ import {
   Table,
 } from '@/components/global/table'
 import { FiltersClient } from '@/components/pages/clients/filters/FilterClient'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { getServerSession } from 'next-auth'
 import { ClientModal } from '@/components/pages/clients/createdClients/clientModal'
 import { getClients } from '@/utils/getClients'
 import { Pagination } from '@/components/global/pagination/pagination'
@@ -56,7 +54,6 @@ const headers = [
 export default async function ClientsPage({
   searchParams,
 }: ClientsSearchParams) {
-  const session = await getServerSession(authOptions)
   const page = Number(searchParams.page) || 1
   const limit = Number(searchParams.limit) || 10
   const search = searchParams.search || ''
@@ -68,7 +65,6 @@ export default async function ClientsPage({
   /* Função para busca de clients */
   const { clients, totalClients } = await getClients({
     search,
-    session,
     page,
     limit,
     sort,

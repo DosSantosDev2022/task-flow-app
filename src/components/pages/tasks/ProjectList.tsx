@@ -35,7 +35,7 @@ export function ProjectList({ projects }: ProjectListProps) {
   }
 
   return (
-    <div className="col-span-1 md:col-span-3 px-2 py-3 border rounded-md shadow-sm h-full">
+    <div className="col-span-1 md:col-span-3 px-2 py-3 border rounded-md shadow-sm max-h-[620px] custom-scrollbar">
       <div className=" px-2 py-3">
         <Input.Root className="rounded-xl">
           <Input.Icon>
@@ -49,7 +49,7 @@ export function ProjectList({ projects }: ProjectListProps) {
         </Input.Root>
       </div>
 
-      <div className="flex flex-col gap-1 mt-2 overflow-y-auto max-h-80vh scrollbar-thin scrollbar-track-neutral scrollbar-thumb-accent p-2">
+      <div className="flex flex-col gap-1 mt-2 overflow-y-auto max-h-80vh custom-scrollbar p-2">
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
             <div

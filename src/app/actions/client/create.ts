@@ -5,16 +5,27 @@ import {
   FormSchema,
 } from '@/@types/ZodSchemas/FormSchemaClients'
 import { revalidatePath } from 'next/cache'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 export async function createClientAction(dataClient: FormDataClient) {
   try {
+    // Obter a sessão diretamente no server
+    const session = await getServerSession(authOptions)
+
+    if (!session || !session.user || !session.user.id) {
+      throw new Error('Usuário não autenticado')
+    }
+
+    const userId = session.user.id
+
     // Validação do esquema
     const validatedData = FormSchema.parse(dataClient)
 
     // Criar o projeto no banco de dados
     const client = await prisma.client.create({
       data: {
-        userId: validatedData.userId,
+        userId,
         name: validatedData.name,
         email: validatedData.email,
         phone: validatedData.phone,

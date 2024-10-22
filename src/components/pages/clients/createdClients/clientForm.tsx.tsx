@@ -9,8 +9,6 @@ import {
 } from '@/@types/ZodSchemas/FormSchemaClients'
 import { createClientAction } from '@/app/actions/client/create'
 import { useNotification } from '@/contexts/NotificationContext'
-import { useEffect } from 'react'
-import { useSession } from 'next-auth/react'
 import { FormField } from '@/components/global/Form/FormField'
 import { SelectField } from '@/components/global/Form/SelectField'
 
@@ -67,22 +65,15 @@ const states = [
 
 export function ClientForm({ closeModal }: ClientFormProps) {
   const { showNotification } = useNotification()
-  const session = useSession()
+
   const {
     control,
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<FormDataClient>({
     resolver: zodResolver(FormSchema),
   })
-
-  useEffect(() => {
-    if (session) {
-      setValue('userId', session.data?.user.id || '')
-    }
-  }, [session, setValue])
 
   const onSubmit: SubmitHandler<FormDataClient> = async (formData) => {
     try {

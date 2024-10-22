@@ -1,27 +1,23 @@
 import { TaskResponse } from '@/@types/task'
-import { Session } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { getServerSession } from 'next-auth'
 
-interface getTasksProps {
-  session: Session | null
-}
-
-export async function getTasks({
-  session,
-}: getTasksProps): Promise<TaskResponse> {
+export async function getTasks(): Promise<TaskResponse> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || ''
+    const session = await getServerSession(authOptions)
 
     const response = await fetch(`${baseUrl}/api/tasks`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.user.id ?? ''}`,
+        Authorization: `Bearer ${session?.user.id ?? ''}`, // Use o id do usuário da sessão
       },
     })
 
     if (!response.ok) {
       throw new Error(
-        `Erro ao buscar clientes: ${response.status} ${response.statusText}`,
+        `Erro ao buscar tarefas: ${response.status} ${response.statusText}`,
       )
     }
 
@@ -29,7 +25,7 @@ export async function getTasks({
 
     return tasks
   } catch (error) {
-    console.error('Erro ao buscar clientes:', error)
+    console.error('Erro ao buscar tarefas:', error)
     return { tasks: [] }
   }
 }

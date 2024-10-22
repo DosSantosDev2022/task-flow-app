@@ -1,9 +1,10 @@
 import { ClientsResponse, getClientParams } from '@/@types/client'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { getServerSession } from 'next-auth'
 
 export async function getClients({
   page = 1,
   limit = 10,
-  session,
   search = '',
   sort = '',
   sortBy = 'createdAt',
@@ -12,7 +13,7 @@ export async function getClients({
 }: getClientParams): Promise<ClientsResponse> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || ''
-
+    const session = await getServerSession(authOptions)
     // Construa a URL de consulta dinamicamente
     const queryParams = new URLSearchParams({
       search: search ?? '',

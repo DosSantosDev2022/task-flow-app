@@ -9,8 +9,6 @@ import {
 import { FilterProjects } from '@/components/pages/projects/filters'
 import { ProjectCreationModal } from '@/components/pages/projects/createdProject/ProjectModal'
 import { Pagination } from '@/components/global/pagination/pagination'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { Actions } from '@/components/pages/projects/tableActions/actions'
 import { ProgressBar } from '@/components/global/progressBar'
 import { MdOutlineTitle, MdPriorityHigh } from 'react-icons/md'
@@ -61,7 +59,6 @@ interface ProjectSearchParams {
 }
 
 export default async function Projects({ searchParams }: ProjectSearchParams) {
-  const session = await getServerSession(authOptions)
   const page = Number(searchParams.page) || 1
   const limit = Number(searchParams.limit) || 10
   const search = searchParams.search || ''
@@ -73,7 +70,6 @@ export default async function Projects({ searchParams }: ProjectSearchParams) {
   const { projects, totalProjects } = await getProjects({
     page,
     limit,
-    session,
     search,
     priority,
     status,

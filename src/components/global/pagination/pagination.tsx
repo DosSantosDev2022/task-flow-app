@@ -13,6 +13,20 @@ interface PaginationProps {
   queryParams?: Record<string, string | number>
 }
 
+// Função para construir a URL
+const buildUrl = (
+  baseUrl: string,
+  pageNumber: number | string,
+  queryParams: Record<string, string | number>,
+) => {
+  const url = new URL(baseUrl, window.location.origin)
+  url.searchParams.set('page', pageNumber.toString())
+  Object.entries(queryParams).forEach(([key, value]) => {
+    url.searchParams.set(key, value.toString())
+  })
+  return url.toString()
+}
+
 export function Pagination({
   page,
   limit,
@@ -28,15 +42,6 @@ export function Pagination({
 
   const isFirstPage = page === 1
   const isLastPage = page === Math.ceil(total / limit)
-
-  const buildUrl = (pageNumber: number | string) => {
-    const url = new URL(baseUrl, window.location.origin)
-    url.searchParams.set('page', pageNumber.toString())
-    Object.entries(queryParams).forEach(([key, value]) => {
-      url.searchParams.set(key, value.toString())
-    })
-    return url.toString()
-  }
 
   return (
     <div className="flex w-full items-center justify-between text-primary">
@@ -54,7 +59,7 @@ export function Pagination({
           page={page}
           isFirstPage={isFirstPage}
           isLastPage={isLastPage}
-          buildUrl={buildUrl}
+          buildUrl={(pageNumber) => buildUrl(baseUrl, pageNumber, queryParams)} // Passa baseUrl e queryParams
         />
       </div>
     </div>

@@ -1,12 +1,10 @@
 import { ClientData } from '@/@types/client'
-import { Session } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { getServerSession } from 'next-auth'
 
-export async function getClientById(
-  id: string,
-  session: Session | null,
-): Promise<ClientData | null> {
+export async function getClientById(id: string): Promise<ClientData | null> {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL
-
+  const session = await getServerSession(authOptions)
   try {
     const res = await fetch(`${baseUrl}/api/clients/${id}`, {
       method: 'GET',

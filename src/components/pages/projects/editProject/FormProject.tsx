@@ -17,9 +17,8 @@ import { LuCalendarDays } from 'react-icons/lu'
 import { format } from 'date-fns'
 import { useNotification } from '@/contexts/NotificationContext'
 import { getFixedData } from '@/utils/getFixedDataProjects'
-import { useSession } from 'next-auth/react'
 import { Typograph } from '@/components/global/typograph '
-import { useFetchClient } from '@/hooks/useFetchClient/useFetchClient'
+import { useGetClients } from '@/hooks/fetchClient/useGetClients'
 import { ProjectData } from '@/@types/project'
 
 // Lazy load do React Quill para evitar problemas de SSR (Server Side Rendering)
@@ -31,12 +30,11 @@ interface ProjectEditModalProps {
 }
 
 export function FormProject({ project, closeModal }: ProjectEditModalProps) {
-  const { data: session } = useSession()
   const { payments, priorities } = getFixedData()
   const { showNotification } = useNotification()
   const [isLoading, setIsLoading] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const { clientOptions } = useFetchClient({ session })
+  const { clientOptions } = useGetClients()
 
   const {
     control,

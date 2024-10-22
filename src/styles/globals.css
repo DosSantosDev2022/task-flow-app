@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+.custom-scrollbar {
+  @apply overflow-auto scrollbar-thin scrollbar-track-light scrollbar-thumb-accent;
+}

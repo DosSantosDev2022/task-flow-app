@@ -6,19 +6,21 @@ import {
   ProjectData,
   ProjectsResponse,
 } from '@/@types/project'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 export async function getProjects({
   page = 1,
   limit = 10,
-  session = null,
   search = '',
   priority = '',
   status = '',
   sort = '',
-  sortBy = '',
+  sortBy = 'createdAt',
 }: getProjectsParams): Promise<ProjectsResponse> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL
+    const session = await getServerSession(authOptions)
 
     // Construa a URL de consulta dinamicamente
     const queryParams = new URLSearchParams({
