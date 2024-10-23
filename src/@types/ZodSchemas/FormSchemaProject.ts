@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 const paymentSchema = ['DINHEIRO', 'CREDITO', 'DEBITO', 'PIX'] as const
-const statusSchema = ['TODOS', 'FINALIZADOS', 'PENDENTES'] as const
+const statusSchema = ['TODOS', 'FINALIZADO', 'PENDENTE'] as const
 const prioritySchema = ['BAIXA', 'MEDIA', 'ALTA'] as const
 
 const ClientSchema = z.object({

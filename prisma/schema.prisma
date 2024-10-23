@@ -90,7 +90,7 @@ model Project {
   deadlines   Deadlines       @default(DENTRO_DO_PRAZO)
   price       Decimal         @db.Decimal(10, 2)
   payment     Payment
-  status      ProjectStatus   @default(PENDENTES)
+  status      ProjectStatus   @default(PENDENTE)
   priority    ProjectPriority
   tasks       Task[]
   user        User            @relation(fields: [userId], references: [id])
@@ -142,8 +142,8 @@ enum TaskStatus {
 
 enum ProjectStatus {
   TODOS
-  PENDENTES
-  FINALIZADOS
+  PENDENTE
+  CONCLUIDO
 }
 
 enum ProjectPriority {

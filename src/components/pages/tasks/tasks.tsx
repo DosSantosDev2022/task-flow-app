@@ -8,7 +8,7 @@ import { useTaskStore } from '@/store/TaskStore'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useNotification } from '@/contexts/NotificationContext'
-import { LoadingOverlay } from '../../global/loading/LoadingOverlaySaveTasks'
+import { LoadingOverlay } from '../../global/loading/LoadingOverlay'
 import { MdSaveAlt } from 'react-icons/md'
 import { TaskAddForm } from './modal/TaskAddForm'
 
@@ -28,7 +28,8 @@ const statusOptions: { label: string; value: FilterType }[] = [
 export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
   const [filterTasks, setFilterTasks] = useState<FilterType>('all')
   const [activeFilter, setActiveFilter] = useState<FilterType>('all')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [saveIsLoading, setSaveIsloading] = useState(false)
   const { showNotification } = useNotification()
   const {
     tasks,
@@ -37,15 +38,16 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
     pendingChangesCount,
     clearPendingChanges,
   } = useTaskStore()
-  console.log('alterações pendentes:', pendingChangesCount)
 
-  // Sincroniza as tasks com o Zustand, adicionando tarefas iniciais
   useEffect(() => {
-    initialTasks.forEach((task) => {
-      if (!tasks[task.id]) {
-        updateTask(task.id, task) // Atualiza o Zustand com a task completa
-      }
-    })
+    if (initialTasks.length > 0) {
+      initialTasks.forEach((task) => {
+        if (!tasks[task.id]) {
+          updateTask(task.id, task) // Atualiza o Zustand com a task completa
+        }
+      })
+      setIsLoading(false) // Desativa o loading após a sincronização
+    }
   }, [initialTasks, tasks, updateTask])
 
   // Função de filtragem atualizada para tasks completas
@@ -76,7 +78,7 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
 
   const handleSaveChanges = async () => {
     try {
-      setIsLoading(true)
+      setSaveIsloading(true)
       await saveAllChanges(projectId) // Salva todas as alterações via Zustand
       showNotification('Informações atualizadas', 'success')
       clearPendingChanges()
@@ -84,7 +86,7 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
       console.error('Error saving changes:', error)
       showNotification('Erro ao salvar alterações', 'error')
     } finally {
-      setIsLoading(false)
+      setSaveIsloading(false)
     }
   }
 
@@ -95,10 +97,14 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
     [updateTask],
   )
 
+  // Renderiza um loading enquanto o Zustand sincroniza as tasks
+  if (isLoading) {
+    return <LoadingOverlay label="Carregando..." />
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
-      {/* Loading overlay */}
-      {isLoading && <LoadingOverlay label="Salvando..." />}
+      {saveIsLoading && <LoadingOverlay label="Salvando..." />}
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 px-2 py-4">
         <TaskAddForm projectId={projectId} onAddTask={handleAddTask} />
@@ -138,7 +144,6 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
               </div>
             )}
           </Button>
-          {/* Botão flutuante mobile */}
           <div className="lg:hidden fixed bottom-4 right-4 z-50">
             <Button
               className="w-[50px] h-[50px] rounded-full shadow-lg flex items-center justify-center"

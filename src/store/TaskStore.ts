@@ -3,6 +3,7 @@ import { Deadlines, Task } from '@prisma/client'
 import { isAfter } from 'date-fns'
 import { revalidatePath } from 'next/cache'
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 export type TaskStatus = 'A_FAZER' | 'EM_ANDAMENTO' | 'CONCLUIDO'
 
@@ -26,63 +27,79 @@ interface TaskStore {
   clearPendingChanges: () => void // Limpa o contador após salvar
 }
 
-// Cria o Zustand store
-export const useTaskStore = create<TaskStore>((set) => ({
-  tasks: {},
-  pendingChangesCount: 0,
+// Cria o Zustand store com persistência
+export const useTaskStore = create<TaskStore>()(
+  persist(
+    (set) => ({
+      tasks: {},
+      pendingChangesCount: 0,
 
-  updateTask: (taskId, taskData) => {
-    set((state) => {
-      const updatedTask = {
-        ...state.tasks[taskId],
-        ...taskData, // Atualiza apenas os campos passados
-      }
+      updateTask: (taskId, taskData) => {
+        set((state) => {
+          const updatedTask = {
+            ...state.tasks[taskId],
+            ...taskData, // Atualiza apenas os campos passados
+          }
 
-      // Verifica se o status foi alterado para CONCLUIDO
-      if (taskData.status === 'CONCLUIDO') {
-        updatedTask.completedDate = new Date() // Define a data de conclusão
-      }
+          // Verifica se o status foi alterado para CONCLUIDO
+          if (taskData.status === 'CONCLUIDO') {
+            updatedTask.completedDate = new Date() // Define a data de conclusão
+          }
 
-      if (updatedTask.endDate) {
-        const endDate = new Date(updatedTask.endDate)
-        const isWithinDeadline = isAfter(
-          endDate,
-          updatedTask.completedDate || new Date(),
-        )
+          if (updatedTask.endDate) {
+            const endDate = new Date(updatedTask.endDate)
+            const isWithinDeadline = isAfter(
+              endDate,
+              updatedTask.completedDate || new Date(),
+            )
 
-        updatedTask.deadlines = isWithinDeadline
-          ? Deadlines.DENTRO_DO_PRAZO
-          : Deadlines.FORA_DO_PRAZO
-      }
+            updatedTask.deadlines = isWithinDeadline
+              ? Deadlines.DENTRO_DO_PRAZO
+              : Deadlines.FORA_DO_PRAZO
+          }
 
-      const updatedTasks = {
-        ...state.tasks,
-        [taskId]: updatedTask,
-      }
+          const updatedTasks = {
+            ...state.tasks,
+            [taskId]: updatedTask,
+          }
 
-      return {
-        tasks: updatedTasks,
-        pendingChangesCount: state.pendingChangesCount + 1,
-      }
-    })
-  },
+          return {
+            tasks: updatedTasks,
+            pendingChangesCount: state.pendingChangesCount + 1,
+          }
+        })
+      },
 
-  saveAllChanges: async (projectId) => {
-    const state = useTaskStore.getState()
-    const tasksToUpdate = Object.values(state.tasks)
+      saveAllChanges: async (projectId) => {
+        const state = useTaskStore.getState()
+        const tasksToUpdate = Object.values(state.tasks)
 
-    try {
-      // Envia as tasks atualizadas para o backend
-      await updateTasksAction(tasksToUpdate)
-      // Revalida o caminho e atualiza a interface
-      revalidatePath(`/tasks?projectId=${projectId}`)
-      // Atualiza o estado após o salvamento bem-sucedido
+        try {
+          if (tasksToUpdate.length === 0) {
+            return // Nenhuma tarefa foi modificada
+          }
 
-      set({ pendingChangesCount: 0 }) // limpa o contador após salvar
-    } catch (error) {
-      console.error('Failed to save task updates:', error)
-    }
-  },
+          // Envia as tasks atualizadas para o backend
+          await updateTasksAction(tasksToUpdate)
+          // Revalida o caminho e atualiza a interface
+          revalidatePath(`/tasks?projectId=${projectId}`)
+          // Atualiza o estado após o salvamento bem-sucedido
 
-  clearPendingChanges: () => set({ pendingChangesCount: 0 }),
-}))
+          // Limpa o estado das tasks e zera o contador
+          set({
+            tasks: {}, // Limpa as tasks
+            pendingChangesCount: 0, // Zera o contador de alterações
+          })
+        } catch (error) {
+          console.error('Failed to save task updates:', error)
+        }
+      },
+
+      clearPendingChanges: () => set({ pendingChangesCount: 0 }),
+    }),
+    {
+      name: 'task-store', // Nome da chave de armazenamento no localStorage
+      getStorage: () => localStorage, // Define o armazenamento como localStorage
+    },
+  ),
+)

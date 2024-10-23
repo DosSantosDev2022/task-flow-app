@@ -4,8 +4,8 @@ import { twMerge } from 'tailwind-merge'
 interface BadgeProps extends ComponentProps<'span'> {
   status:
     | 'TODOS'
-    | 'PENDENTES'
-    | 'FINALIZADOS'
+    | 'PENDENTE'
+    | 'FINALIZADO'
     | 'ALTA'
     | 'MEDIA'
     | 'BAIXA'
@@ -18,8 +18,8 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, status, ...props }, ref) => {
     const statusClasses = {
       TODOS: '',
-      PENDENTES: 'bg-red-500', // Define as cores para cada status
-      FINALIZADOS: 'bg-green-500',
+      PENDENTE: 'bg-red-500', // Define as cores para cada status
+      FINALIZADO: 'bg-green-500',
       ALTA: 'bg-red-500',
       MEDIA: 'bg-blue-500',
       BAIXA: 'bg-green-500',
@@ -33,8 +33,8 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       ALTA: 'Alta',
       BAIXA: 'Baixa',
       TODOS: 'Todos',
-      PENDENTES: 'Pendentes',
-      FINALIZADOS: 'Finalizados',
+      PENDENTE: 'Pendente',
+      FINALIZADO: 'Finalizado',
       A_FAZER: 'A fazer',
       EM_ANDAMENTO: 'Em andamento',
       CONCLUIDO: 'Concluído',
