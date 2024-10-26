@@ -48,7 +48,9 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
       })
       setIsLoading(false) // Desativa o loading após a sincronização
     }
-  }, [initialTasks, tasks, updateTask])
+    setFilterTasks('all')
+    setActiveFilter('all')
+  }, [clearPendingChanges, initialTasks, projectId, tasks, updateTask])
 
   // Função de filtragem atualizada para tasks completas
   const filteredTasks = (filter: FilterType, projectId: string) => {
@@ -80,6 +82,7 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
     try {
       setSaveIsloading(true)
       await saveAllChanges(projectId) // Salva todas as alterações via Zustand
+
       showNotification('Informações atualizadas', 'success')
       clearPendingChanges()
     } catch (error) {

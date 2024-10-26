@@ -1,7 +1,6 @@
 import { updateTasksAction } from '@/app/actions/tasks/updateTasks'
 import { Deadlines, Task } from '@prisma/client'
 import { isAfter } from 'date-fns'
-import { revalidatePath } from 'next/cache'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -70,7 +69,7 @@ export const useTaskStore = create<TaskStore>()(
         })
       },
 
-      saveAllChanges: async (projectId) => {
+      saveAllChanges: async () => {
         const state = useTaskStore.getState()
         const tasksToUpdate = Object.values(state.tasks)
 
@@ -81,15 +80,6 @@ export const useTaskStore = create<TaskStore>()(
 
           // Envia as tasks atualizadas para o backend
           await updateTasksAction(tasksToUpdate)
-          // Revalida o caminho e atualiza a interface
-          revalidatePath(`/tasks?projectId=${projectId}`)
-          // Atualiza o estado após o salvamento bem-sucedido
-
-          // Limpa o estado das tasks e zera o contador
-          set({
-            tasks: {}, // Limpa as tasks
-            pendingChangesCount: 0, // Zera o contador de alterações
-          })
         } catch (error) {
           console.error('Failed to save task updates:', error)
         }
