@@ -5,7 +5,26 @@ import { Task } from '@prisma/client'
 
 export async function updateTasksAction(tasksToUpdate: Task[]) {
   try {
-    const updatePromises = tasksToUpdate.map((task) =>
+    // Extraindo os IDs das tarefas que estamos tentando atualizar
+    const tasksIds = tasksToUpdate.map((task) => task.id)
+
+    // Buscando as tarefas que existem no banco de dados
+    const existingTasks = await prisma.task.findMany({
+      where: {
+        id: { in: tasksIds },
+      },
+    })
+
+    // Criando um conjunto para verificar a existência das tarefas
+    const existingTaskIds = new Set(existingTasks.map((task) => task.id))
+
+    // Filtrando apenas as tarefas que existem
+    const tasksToUpdateValid = tasksToUpdate.filter((task) =>
+      existingTaskIds.has(task.id),
+    )
+
+    // Atualizando apenas as tarefas que existem
+    const updatePromises = tasksToUpdateValid.map((task) =>
       prisma.task.update({
         where: { id: task.id },
         data: {
@@ -22,7 +41,6 @@ export async function updateTasksAction(tasksToUpdate: Task[]) {
       }),
     )
     await Promise.all(updatePromises)
-    console.log(updatePromises)
   } catch (error) {
     console.error('Erro ao alterar status das tarefas, verifique:', error)
     throw new Error('Erro ao alterar status das tarefas')
