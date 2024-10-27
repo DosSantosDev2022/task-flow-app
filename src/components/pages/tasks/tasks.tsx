@@ -11,6 +11,7 @@ import { useNotification } from '@/contexts/NotificationContext'
 import { LoadingOverlay } from '../../global/loading/LoadingOverlay'
 import { MdSaveAlt } from 'react-icons/md'
 import { TaskAddForm } from './modal/TaskAddForm'
+import { updateProjectStatus } from '@/app/actions/project/updateStatus'
 
 interface TasksProps {
   tasks: Task[]
@@ -82,7 +83,10 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
     try {
       setSaveIsloading(true)
       await saveAllChanges(projectId) // Salva todas as alterações via Zustand
-
+      await updateProjectStatus({
+        id: projectId,
+        newStatus: 'CONCLUIDO',
+      }) // Altera status do projeto para conluído
       showNotification('Informações atualizadas', 'success')
       clearPendingChanges()
     } catch (error) {

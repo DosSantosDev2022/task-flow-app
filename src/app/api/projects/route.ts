@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 // Definindo os possíveis valores para status e prioridade
-const VALID_STATUSES = ['PENDENTES', 'FINALIZADOS', 'TODOS']
+const VALID_STATUSES = ['PENDENTE', 'CONCLUIDO', 'ARQUIVADO', 'TODOS']
 const VALID_PRIORITIES = ['ALTA', 'MEDIA', 'BAIXA']
 
 export async function GET(req: NextRequest) {

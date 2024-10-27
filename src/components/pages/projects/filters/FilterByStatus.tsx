@@ -17,11 +17,15 @@ const status = [
   },
   {
     id: 'check02',
-    label: 'PENDENTES',
+    label: 'PENDENTE',
   },
   {
     id: 'check03',
-    label: 'FINALIZADOS',
+    label: 'CONCLUIDO',
+  },
+  {
+    id: 'check04',
+    label: 'ARQUIVADO',
   },
 ]
 

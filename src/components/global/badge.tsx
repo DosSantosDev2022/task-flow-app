@@ -6,6 +6,7 @@ interface BadgeProps extends ComponentProps<'span'> {
     | 'TODOS'
     | 'PENDENTE'
     | 'FINALIZADO'
+    | 'ARQUIVADO'
     | 'ALTA'
     | 'MEDIA'
     | 'BAIXA'
@@ -20,6 +21,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       TODOS: '',
       PENDENTE: 'bg-red-500', // Define as cores para cada status
       FINALIZADO: 'bg-green-500',
+      ARQUIVADO: 'bg-zinc-500',
       ALTA: 'bg-red-500',
       MEDIA: 'bg-blue-500',
       BAIXA: 'bg-green-500',
@@ -38,6 +40,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       A_FAZER: 'A fazer',
       EM_ANDAMENTO: 'Em andamento',
       CONCLUIDO: 'Concluído',
+      ARQUIVADO: 'Arquivado',
     }
 
     return (

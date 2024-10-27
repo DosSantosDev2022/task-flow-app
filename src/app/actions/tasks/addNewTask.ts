@@ -5,6 +5,7 @@ import {
 } from '@/@types/ZodSchemas/FormSchemaTasks'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
+import { ProjectStatus } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
 
@@ -31,6 +32,21 @@ export async function addNewTaskAction(dataTask: TaskFormData) {
         projectId: validatedData.projectId,
       },
     })
+
+    const project = await prisma.project.findUnique({
+      where: {
+        id: dataTask.projectId,
+      },
+      select: { status: true },
+    })
+
+    if (project?.status === ProjectStatus.CONCLUIDO) {
+      await prisma.project.update({
+        where: { id: dataTask.projectId },
+        data: { status: ProjectStatus.PENDENTE },
+      })
+    }
+
     revalidatePath('/tasks')
 
     return newTask
