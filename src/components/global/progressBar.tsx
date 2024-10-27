@@ -11,16 +11,18 @@ const ProgressBar = React.forwardRef<
   <ProgressPrimitive.Root
     ref={ref}
     className={twMerge(
-      'w-full relative h-4 overflow-hidden rounded-full bg-neutral',
+      'w-full relative h-4.5 overflow-hidden rounded-full bg-neutral',
       className,
     )}
     {...props}
   >
     <ProgressPrimitive.Indicator
-      className="h-full flex items-center justify-end bg-blue-500 transition-all"
+      className="h-full flex items-center justify-end py-0.5 px-1.5 bg-blue-500 transition-all"
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
     >
-      <span className="text-xs font-medium text-neutral">{value} %</span>
+      <span className="flex items-center justify-center text-xs font-medium text-neutral">
+        {value} %
+      </span>
     </ProgressPrimitive.Indicator>
   </ProgressPrimitive.Root>
 ))
