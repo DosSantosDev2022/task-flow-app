@@ -10,8 +10,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 export async function getProjects({
-  page = 1,
-  limit = 10,
+  page,
+  limit,
   search = '',
   priority = '',
   status = '',
@@ -29,8 +29,8 @@ export async function getProjects({
       status: status ?? '',
       sort: sort ?? '',
       sortBy: sortBy ?? '',
-      page: page?.toString() ?? '1',
-      limit: limit?.toString() ?? '10',
+      page: page ? page.toString() : '1',
+      limit: limit ? limit.toString() : '',
     }).toString()
 
     /* Fetch para buscar os dados da API */
@@ -40,7 +40,7 @@ export async function getProjects({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session?.user.id ?? ''}`,
       },
-      cache: 'force-cache',
+      cache: 'no-cache',
     })
 
     if (!res.ok) {

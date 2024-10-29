@@ -2,7 +2,6 @@ import { HeaderTasks } from '@/components/pages/tasks/headerTasks'
 import { ProjectList } from '@/components/pages/tasks/ProjectList'
 import { Tasks } from '@/components/pages/tasks/tasks'
 import { getProjects } from '@/utils/getProjects'
-import Loading from './loading'
 import { ProjectStatus } from '@prisma/client'
 
 export default async function TasksPage({
@@ -12,11 +11,10 @@ export default async function TasksPage({
 }) {
   const projectId = searchParams.projectId
 
-  const { projects } = await getProjects({})
-
-  if (!projects) {
-    return <Loading />
-  }
+  const { projects } = await getProjects({
+    page: 1,
+    limit: 1000,
+  })
 
   // Filtra apenas projetos com status 'CONCLUIDO' ou 'PENDENTE'
   const filteredProjects = projects.filter(
@@ -30,11 +28,8 @@ export default async function TasksPage({
     selectedProject = filteredProjects.find(
       (project) => project.id === projectId,
     )
-    if (!selectedProject) {
-      return <Loading />
-    }
   }
-
+  console.log(filteredProjects)
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-2 p-2 w-full">
       <ProjectList projects={filteredProjects} />

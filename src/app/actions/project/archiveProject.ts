@@ -26,17 +26,18 @@ export async function ArchiveProject({
     const userId = session.user.id
 
     // Atualizar o projeto
-    const updateProject = await prisma.project.update({
+    await prisma.project.update({
       where: { id },
       data: {
         userId,
-        status: newStatus, // Atualiza o status com base na verificação
+        status: newStatus,
       },
     })
 
     revalidatePath('/projects')
-    revalidatePath(`/tasks`)
-    return updateProject
+    revalidatePath('/tasks')
+
+    return { success: true } // Retorne um objeto de sucesso
   } catch (error) {
     console.error('Erro ao arquivar  o  projeto:', error)
     throw new Error('Erro ao arquivar  o  projeto')

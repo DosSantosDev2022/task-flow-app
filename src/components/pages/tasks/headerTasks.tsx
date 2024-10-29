@@ -15,12 +15,14 @@ import { Badge } from '@/components/global/badge'
 import { Button } from '@/components/global/button'
 import { useNotification } from '@/contexts/NotificationContext'
 import { ArchiveProject } from '@/app/actions/project/archiveProject'
+import { useRouter } from 'next/navigation'
 
 export function HeaderTasks({
   selectedProject,
 }: {
   selectedProject: ProjectData
 }) {
+  const router = useRouter()
   const { tasks } = useTaskStore() // Usando o estado global das tarefas
   const { showNotification } = useNotification()
   const [progressPercentage, setProgressPercentage] = useState(0)
@@ -51,10 +53,15 @@ export function HeaderTasks({
 
   const handleArchiveproject = async () => {
     try {
-      await ArchiveProject({
+      const response = await ArchiveProject({
         id: selectedProject.id,
         newStatus: 'ARQUIVADO',
       })
+
+      if (response.success) {
+        // Redireciona para a página de tarefas
+        router.push('/tasks')
+      }
       showNotification('Projeto arquivado com sucesso', 'success')
     } catch (error) {
       showNotification('Erro ao arquivar projeto', 'error')
@@ -88,7 +95,7 @@ export function HeaderTasks({
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1 w-full ">
+        <div className="flex flex-col items-end gap-2 w-full ">
           <Deadiline.Root className="ml-10 sm:ml-0">
             <Deadiline.Icon
               className={isWithinDeadline() ? 'bg-green-500' : 'bg-red-500'}

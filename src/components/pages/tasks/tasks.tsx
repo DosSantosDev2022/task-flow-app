@@ -83,10 +83,25 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
     try {
       setSaveIsloading(true)
       await saveAllChanges(projectId) // Salva todas as alterações via Zustand
-      await updateProjectStatus({
-        id: projectId,
-        newStatus: 'CONCLUIDO',
-      }) // Altera status do projeto para conluído
+
+      // Atualiza o estado de tasks após salvar
+      const updatedTasks = Object.values(tasks).filter(
+        (task) => task.projectId === projectId,
+      )
+
+      // Verifica se todas as tarefas estão concluídas
+      const allTasksCompleted = updatedTasks.every(
+        (task) => task.status === 'CONCLUIDO',
+      )
+
+      // Atualiza o status do projeto se todas as tarefas estiverem concluídas
+      if (allTasksCompleted) {
+        await updateProjectStatus({
+          id: projectId,
+          newStatus: 'CONCLUIDO',
+        })
+      }
+
       showNotification('Informações atualizadas', 'success')
       clearPendingChanges()
     } catch (error) {
@@ -105,7 +120,7 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
   )
 
   // Renderiza um loading enquanto o Zustand sincroniza as tasks
-  if (isLoading) {
+  if (isLoading && initialTasks.length > 0) {
     return <LoadingOverlay label="Carregando..." />
   }
 
@@ -131,16 +146,16 @@ export function Tasks({ tasks: initialTasks, projectId }: TasksProps) {
           ))}
 
           <Button
-            className="hidden lg:flex relative"
+            className="hidden lg:flex relative justify-center items-center"
             effects="scale"
             variant="highlight"
             isLoading={isLoading}
             onClick={handleSaveChanges}
           >
-            {isLoading ? (
+            {isLoading && initialTasks.length > 0 ? (
               'Salvando...'
             ) : (
-              <span className="flex items-center justify-center gap-1 w-[98px] h-10 rounded-2xl px-2 py-4">
+              <span className="flex items-center justify-center gap-1">
                 <MdSaveAlt size={16} />
                 Salvar
               </span>
