@@ -11,7 +11,15 @@ const Dialog = DialogPrimitive.Root
 
 const DialogPortal = DialogPrimitive.Portal
 
-const DialogClose = DialogPrimitive.Close
+const DialogClose = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps & React.ComponentPropsWithoutRef<typeof DialogPrimitive.Close>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Close asChild>
+    <Button ref={ref} className={twMerge('', className)} {...props} />
+  </DialogPrimitive.Close>
+))
+DialogClose.displayName = 'DialogClose'
 
 // Estendendo o DialogTrigger
 const DialogTrigger = React.forwardRef<

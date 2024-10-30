@@ -12,7 +12,7 @@ export const Typograph = forwardRef<HTMLElement, TypographProps<ElementType>>(
   ({ as: Tag = 'p', className, children, ...props }, ref) => {
     return (
       <Tag
-        className={twMerge('text-sm font-normal text-primary/80', className)}
+        className={twMerge('text-base font-normal text-primary/80', className)}
         ref={ref}
         {...props}
       >

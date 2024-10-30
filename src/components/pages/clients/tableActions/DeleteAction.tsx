@@ -61,10 +61,8 @@ export function DeleteAction({
             >
               Excluir
             </Button>
-            <DialogClose>
-              <Button effects="scale" variant="outline">
-                Cancelar
-              </Button>
+            <DialogClose effects="scale" variant="outline">
+              Cancelar
             </DialogClose>
           </div>
         </DialogHeader>

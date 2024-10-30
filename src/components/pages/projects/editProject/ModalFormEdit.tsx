@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/global/modal'
-import { BiX } from 'react-icons/bi'
 import { FormProject } from './FormProject'
 import { FaEdit } from 'react-icons/fa'
 import { ProjectData } from '@/@types/project'
@@ -33,8 +32,8 @@ export function ModalFormEdit({ project }: { project: ProjectData }) {
             <DialogTitle>
               Aqui você pode editar e visualizar o seu projeto
             </DialogTitle>
-            <DialogClose className="rounded-md bg-zinc-200 border hover:opacity-80 active:scale-75 duration-300">
-              <BiX size={25} />
+            <DialogClose sizes="icon" variant="outline">
+              X
             </DialogClose>
           </div>
           <DialogDescription>

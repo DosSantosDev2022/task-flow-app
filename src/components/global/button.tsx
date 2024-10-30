@@ -40,7 +40,7 @@ export function Button({
     primary: 'bg-primary text-neutral hover:bg-primary_hover',
     secundary: 'bg-secondary text-neutral hover:bg-secondary_hover',
     outline:
-      'bg-transparent border border-neutral text-primary hover:bg-neutral_hover hover:text-primary_hover',
+      'bg-transparent hover:bg-neutral_hover border border-neutral text-primary',
     highlight: 'text-neutral hover:bg-accent_hover duration-300 bg-accent',
     disabled:
       'bg-opacity-80 bg-primary-950 border border-primary text-secondary',

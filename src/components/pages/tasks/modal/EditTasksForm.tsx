@@ -1,6 +1,7 @@
 'use client'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -21,6 +22,8 @@ import { FormField } from '@/components/global/Form/FormField'
 import { TextAreaField } from '@/components/global/Form/TextAreaField'
 import { FormDatePicker } from '@/components/global/Form/FormDataPicker'
 import { useTaskStore } from '@/store/TaskStore'
+import { LuCalendarDays } from 'react-icons/lu'
+import { format } from 'date-fns'
 
 interface TaskAddFormProps {
   task?: Task // Prop opcional para editar tarefa
@@ -95,6 +98,16 @@ export function ModalTasksForm({ task }: TaskAddFormProps) {
     }
   }
 
+  const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault() // Impede o comportamento de submit
+    setIsEditing(true)
+  }
+
+  const handleCancelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault() // Impede o comportamento de submit
+    setIsEditing(false)
+  }
+
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <DialogTrigger sizes="full" effects="scale" variant="outline">
@@ -103,68 +116,135 @@ export function ModalTasksForm({ task }: TaskAddFormProps) {
         </span>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
+        <DialogHeader className="flex-row items-center justify-between">
           <DialogTitle className="text-lg font-semibold text-primary">
             {task ? 'Editar tarefa' : 'Adicione uma nova tarefa'}
           </DialogTitle>
+          <DialogClose sizes="icon" variant="outline">
+            X
+          </DialogClose>
         </DialogHeader>
 
         <form
           onSubmit={handleSubmit(onSubmitAction)}
           className="overflow-y-auto overflow-x-hidden max-h-[468px]"
         >
-          <div className="flex flex-col gap-3 px-1 py-2">
-            <FormField
-              label="Nome da tarefa"
-              register={register('title')}
-              placeholder="Digite o nome da sua tarefa"
-              disabled={!isEditing}
-              error={errors.title}
-              type="text"
-            />
+          <div className="flex flex-col gap-2">
+            {!isEditing ? (
+              <>
+                <h3 className="text-base font-normal text-primary/80">
+                  Nome da tarefa
+                </h3>
+                <p className="text-secondary/50">{task?.title}</p>
+              </>
+            ) : (
+              <>
+                <FormField
+                  label="Nome da tarefa"
+                  register={register('title')}
+                  placeholder="Digite o nome da sua tarefa"
+                  disabled={!isEditing}
+                  error={errors.title}
+                  type="text"
+                />
+              </>
+            )}
 
-            <div className="flex gap-2 justify-between w-full">
-              <FormDatePicker
-                control={control}
-                label="Data de início"
-                name="startDate"
-                disabled={!isEditing}
-                error={errors.startDate?.message}
-              />
+            {!isEditing ? (
+              <>
+                <div>
+                  <h3 className="text-base font-normal text-primary/80">
+                    Data de início
+                  </h3>
+                  <p className="flex gap-1 items-center justify-start text-sm text-secondary/50">
+                    <LuCalendarDays />
+                    {format(new Date(task?.startDate || ''), 'dd/MM/yyyy')}
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-base font-normal text-primary/80">
+                    Data de entrega
+                  </h3>
+                  <p className="flex gap-1 items-center justify-start text-sm text-secondary/50">
+                    <LuCalendarDays />
+                    {format(new Date(task?.endDate || ''), 'dd/MM/yyyy')}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="flex gap-2 justify-between w-full">
+                <FormDatePicker
+                  control={control}
+                  label="Data de início"
+                  name="startDate"
+                  disabled={!isEditing}
+                  error={errors.startDate?.message}
+                />
 
-              <FormDatePicker
-                control={control}
-                label="Data de entrega"
-                name="endDate"
+                <FormDatePicker
+                  control={control}
+                  label="Data de entrega"
+                  name="endDate"
+                  disabled={!isEditing}
+                  error={errors.endDate?.message}
+                />
+              </div>
+            )}
+
+            {!isEditing ? (
+              <>
+                <h3 className="text-base font-normal text-primary/80">
+                  Descrição
+                </h3>
+                <p className="text-secondary/50">{task?.description}</p>
+              </>
+            ) : (
+              <TextAreaField
+                label="Descrição"
+                register={register('description')}
                 disabled={!isEditing}
-                error={errors.endDate?.message}
+                placeholder="Descreva a sua tarefa"
+                error={errors.description}
               />
+            )}
+
+            <div className="flex justify-end gap-4 mt-5">
+              {!isEditing ? (
+                <>
+                  <Button
+                    type="button" // Alterado para "button" para não submeter o formulário
+                    onClick={handleEditClick} // Função que define o estado de edição
+                    variant="highlight"
+                    sizes="full"
+                  >
+                    Editar
+                  </Button>
+                  <DialogClose type="button" variant="outline" sizes="full">
+                    Fechar
+                  </DialogClose>
+                </>
+              ) : (
+                <>
+                  <Button
+                    disabled={isLoading}
+                    type="submit"
+                    isLoading={isLoading}
+                    variant="highlight"
+                    sizes="full"
+                  >
+                    {isLoading ? 'Salvando...' : 'Salvar Alterações'}
+                  </Button>
+                  <Button
+                    type="button" // Alterado para "button" para não submeter o formulário
+                    onClick={handleCancelClick} // Função que define o estado de edição
+                    variant="outline"
+                    sizes="full"
+                  >
+                    Cancelar
+                  </Button>
+                </>
+              )}
             </div>
-
-            <TextAreaField
-              label="Descrição"
-              register={register('description')}
-              disabled={!isEditing}
-              placeholder="Descreva a sua tarefa"
-              error={errors.description}
-            />
-            <Button
-              isLoading={isLoading}
-              variant="highlight"
-              sizes="full"
-              className="text-base flex items-center justify-center space-x-3"
-              disabled={isLoading}
-              type="button" // Mantém como botão normal
-              onClick={() => {
-                if (isEditing) {
-                  handleSubmit(onSubmitAction)() // Chama a função de submissão
-                } else {
-                  setIsEditing(true) // Habilita a edição se não estiver editando
-                }
-              }}
-            >
-              {isEditing ? 'Salvar' : 'Editar'}
-            </Button>
           </div>
         </form>
       </DialogContent>

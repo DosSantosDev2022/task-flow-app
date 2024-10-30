@@ -1,6 +1,7 @@
 'use client'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -91,10 +92,13 @@ export function TaskAddForm({
         <span className="text-base">Nova</span>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
+        <DialogHeader className="flex-row items-center justify-between">
           <DialogTitle className="text-lg font-semibold text-primary">
             Adicione uma nova tarefa
           </DialogTitle>
+          <DialogClose sizes="icon" variant="outline">
+            X
+          </DialogClose>
         </DialogHeader>
 
         <form

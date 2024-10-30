@@ -91,10 +91,12 @@ export function FormProject({ project, closeModal }: ProjectEditModalProps) {
         Detalhes do Projeto
       </h4>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="px-1 py-2 border rounded-md">
+        <div className="px-1 py-2 rounded-md">
           {!isEditing ? (
             <>
-              <span className="font-bold text-lg">Nome do Projeto</span>
+              <h3 className="text-base font-normal text-primary/80">
+                Nome do Projeto
+              </h3>
               <p className="mt-1">{project.title}</p>
             </>
           ) : (
@@ -109,18 +111,22 @@ export function FormProject({ project, closeModal }: ProjectEditModalProps) {
           )}
         </div>
 
-        <div className="flex w-full items-center justify-between gap-2 px-1 py-2 border rounded-md ">
+        <div className="flex w-full items-center justify-between gap-2 px-1 py-2  rounded-md ">
           {!isEditing ? (
             <>
               <div>
-                <span className="font-bold text-lg">Data início</span>
+                <h3 className="text-base font-normal text-primary/80">
+                  Data de iniício
+                </h3>
                 <p className="mt-1 flex gap-1 items-center justify-start">
                   <LuCalendarDays />
                   {format(new Date(project.startDate || ''), 'dd/MM/yyyy')}
                 </p>
               </div>
               <div>
-                <span className="font-bold text-lg">Data entrega</span>
+                <h3 className="text-base font-normal text-primary/80">
+                  Data de entrega
+                </h3>
                 <p className="mt-1 flex gap-1 items-center justify-start">
                   <LuCalendarDays />
                   {format(new Date(project.endDate || ''), 'dd/MM/yyyy')}
@@ -147,10 +153,12 @@ export function FormProject({ project, closeModal }: ProjectEditModalProps) {
           )}
         </div>
 
-        <div className="space-y-3 max-h-[220px] overflow-auto px-1 py-2 border rounded-md scrollbar-thin">
+        <div className="space-y-3 max-h-[220px] overflow-auto px-1 py-2 scrollbar-thin">
           {!isEditing ? (
             <>
-              <span className="font-bold text-lg">Descrição</span>
+              <h3 className="text-base font-normal text-primary/80">
+                Descrição
+              </h3>
               <div
                 className="text-sm"
                 dangerouslySetInnerHTML={{
@@ -172,11 +180,11 @@ export function FormProject({ project, closeModal }: ProjectEditModalProps) {
           )}
         </div>
 
-        <div className="flex items-center justify-between gap-2 px-1 py-2 border rounded-md">
+        <div className="flex items-center justify-between gap-2 px-1 py-2 ">
           <div>
             {!isEditing ? (
               <>
-                <span className="font-bold text-lg">Preço</span>
+                <h3 className="text-base font-normal text-primary/80">Preço</h3>
                 <p className="mt-1">
                   {new Intl.NumberFormat('pt-BR', {
                     style: 'currency',
@@ -196,10 +204,12 @@ export function FormProject({ project, closeModal }: ProjectEditModalProps) {
             )}
           </div>
 
-          <div className="px-1 py-2 border rounded-md">
+          <div className="px-1 py-2">
             {!isEditing ? (
               <>
-                <span className="font-bold text-lg">Pagamento</span>
+                <h3 className="text-base font-normal text-primary/80">
+                  Pagamento
+                </h3>
                 <Typograph className="mt-1">{project?.payment}</Typograph>
               </>
             ) : (
@@ -215,10 +225,10 @@ export function FormProject({ project, closeModal }: ProjectEditModalProps) {
           </div>
         </div>
 
-        <div className="px-1 py-2 border rounded-md">
+        <div className="px-1 py-2 rounded-md">
           {!isEditing ? (
             <>
-              <span className="font-bold text-lg">Cliente</span>
+              <h3 className="text-base font-normal text-primary/80">Cliente</h3>
               <p>{project.client?.name}</p>
             </>
           ) : (
@@ -233,10 +243,12 @@ export function FormProject({ project, closeModal }: ProjectEditModalProps) {
           )}
         </div>
 
-        <div className="px-1 py-2 border rounded-md">
+        <div className="px-1 py-2">
           {!isEditing ? (
             <>
-              <span className="font-bold text-lg">Prioridade</span>
+              <h3 className="text-base font-normal text-primary/80">
+                Prioridade
+              </h3>
               <p className="mt-1">{project.priority}</p>
             </>
           ) : (

@@ -11,6 +11,7 @@ export const FormTaskSchema = z.object({
   description: z.string().min(1, 'A descrição da tarefa é obrigatória'),
   projectId: z.string(),
   status: z.enum(status).optional(),
+  userId: z.string(),
 })
 
 export type TaskFormData = z.infer<typeof FormTaskSchema>
