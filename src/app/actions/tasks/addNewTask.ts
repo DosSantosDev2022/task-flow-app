@@ -3,7 +3,7 @@ import {
   FormTaskSchema,
   TaskFormData,
 } from '@/@types/ZodSchemas/FormSchemaTasks'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { ProjectStatus } from '@prisma/client'
 import { getServerSession } from 'next-auth'
@@ -25,8 +25,8 @@ export async function addNewTaskAction(dataTask: TaskFormData) {
     // Criar a task vinculada a um projectId
     const newTask = await prisma.task.create({
       data: {
-        userId,
         ...validatedData,
+        userId,
         startDate: new Date(validatedData.startDate),
         endDate: new Date(validatedData.endDate),
         projectId: validatedData.projectId,

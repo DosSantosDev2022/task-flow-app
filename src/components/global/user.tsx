@@ -4,7 +4,7 @@ import { Avatar } from './avatar'
 import { useState } from 'react'
 
 export function User() {
-  const { data } = useSession()
+  const { data: session } = useSession()
 
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -21,9 +21,9 @@ export function User() {
       <div className="relative">
         <button onClick={handleButtonClickSignUp}>
           <Avatar
-            Url={data?.user?.image || ''}
-            Alt={data?.user?.name || ''}
-            name={data?.user?.name || ''}
+            Url={session?.user?.image || ''}
+            Alt={session?.user?.name || ''}
+            name={session?.user?.name || ''}
           />
         </button>
 
@@ -41,10 +41,10 @@ export function User() {
 
       <div className="flex-col hidden lg:flex">
         <span className="text-base font-bold text-primary">
-          {data?.user?.name}
+          {session?.user?.name}
         </span>
         <span className="text-secondary/50 font-normal text-xs leading-[14.52px] ">
-          {data?.user?.email}
+          {session?.user?.email}
         </span>
       </div>
     </div>

@@ -1,18 +1,27 @@
 // app/api/clients/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { Client } from '@prisma/client'
+
+interface QueryParams {
+  search?: string
+  page?: string
+  limit?: string
+  sort?: string // Prisma tem tipos para sort (asc, desc)
+  sortBy?: keyof Client // Você pode restringir a propriedades específicas do modelo Client
+  state?: string
+  city?: string
+}
 
 export async function GET(req: NextRequest) {
-  const { search, page, limit, sort, sortBy, state, city } = Object.fromEntries(
-    req.nextUrl.searchParams,
-  )
+  const params: QueryParams = Object.fromEntries(req.nextUrl.searchParams)
 
   try {
-    const pageNumber = parseInt(page as string, 10) || 1
-    const pageSize = parseInt(limit as string, 10) || 10
+    const pageNumber = parseInt(params.page || '1', 10)
+    const pageSize = parseInt(params.limit || '10', 10)
     const skip = (pageNumber - 1) * pageSize
-    const orderBy: any = {}
-    orderBy[(sortBy as string) || 'createdAt'] = sort || 'asc'
+    const orderBy: Record<string, string> = {}
+    orderBy[params.sortBy || 'createdAt'] = params.sort || 'asc'
 
     // Verificar autenticação e obter sessão
     const token = req.headers.get('Authorization')?.replace('Bearer ', '')
@@ -26,11 +35,18 @@ export async function GET(req: NextRequest) {
 
     const userId = token
 
-    const whereClause: any = {
+    const whereClause: {
+      userId: string
+      name?: { contains: string; mode: 'insensitive' }
+      state?: { equals: string }
+      city?: { equals: string }
+    } = {
       userId,
-      ...(search ? { name: { contains: search, mode: 'insensitive' } } : {}),
-      ...(state ? { state: { equals: state } } : {}),
-      ...(city ? { city: { equals: city } } : {}),
+      ...(params.search
+        ? { name: { contains: params.search, mode: 'insensitive' } }
+        : {}),
+      ...(params.state ? { state: { equals: params.state } } : {}),
+      ...(params.city ? { city: { equals: params.city } } : {}),
     }
 
     // Buscando clientes e total de clientes com base nos parâmetros fornecidos

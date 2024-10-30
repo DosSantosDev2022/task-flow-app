@@ -15,12 +15,9 @@ import {
 } from '@/@types/ZodSchemas/FormSchemaLogin'
 
 export default function SignInPage() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormDataLogin>({ resolver: zodResolver(FormSchemaLogin) })
+  const { register, handleSubmit, reset } = useForm<FormDataLogin>({
+    resolver: zodResolver(FormSchemaLogin),
+  })
 
   const { data: session } = useSession()
   const router = useRouter()

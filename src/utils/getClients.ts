@@ -1,5 +1,5 @@
 import { ClientsResponse, getClientParams } from '@/@types/client'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 
 export async function getClients({

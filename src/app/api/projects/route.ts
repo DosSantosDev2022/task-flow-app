@@ -1,6 +1,7 @@
 // app/api/all-data/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { ProjectPriority, ProjectStatus } from '@prisma/client'
 
 // Definindo os possíveis valores para status e prioridade
 const VALID_STATUSES = ['PENDENTE', 'CONCLUIDO', 'ARQUIVADO', 'TODOS']
@@ -14,8 +15,8 @@ export async function GET(req: NextRequest) {
     const pageNumber = parseInt(page as string, 10) || 1
     const pageSize = parseInt(limit as string, 10) || 10
     const skip = (pageNumber - 1) * pageSize
-    const orderBy: any = {}
-    orderBy[(sortBy as string) || ''] = sort || 'asc'
+    const orderBy: Record<string, 'asc' | 'desc'> = {}
+    orderBy[sortBy as string] = sort === 'desc' ? 'desc' : 'asc'
 
     // Verificar autenticação e obter sessão
     const token = req.headers.get('Authorization')?.replace('Bearer ', '')
@@ -30,13 +31,18 @@ export async function GET(req: NextRequest) {
     const userId = token
     // Verificar e converter os valores de status e prioridade para garantir que sejam válidos
     const projectStatus = VALID_STATUSES.includes(status as string)
-      ? status
+      ? (status as ProjectStatus)
       : undefined
     const projectPriority = VALID_PRIORITIES.includes(priority as string)
-      ? priority
+      ? (priority as ProjectPriority)
       : undefined
 
-    const whereClause: any = {
+    const whereClause: {
+      userId: string
+      title?: { contains: string; mode: 'insensitive' }
+      status?: ProjectStatus
+      priority?: ProjectPriority
+    } = {
       userId,
       ...(search ? { title: { contains: search, mode: 'insensitive' } } : {}),
       ...(projectStatus ? { status: projectStatus } : {}),

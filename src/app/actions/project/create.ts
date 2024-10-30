@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { FormDataProject } from '@/@types/ZodSchemas/FormSchemaProject'
 import { revalidatePath } from 'next/cache'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 
 export async function createProjectAction(formData: FormDataProject) {

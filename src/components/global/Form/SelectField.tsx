@@ -18,6 +18,7 @@ interface SelectFieldProps {
   label: string
   options: SelectOption[] // Lista de opções com label e value
   name: string // Nome do campo de formulário
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any> // Control do react-hook-form
   error?: FieldError // Erros do campo
   disabled?: boolean // Desabilitar o campo

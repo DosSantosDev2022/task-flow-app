@@ -8,7 +8,6 @@ import {
   PopoverContent,
 } from '@/components/global/popover'
 import { ModalFormEdit } from '@/components/pages/projects/editProject/ModalFormEdit'
-import { ArchiveAction } from './ArchiveAction'
 import { DeleteAction } from './DeleteAction'
 import { ProjectData } from '@/@types/project'
 
@@ -21,7 +20,6 @@ export const Actions = ({ project }: { project: ProjectData }) => {
         <LuMoreVertical />
       </PopoverTrigger>
       <PopoverContent className="z-50 w-[130px] overflow-hidden rounded-md border px-1.5 py-2 space-y-1.5">
-        <ArchiveAction projectId={project.id || ''} />
         <ModalFormEdit project={project} />
         <DeleteAction
           isOpen={isOpen}
